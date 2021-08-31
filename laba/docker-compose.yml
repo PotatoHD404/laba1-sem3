@@ -1,0 +1,11 @@
+version: "3"
+
+
+services:
+  code-compiler:
+    build: ./src
+    restart: unless-stopped
+    volumes:
+      - ./src:/src
+    ports:
+      - "22:22"
