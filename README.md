@@ -1,12 +1,10 @@
-# SvelteKit
+# Lab work 1 based on SvelteKit and Webassembly
 
-Example project using SvelteKit with the [SpaceX GraphQL API](https://api.spacex.land/graphql/), deployed to [Vercel](https://vercel.com).
+You can see it at https://laba1-sem3.vercel.app/
 
-## Deploy Your Own
+## Compiling to webassembly
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fvercel%2Ftree%2Fmain%2Fexamples%2Fsveltekit&project-name=sveltekit-vercel&repository-name=sveltekit-vercel&demo-title=SvelteKit%20%2B%20Vercel&demo-description=SvelteKit%20app%20fetching%20data%20from%20the%20SpaceX%20GraphQL%20API.&demo-url=https%3A%2F%2Fsveltekit.examples.vercel.com%2F&demo-image=https%3A%2F%2Fsveltekit.examples.vercel.com%2Ftwitter.png)
-
-_Live Example: https://sveltekit.examples.vercel.com_
+You can see more about this topic in the [laba folder](https://github.com/PotatoHD404/laba1-sem3/tree/main/laba)
 
 ## Developing
 

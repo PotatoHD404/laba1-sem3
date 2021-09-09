@@ -1,143 +1,73 @@
-<script context="module">
-  export async function load({ fetch }) {
-    const res = await fetch('https://api.spacex.land/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        query: `{
-            launchesPast(limit: 10) {
-                mission_name
-                launch_date_local
-                links {
-                    video_link
-                }
-            }
-        }`
-      })
-    });
-
-    if (res.ok) {
-      const { data } = await res.json();
-      return {
-        props: {
-          launches: data.launchesPast
-        }
-      };
-    }
-
-    return {
-      status: res.status,
-      error: new Error(`Error fetching GraphQL data`)
-    };
-  }
-</script>
-
 <script>
-  export let launches;
-</script>
+  import Button from '../components/theme_toggle.svelte';
+  import { onMount } from 'svelte';
+  onMount(() => {
+    exported.onLoad();
+  });
+  let exported;
 
-<h1>SpaceX Launches</h1>
-<p>
-  This is an example <a
-    class="link"
-    target="_blank"
-    rel="noopener"
-    href="https://svelte.dev">SvelteKit</a
-  >
-  application fetching GraphQL data from the public
-  <a
-    class="link"
-    target="_blank"
-    rel="noopener"
-    href="https://api.spacex.land/graphql">SpaceX API</a
-  >. View source on
-  <a
-    class="link"
-    target="_blank"
-    rel="noopener"
-    href="https://github.com/leerob/sveltekit-graphql">GitHub</a
-  >.
-</p>
-<ul>
-  {#each launches as launch}
-    <li>
-      <a
-        class="card-link"
-        target="_blank"
-        rel="noopener"
-        href={launch.links.video_link}
-      >
-        <h2>{launch.mission_name}</h2>
-        <p>{new Date(launch.launch_date_local).toLocaleString()}</p>
-      </a>
-    </li>
-  {/each}
-</ul>
-<footer>
-  <p>
-    Created with <a
-      class="link"
-      target="_blank"
-      rel="noopener"
-      href="https://svelte.dev">SvelteKit</a
-    >
-    and deployed with
-    <a class="link" target="_blank" rel="noopener" href="https://vercel.com"
-      >▲ Vercel</a
-    >.
-  </p>
-</footer>
+</script>
+<nav class='flex items-center justify-between flex-wrap bg-teal-500 p-6'>
+  <div class='flex items-center flex-shrink-0 text-white mr-6'>
+    <img src='/favicon.png' alt='Beautiful image' class='w-10 mr-2'>
+    <span class='font-semibold text-xl tracking-tight'>PotatoHD's lab</span>
+  </div>
+  <div class='block lg:hidden'>
+    <Button bind:exported={exported}>
+      Theme
+    </Button>
+  </div>
+</nav>
+<header>
+  <div>
+
+  </div>
+
+</header>
+<div class='grid grid-cols-3 gap-4 mt-8'>
+
+  <div class='col-span-2 flex justify-center'>
+    <textarea class='console'></textarea>
+  </div>
+</div>
 
 <style>
-  :global(body) {
-    font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
-      monospace;
-    background-color: #fafafa;
-    max-width: 650px;
-    margin: 32px auto;
-    padding: 0 16px;
-  }
-  h1 {
-    letter-spacing: -0.025em;
-  }
-  h2 {
-    font-size: 18px;
-  }
-  ul {
-    list-style: none;
-    padding: 0;
-    margin-top: 32px;
-  }
-  li {
-    border: 1px solid #eaeaea;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    background-color: white;
-    transition: 0.15s box-shadow ease-in-out;
-  }
-  li:hover {
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
-  }
-  p {
-    color: #666;
-    font-size: 14px;
-    line-height: 1.75;
-  }
-  a {
-    color: #0070f3;
-    text-decoration: none;
-  }
-  .card-link {
-    padding: 8px 24px;
-    display: block;
-  }
-  .link {
-    transition: 0.15s text-decoration ease-in-out;
-    color: #0761d1;
-  }
-  .link:hover {
-    text-decoration: underline;
-  }
+    .console {
+        @apply resize-y border rounded-md dark:bg-black;
+    }
+
+    :global(body.dark) .console {
+        @apply bg-black;
+    }
+
+    body {
+        @apply m-auto;
+    }
+
+    :global(body) {
+        background-color: #f2eee2;
+        color: #0084f6;
+        transition: background-color 0.3s
+    }
+
+    /*:global(.dark) {*/
+    /*    background-color: #1d3040;*/
+    /*    color: #bfc2c7;*/
+    /*}*/
+    :global(body.dark) {
+        background-color: #1d3040;
+        color: #bfc2c7;
+    }
+
+    /*.btn {*/
+    /*    @apply text-base font-medium rounded-lg p-3;*/
+    /*}*/
+
+    /*.btn--primary {*/
+    /*    @apply bg-rose-500 text-white;*/
+    /*}*/
+
+    /*.btn--secondary {*/
+    /*    @apply bg-gray-100 text-black;*/
+    /*}*/
 </style>

@@ -10,6 +10,8 @@ dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux 
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 ```
 
+**Restart** your machine to complete the WSL install and update to WSL 2.
+
 Download and install [WSL 2](https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi)
 
 Run Windows PowerShell with administrator privileges again and run these commands

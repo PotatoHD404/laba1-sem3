@@ -3,11 +3,6 @@
 //#pragma GCC optimize("unroll-loops")
 
 #include <iostream>
-#include "Complex.hpp"
-#include "NAryTree.hpp"
-#include "Person.hpp"
-#include "BTree.hpp"
-#include "Set.hpp"
 #include <chrono>
 #include <random>
 
@@ -29,9 +24,13 @@ string str;
 EM_JS(const char *, do_fetch, (), {
 return Asyncify.handleAsync(async () => {
         let promise = new Promise(function(resolve, reject){
-            Module.promiseResolve = resolve;
-            Module.promiseReject = reject;
+        Module.addEventListener("message", text => {
+
+            resolve(text);
+
+        }, {once : true});
         });
+        let promise = Module.cpp_promise;
         let res = await promise;
         let lengthBytes = lengthBytesUTF8(res)+1;
         let stringOnWasmHeap = _malloc(lengthBytes);
@@ -115,6 +114,7 @@ string readline() {
 
 
 #include <iostream>
+#include "NAryTree.hpp"
 #include "Functions.hpp"
 #include "Complex.hpp"
 #include "Person.hpp"
