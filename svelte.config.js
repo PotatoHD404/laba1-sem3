@@ -6,6 +6,11 @@ const config = {
     adapter: vercel(),
     target: '#svelte',
   },
+  vite: {
+    optimizeDeps: {
+      exclude: ['svelte-kit-cookie-session'],
+    },
+  },
   preprocess: [preprocess({
     "postcss": true
   })]

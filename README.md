@@ -19,8 +19,6 @@ npm run dev -- --open
 
 ## Building
 
-This uses the [Vercel Adapter](https://github.com/sveltejs/kit/tree/master/packages/adapter-vercel) for SvelteKit.
-
 ```bash
 npm run build
 ```
