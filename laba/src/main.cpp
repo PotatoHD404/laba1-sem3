@@ -6,6 +6,10 @@
 #include <chrono>
 #include <random>
 #include <sstream>
+#include "Sequence.hpp"
+#include "ListSequence.hpp"
+#include "ArraySequence.hpp"
+#include "Complex.hpp"
 
 using namespace std;
 
