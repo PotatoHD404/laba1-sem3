@@ -19,6 +19,10 @@ private:
 
 
 public:
+    IEnumerator<T, Enumerable>& GetEnumerator() {
+        // TODO: implement
+    }
+
     //Creation of the object
     ListSequence() {
         items = LinkedList<T>();
@@ -43,7 +47,7 @@ public:
     explicit ListSequence(T (&items)[N]) : ListSequence(items, N) {}
 
     ListSequence(initializer_list<T> items) : ListSequence() {
-        for (T item : items)
+        for (T item: items)
             this->Append(item);
     }
 

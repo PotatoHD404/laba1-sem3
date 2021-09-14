@@ -17,6 +17,9 @@ private:
     DynamicArray<T> items;
 
 public:
+    IEnumerator<T, Enumerable>& GetEnumerator() {
+        // TODO: implement
+    }
     //Creation of the object
     ArraySequence() {
         items = DynamicArray<T>();

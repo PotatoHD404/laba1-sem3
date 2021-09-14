@@ -5,6 +5,7 @@
 #define LABA2_ENUMERABLE_H
 
 #include "ICollection.hpp"
+#include "IEnumerable.hpp"
 #include <vector>
 #include <tuple>
 #include <iostream>
@@ -14,7 +15,7 @@ using namespace std;
 
 template<typename T>
 /*abstract*/
-class Enumerable : public ICollection<T> {
+class Enumerable : public ICollection<T>, public IEnumerable<T, Enumerable> {
 protected:
     template<typename T1, template<typename> class ChildClass>
     Enumerable<T1> *Map(T1 (*mapper)(T)) {
