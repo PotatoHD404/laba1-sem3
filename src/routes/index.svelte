@@ -1,18 +1,18 @@
 <script>
   import Input from '../components/input.svelte';
 
-  let array = [...Array(1).keys()];
+  let array = [...Array(2).keys()];
 
 </script>
 
 <div class='flex justify-center'>
-  <div class='flex justify-center w-2/3'>
-    <div class='flex justify-center flex-wrap w-2/3'>
+  <div class='flex justify-center md:w-full xl:w-2/3 2xl:w-1/2'>
+    <div class='flex justify-center flex-wrap md:w-2/3 w-full'>
     <textarea
       class='px-2 py-2 flex console bg-light ring-1 ring-outline-light dark:bg-deep-black dark:text-gray-200
-       rounded-md w-full focus:outline-none h-44 dark:ring-outline-dark'
+       rounded-md w-full focus:outline-none h-44 dark:ring-outline-dark m-1'
       readonly>blabla</textarea>
-      <div class='my-2 w-full flex flex-wrap justify-center'>
+      <div class='my-2 w-full flex flex-wrap justify-center pt-2'>
         {#each array as item}
 
           <Input />
