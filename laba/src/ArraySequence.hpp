@@ -1,10 +1,13 @@
 //
 // Created by korna on 20.03.2021.
 //
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunknown-pragmas"
+#pragma ide diagnostic ignored "HidingNonVirtualFunction"
 #ifndef LABA2_ARRAYSEQUENCE_H
 #define LABA2_ARRAYSEQUENCE_H
 
-#include "Sequence.hpp"
+#include "Enumerable.hpp"
 #include "DynamicArray.hpp"
 #include <iostream>
 #include <cstring>
@@ -12,14 +15,11 @@
 using namespace std;
 
 template<typename T>
-class ArraySequence : public Sequence<T> {
+class ArraySequence : public Enumerable<T> {
 private:
     DynamicArray<T> items;
 
 public:
-    IEnumerator<T, Enumerable>& GetEnumerator() {
-        // TODO: implement
-    }
     //Creation of the object
     ArraySequence() {
         items = DynamicArray<T>();
@@ -76,7 +76,7 @@ public:
             throw range_error("startIndex > endIndex");
         if (endIndex >= items.Count())
             throw range_error("endIndex >= length");
-        ArraySequence<T> *res = new ArraySequence<T>();
+        auto *res = new ArraySequence<T>();
         for (size_t i = startIndex; i < endIndex + 1; ++i) {
             res->Append(items.At(i));
         }
@@ -94,7 +94,7 @@ public:
             throw range_error("startIndex > endIndex");
         if (endIndex >= items.Count())
             throw range_error("endIndex >= length");
-        ArraySequence<T> *res = new ArraySequence<T>();
+        auto *res = new ArraySequence<T>();
         res->items = items.GetSubArray(startIndex, endIndex);
         return res;
     }
@@ -207,7 +207,7 @@ public:
 
     template<typename T1>
     ArraySequence<T1> Map(T1 (*mapper)(T)) {
-        ArraySequence<T1> *res = dynamic_cast<ArraySequence<T1> *>(Enumerable<T>::template Map<T1, ArraySequence>(
+        auto *res = dynamic_cast<ArraySequence<T1> *>(Enumerable<T>::template Map<T1, ArraySequence>(
                 mapper));
         auto res1 = ArraySequence<T1>(res);
         delete res;
@@ -215,7 +215,7 @@ public:
     }
 
     ArraySequence<T> Where(bool(*predicate)(T)) {
-        ArraySequence<T> *res = dynamic_cast<ArraySequence<T> *>(Enumerable<T>::template Where<ArraySequence>(
+        auto *res = dynamic_cast<ArraySequence<T> *>(Enumerable<T>::template Where<ArraySequence>(
                 predicate));
         auto res1 = ArraySequence<T>(res);
         delete res;
@@ -237,3 +237,4 @@ public:
 };
 
 #endif //LABA2_ARRAYSEQUENCE_H
+#pragma clang diagnostic pop

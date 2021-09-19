@@ -6,84 +6,17 @@
 #include <chrono>
 #include <random>
 #include <sstream>
+#include "Sort.hpp"
 #include "Sequence.hpp"
 #include "ListSequence.hpp"
 #include "ArraySequence.hpp"
 #include "Complex.hpp"
+#include <vector>
+#include "WebAssembly.hpp"
 
 using namespace std;
 
-//#ifdef __EMSCRIPTEN__
-//#else
-//#pragma clang diagnostic push
-//#pragma ide diagnostic ignored "EndlessLoop"
-//#endif
-//
-
 using namespace std::chrono;
-
-
-#ifdef __EMSCRIPTEN__
-#include <emscripten.h>
-#include <emscripten/bind.h>
-string str;
-EM_JS(const char *, do_fetch, (), {
-return Asyncify.handleAsync(async () => {
-        let promise = new Promise(function(resolve, reject){
-        Module.addEventListener("message", text => {
-
-            resolve(text);
-
-        }, {once : true});
-        });
-        let promise = Module.cpp_promise;
-        let res = await promise;
-        let lengthBytes = lengthBytesUTF8(res)+1;
-        let stringOnWasmHeap = _malloc(lengthBytes);
-        stringToUTF8(res, stringOnWasmHeap, lengthBytes);
-        return stringOnWasmHeap;
-});
-str = "";
-});
-
-
-string readline(){
-    string res;
-    if(str == ""){
-        const char * input = do_fetch();
-        str = input;
-        delete[] input;
-    }
-                    string delimiter = "\n";
-        if((str.find(delimiter)) != std::string::npos && str.find(delimiter) != 0){
-
-
-        res = str.substr(0, str.find(delimiter));
-            str = str.substr(str.find(delimiter) + 1,str.length()-1);
-        }
-        else if(str.find(delimiter) == 0)
-            {
-            str = str.substr(str.find(delimiter) + 3,str.length()-1);
-            return readline();
-            }
-        else {res = str;
-            str = "";}
-
-    return res;
-}
-#else
-
-string readline() {
-    string res;
-    getline(cin, res);
-    return res;
-}
-
-#endif
-
-
-
-
 
 
 const char *MSGS[] = {"0. Quit",
@@ -292,8 +225,53 @@ void StartUI() {
     }
 }
 
+#include "IEnumerator.hpp"
+
+template<typename T>
+class VecEnum : public IEnumerator<T, ListSequence> {
+private:
+    size_t n;
+public:
+//    using IEnumerator<T>:: IEnumerator<T, vector>;
+    explicit VecEnum(ListSequence<T> &it) : IEnumerator<T, ListSequence>::IEnumerator(it) {
+        n = 0;
+    }
+
+    bool MoveNext() override {
+        n++;
+        return true;
+    };
+
+    void Reset() override {
+        n = 0;
+    };
+
+    void Set(int n1) {
+        n = n1;
+    }
+};
+
 int main() {
-    MainStartUI();
+
+//    MainStartUI();
+    ListSequence<int> v = {1, 2, 3, 4, 5};
+    vector<int> v1 = {1, 2, 3, 4, 5};
+    auto iterator = VecEnum<int>(v);
+    auto iterator2 = VecEnum<int>(v);
+    iterator2.Set(3);
+//    cout << iterator << endl;
+//    cout << v1.begin() << endl;
+
+//    cout << v.begin().base() << endl;
+//    cout << v.end().base() - v.begin().base() << endl;
+//    cout << v.end() << endl;
+//    for (int n: v) {
+//        cout << n << endl;
+//    }
+//
+//    for (int n: v) {
+//        cout << n << endl;
+//    }
 
     return 0;
 }

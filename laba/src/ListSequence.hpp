@@ -1,10 +1,11 @@
 //
 // Created by korna on 20.03.2021.
 //
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunknown-pragmas"
 #ifndef LABA2_LISTSEQUENCE_H
 #define LABA2_LISTSEQUENCE_H
 
-#include "Sequence.hpp"
 #include "LinkedList.hpp"
 #include <iostream>
 #include <cstring>
@@ -13,16 +14,12 @@
 using namespace std;
 
 template<typename T>
-class ListSequence : public Sequence<T> {
+class ListSequence : public Enumerable<T> {
 private:
     LinkedList<T> items;
 
 
 public:
-    IEnumerator<T, Enumerable>& GetEnumerator() {
-        // TODO: implement
-    }
-
     //Creation of the object
     ListSequence() {
         items = LinkedList<T>();
@@ -83,7 +80,7 @@ public:
             throw range_error("startIndex > endIndex");
         if (endIndex >= items.Count())
             throw range_error("endIndex >= length");
-        ListSequence<T> *res = new ListSequence<T>();
+        auto *res = new ListSequence<T>();
         res->items = items.GetSubList(startIndex, endIndex);
         return res;
     }
@@ -126,20 +123,30 @@ public:
         return new ListSequence<T1>(count);
     }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "HidingNonVirtualFunction"
+
     template<typename T1>
     ListSequence<T1> Map(T1 (*mapper)(T)) {
-        ListSequence<T1> *res = dynamic_cast<ListSequence<T1> *>(Enumerable<T>::template Map<T1, ListSequence>(mapper));
+        auto *res = dynamic_cast<ListSequence<T1> *>(Enumerable<T>::template Map<T1, ListSequence>(mapper));
         auto res1 = ListSequence<T1>(res);
         delete res;
         return res1;
     }
 
+#pragma clang diagnostic pop
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "HidingNonVirtualFunction"
+
     ListSequence<T> Where(bool(*predicate)(T)) {
-        ListSequence<T> *res = dynamic_cast<ListSequence<T> *>(Enumerable<T>::template Where<ListSequence>(predicate));
+        auto *res = dynamic_cast<ListSequence<T> *>(Enumerable<T>::template Where<ListSequence>(predicate));
         auto res1 = ListSequence<T>(res);
         delete res;
         return res1;
     }
+
+#pragma clang diagnostic pop
 
     void Append(T item) {
         items.Append(item);
@@ -168,7 +175,7 @@ public:
     }
 
     ListSequence<T> *Concat(Sequence<T> &list) {
-        ListSequence<T> *res = new ListSequence<T>();
+        auto *res = new ListSequence<T>();
         for (size_t i = 0; i < items.Count(); ++i) {
             res->Append(items.At(i));
         }
@@ -178,10 +185,6 @@ public:
         return res;
     }
 
-//    ListSequence<T> *Concat(const ListSequence<T> *list) {
-//        return Concat(*list);
-//    }
-
     ListSequence<T> &operator=(const ListSequence<T> &list) {
         items = LinkedList<T>(list.items);
         return *this;
@@ -190,3 +193,4 @@ public:
 
 
 #endif //LABA2_LISTSEQUENCE_H
+#pragma clang diagnostic pop

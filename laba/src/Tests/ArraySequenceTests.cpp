@@ -15,8 +15,8 @@
 TEST(ArraySequence_int, InitDefault) {
     ArraySequence<int> arr = ArraySequence<int>();
     ASSERT_EQ(0, arr.Count());
-    EXPECT_ANY_THROW(arr.GetFirst());
-    EXPECT_ANY_THROW(arr.GetLast());
+    EXPECT_ANY_THROW(arr.First());
+    EXPECT_ANY_THROW(arr.Last());
 }
 
 TEST(ArraySequence_int, InitCount_Set_Clear) {
@@ -26,8 +26,8 @@ TEST(ArraySequence_int, InitCount_Set_Clear) {
     arr[0] = 1;
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (0, arr[1]);
-    EXPECT_EQ (1, arr.GetFirst());
-    EXPECT_EQ (0, arr.GetLast());
+    EXPECT_EQ (1, arr.First());
+    EXPECT_EQ (0, arr.Last());
     arr = ArraySequence<int>(0);
     ASSERT_EQ (0, arr.Count());
     arr = ArraySequence<int>(10);
@@ -47,8 +47,8 @@ TEST(ArraySequence_int, Append) {
 
     arr[0] = 4;
     EXPECT_EQ (4, arr[0]);
-    EXPECT_EQ (4, arr.GetFirst());
-    EXPECT_EQ (4, arr.GetLast());
+    EXPECT_EQ (4, arr.First());
+    EXPECT_EQ (4, arr.Last());
     EXPECT_ANY_THROW(arr.Set(-1, 1));
     EXPECT_ANY_THROW(arr.Set(1, 1));
 
@@ -57,16 +57,16 @@ TEST(ArraySequence_int, Append) {
     arr.Set(0, 1);
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (5, arr[1]);
-    EXPECT_EQ (1, arr.GetFirst());
-    EXPECT_EQ (5, arr.GetLast());
+    EXPECT_EQ (1, arr.First());
+    EXPECT_EQ (5, arr.Last());
 
     arr.Append(3);
     ASSERT_EQ (3, arr.Count());
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (5, arr[1]);
     EXPECT_EQ (3, arr[2]);
-    EXPECT_EQ (1, arr.GetFirst());
-    EXPECT_EQ (3, arr.GetLast());
+    EXPECT_EQ (1, arr.First());
+    EXPECT_EQ (3, arr.Last());
 }
 
 TEST(ArraySequence_int, Prepend) {
@@ -79,8 +79,8 @@ TEST(ArraySequence_int, Prepend) {
 
     arr[0] = 4;
     EXPECT_EQ (4, arr[0]);
-    EXPECT_EQ (4, arr.GetFirst());
-    EXPECT_EQ (4, arr.GetLast());
+    EXPECT_EQ (4, arr.First());
+    EXPECT_EQ (4, arr.Last());
     EXPECT_ANY_THROW(arr.Set(-1, 1));
     EXPECT_ANY_THROW(arr.Set(1, 1));
 
@@ -88,16 +88,16 @@ TEST(ArraySequence_int, Prepend) {
     ASSERT_EQ (2, arr.Count());
     EXPECT_EQ (5, arr[0]);
     EXPECT_EQ (4, arr[1]);
-    EXPECT_EQ (5, arr.GetFirst());
-    EXPECT_EQ (4, arr.GetLast());
+    EXPECT_EQ (5, arr.First());
+    EXPECT_EQ (4, arr.Last());
 
     arr.Prepend(3);
     ASSERT_EQ (3, arr.Count());
     EXPECT_EQ (3, arr[0]);
     EXPECT_EQ (5, arr[1]);
     EXPECT_EQ (4, arr[2]);
-    EXPECT_EQ (3, arr.GetFirst());
-    EXPECT_EQ (4, arr.GetLast());
+    EXPECT_EQ (3, arr.First());
+    EXPECT_EQ (4, arr.Last());
 }
 
 TEST(ArraySequence_int, InsertAt) {
@@ -111,8 +111,8 @@ TEST(ArraySequence_int, InsertAt) {
     EXPECT_EQ (4, arr[1]);
     EXPECT_EQ (2, arr[2]);
     EXPECT_EQ (3, arr[3]);
-    EXPECT_EQ (1, arr.GetFirst());
-    EXPECT_EQ (3, arr.GetLast());
+    EXPECT_EQ (1, arr.First());
+    EXPECT_EQ (3, arr.Last());
 
     arr.InsertAt(0, 5);
     ASSERT_EQ (5, arr.Count());
@@ -121,8 +121,8 @@ TEST(ArraySequence_int, InsertAt) {
     EXPECT_EQ (4, arr[2]);
     EXPECT_EQ (2, arr[3]);
     EXPECT_EQ (3, arr[4]);
-    EXPECT_EQ (5, arr.GetFirst());
-    EXPECT_EQ (3, arr.GetLast());
+    EXPECT_EQ (5, arr.First());
+    EXPECT_EQ (3, arr.Last());
 
     arr.InsertAt(arr.Count() - 1, 6);
     ASSERT_EQ (6, arr.Count());
@@ -132,8 +132,8 @@ TEST(ArraySequence_int, InsertAt) {
     EXPECT_EQ (2, arr[3]);
     EXPECT_EQ (3, arr[4]);
     EXPECT_EQ (6, arr[5]);
-    EXPECT_EQ (5, arr.GetFirst());
-    EXPECT_EQ (6, arr.GetLast());
+    EXPECT_EQ (5, arr.First());
+    EXPECT_EQ (6, arr.Last());
 }
 
 TEST(ArraySequence_int, PopFirst) {
@@ -145,20 +145,20 @@ TEST(ArraySequence_int, PopFirst) {
     ASSERT_EQ (2, arr.Count());
     EXPECT_EQ (2, arr[0]);
     EXPECT_EQ (3, arr[1]);
-    EXPECT_EQ (2, arr.GetFirst());
-    EXPECT_EQ (3, arr.GetLast());
+    EXPECT_EQ (2, arr.First());
+    EXPECT_EQ (3, arr.Last());
 
     arr.PopFirst();
     ASSERT_EQ (1, arr.Count());
     EXPECT_EQ (3, arr[0]);
-    EXPECT_EQ (3, arr.GetFirst());
-    EXPECT_EQ (3, arr.GetLast());
+    EXPECT_EQ (3, arr.First());
+    EXPECT_EQ (3, arr.Last());
 
     arr.PopFirst();
     ASSERT_EQ (0, arr.Count());
     EXPECT_ANY_THROW (arr.At(0));
-    EXPECT_ANY_THROW(arr.GetFirst());
-    EXPECT_ANY_THROW (arr.GetLast());
+    EXPECT_ANY_THROW(arr.First());
+    EXPECT_ANY_THROW (arr.Last());
     EXPECT_ANY_THROW (arr.PopFirst(););
 }
 
@@ -171,20 +171,20 @@ TEST(ArraySequence_int, PopLast) {
     ASSERT_EQ (2, arr.Count());
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (2, arr[1]);
-    EXPECT_EQ (1, arr.GetFirst());
-    EXPECT_EQ (2, arr.GetLast());
+    EXPECT_EQ (1, arr.First());
+    EXPECT_EQ (2, arr.Last());
 
     arr.PopLast();
     ASSERT_EQ (1, arr.Count());
     EXPECT_EQ (1, arr[0]);
-    EXPECT_EQ (1, arr.GetFirst());
-    EXPECT_EQ (1, arr.GetLast());
+    EXPECT_EQ (1, arr.First());
+    EXPECT_EQ (1, arr.Last());
 
     arr.PopLast();
     ASSERT_EQ (0, arr.Count());
     EXPECT_ANY_THROW (arr.At(0));
-    EXPECT_ANY_THROW (arr.GetFirst());
-    EXPECT_ANY_THROW (arr.GetLast());
+    EXPECT_ANY_THROW (arr.First());
+    EXPECT_ANY_THROW (arr.Last());
     EXPECT_ANY_THROW(arr.PopLast());
 }
 
@@ -200,20 +200,20 @@ TEST(ArraySequence_int, RemoveAt) {
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (3, arr[1]);
     ASSERT_ANY_THROW (arr.At(2));
-    EXPECT_EQ (1, arr.GetFirst());
-    EXPECT_EQ (3, arr.GetLast());
+    EXPECT_EQ (1, arr.First());
+    EXPECT_EQ (3, arr.Last());
 
     arr.RemoveAt(0);
     ASSERT_EQ (1, arr.Count());
     EXPECT_EQ (3, arr[0]);
-    EXPECT_EQ (3, arr.GetFirst());
-    EXPECT_EQ (3, arr.GetLast());
+    EXPECT_EQ (3, arr.First());
+    EXPECT_EQ (3, arr.Last());
 
     arr.RemoveAt(0);
     ASSERT_EQ (0, arr.Count());
     EXPECT_ANY_THROW (arr.At(0));
-    EXPECT_ANY_THROW (arr.GetFirst());
-    EXPECT_ANY_THROW (arr.GetLast());
+    EXPECT_ANY_THROW (arr.First());
+    EXPECT_ANY_THROW (arr.Last());
     EXPECT_ANY_THROW(arr.PopLast());
     EXPECT_ANY_THROW(arr.RemoveAt(0));
 
@@ -224,14 +224,14 @@ TEST(ArraySequence_int, RemoveAt) {
     arr.RemoveAt(1);
     ASSERT_EQ (1, arr.Count());
     EXPECT_EQ (1, arr[0]);
-    EXPECT_EQ (1, arr.GetFirst());
-    EXPECT_EQ (1, arr.GetLast());
+    EXPECT_EQ (1, arr.First());
+    EXPECT_EQ (1, arr.Last());
 
     arr.RemoveAt(0);
     ASSERT_EQ (0, arr.Count());
     EXPECT_ANY_THROW (arr.At(0));
-    EXPECT_ANY_THROW (arr.GetFirst());
-    EXPECT_ANY_THROW (arr.GetLast());
+    EXPECT_ANY_THROW (arr.First());
+    EXPECT_ANY_THROW (arr.Last());
     EXPECT_ANY_THROW(arr.PopLast());
     EXPECT_ANY_THROW(arr.RemoveAt(0));
 }
@@ -369,8 +369,8 @@ TEST(ArraySequence_int, GetSubsequence) {
 TEST(ArraySequence_float, InitDefault) {
     ArraySequence<float> arr = ArraySequence<float>();
     ASSERT_EQ(0, arr.Count());
-    EXPECT_ANY_THROW(arr.GetFirst());
-    EXPECT_ANY_THROW(arr.GetLast());
+    EXPECT_ANY_THROW(arr.First());
+    EXPECT_ANY_THROW(arr.Last());
 }
 
 TEST(ArraySequence_float, InitCount_Set_Clear) {
@@ -380,8 +380,8 @@ TEST(ArraySequence_float, InitCount_Set_Clear) {
     arr[0] = 1;
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (0, arr[1]);
-    EXPECT_EQ (1, arr.GetFirst());
-    EXPECT_EQ (0, arr.GetLast());
+    EXPECT_EQ (1, arr.First());
+    EXPECT_EQ (0, arr.Last());
     arr = ArraySequence<float>(0);
     ASSERT_EQ (0, arr.Count());
     arr = ArraySequence<float>(10);
@@ -401,8 +401,8 @@ TEST(ArraySequence_float, Append) {
 
     arr[0] = 4;
     EXPECT_EQ (4, arr[0]);
-    EXPECT_EQ (4, arr.GetFirst());
-    EXPECT_EQ (4, arr.GetLast());
+    EXPECT_EQ (4, arr.First());
+    EXPECT_EQ (4, arr.Last());
     EXPECT_ANY_THROW(arr.Set(-1, 1));
     EXPECT_ANY_THROW(arr.Set(1, 1));
 
@@ -411,16 +411,16 @@ TEST(ArraySequence_float, Append) {
     arr.Set(0, 1);
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (5, arr[1]);
-    EXPECT_EQ (1, arr.GetFirst());
-    EXPECT_EQ (5, arr.GetLast());
+    EXPECT_EQ (1, arr.First());
+    EXPECT_EQ (5, arr.Last());
 
     arr.Append(3);
     ASSERT_EQ (3, arr.Count());
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (5, arr[1]);
     EXPECT_EQ (3, arr[2]);
-    EXPECT_EQ (1, arr.GetFirst());
-    EXPECT_EQ (3, arr.GetLast());
+    EXPECT_EQ (1, arr.First());
+    EXPECT_EQ (3, arr.Last());
 }
 
 TEST(ArraySequence_float, Prepend) {
@@ -433,8 +433,8 @@ TEST(ArraySequence_float, Prepend) {
 
     arr[0] = 4;
     EXPECT_EQ (4, arr[0]);
-    EXPECT_EQ (4, arr.GetFirst());
-    EXPECT_EQ (4, arr.GetLast());
+    EXPECT_EQ (4, arr.First());
+    EXPECT_EQ (4, arr.Last());
     EXPECT_ANY_THROW(arr.Set(-1, 1));
     EXPECT_ANY_THROW(arr.Set(1, 1));
 
@@ -442,16 +442,16 @@ TEST(ArraySequence_float, Prepend) {
     ASSERT_EQ (2, arr.Count());
     EXPECT_EQ (5, arr[0]);
     EXPECT_EQ (4, arr[1]);
-    EXPECT_EQ (5, arr.GetFirst());
-    EXPECT_EQ (4, arr.GetLast());
+    EXPECT_EQ (5, arr.First());
+    EXPECT_EQ (4, arr.Last());
 
     arr.Prepend(3);
     ASSERT_EQ (3, arr.Count());
     EXPECT_EQ (3, arr[0]);
     EXPECT_EQ (5, arr[1]);
     EXPECT_EQ (4, arr[2]);
-    EXPECT_EQ (3, arr.GetFirst());
-    EXPECT_EQ (4, arr.GetLast());
+    EXPECT_EQ (3, arr.First());
+    EXPECT_EQ (4, arr.Last());
 }
 
 TEST(ArraySequence_float, InsertAt) {
@@ -465,8 +465,8 @@ TEST(ArraySequence_float, InsertAt) {
     EXPECT_EQ (4, arr[1]);
     EXPECT_EQ (2, arr[2]);
     EXPECT_EQ (3, arr[3]);
-    EXPECT_EQ (1, arr.GetFirst());
-    EXPECT_EQ (3, arr.GetLast());
+    EXPECT_EQ (1, arr.First());
+    EXPECT_EQ (3, arr.Last());
 
     arr.InsertAt(0, 5);
     ASSERT_EQ (5, arr.Count());
@@ -475,8 +475,8 @@ TEST(ArraySequence_float, InsertAt) {
     EXPECT_EQ (4, arr[2]);
     EXPECT_EQ (2, arr[3]);
     EXPECT_EQ (3, arr[4]);
-    EXPECT_EQ (5, arr.GetFirst());
-    EXPECT_EQ (3, arr.GetLast());
+    EXPECT_EQ (5, arr.First());
+    EXPECT_EQ (3, arr.Last());
 
     arr.InsertAt(arr.Count() - 1, 6);
     ASSERT_EQ (6, arr.Count());
@@ -486,8 +486,8 @@ TEST(ArraySequence_float, InsertAt) {
     EXPECT_EQ (2, arr[3]);
     EXPECT_EQ (3, arr[4]);
     EXPECT_EQ (6, arr[5]);
-    EXPECT_EQ (5, arr.GetFirst());
-    EXPECT_EQ (6, arr.GetLast());
+    EXPECT_EQ (5, arr.First());
+    EXPECT_EQ (6, arr.Last());
 }
 
 TEST(ArraySequence_float, PopFirst) {
@@ -499,20 +499,20 @@ TEST(ArraySequence_float, PopFirst) {
     ASSERT_EQ (2, arr.Count());
     EXPECT_EQ (2, arr[0]);
     EXPECT_EQ (3, arr[1]);
-    EXPECT_EQ (2, arr.GetFirst());
-    EXPECT_EQ (3, arr.GetLast());
+    EXPECT_EQ (2, arr.First());
+    EXPECT_EQ (3, arr.Last());
 
     arr.PopFirst();
     ASSERT_EQ (1, arr.Count());
     EXPECT_EQ (3, arr[0]);
-    EXPECT_EQ (3, arr.GetFirst());
-    EXPECT_EQ (3, arr.GetLast());
+    EXPECT_EQ (3, arr.First());
+    EXPECT_EQ (3, arr.Last());
 
     arr.PopFirst();
     ASSERT_EQ (0, arr.Count());
     EXPECT_ANY_THROW (arr.At(0));
-    EXPECT_ANY_THROW(arr.GetFirst());
-    EXPECT_ANY_THROW (arr.GetLast());
+    EXPECT_ANY_THROW(arr.First());
+    EXPECT_ANY_THROW (arr.Last());
     EXPECT_ANY_THROW (arr.PopFirst(););
 }
 
@@ -525,20 +525,20 @@ TEST(ArraySequence_float, PopLast) {
     ASSERT_EQ (2, arr.Count());
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (2, arr[1]);
-    EXPECT_EQ (1, arr.GetFirst());
-    EXPECT_EQ (2, arr.GetLast());
+    EXPECT_EQ (1, arr.First());
+    EXPECT_EQ (2, arr.Last());
 
     arr.PopLast();
     ASSERT_EQ (1, arr.Count());
     EXPECT_EQ (1, arr[0]);
-    EXPECT_EQ (1, arr.GetFirst());
-    EXPECT_EQ (1, arr.GetLast());
+    EXPECT_EQ (1, arr.First());
+    EXPECT_EQ (1, arr.Last());
 
     arr.PopLast();
     ASSERT_EQ (0, arr.Count());
     EXPECT_ANY_THROW (arr.At(0));
-    EXPECT_ANY_THROW (arr.GetFirst());
-    EXPECT_ANY_THROW (arr.GetLast());
+    EXPECT_ANY_THROW (arr.First());
+    EXPECT_ANY_THROW (arr.Last());
     EXPECT_ANY_THROW(arr.PopLast());
 }
 
@@ -554,20 +554,20 @@ TEST(ArraySequence_float, RemoveAt) {
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (3, arr[1]);
     ASSERT_ANY_THROW (arr.At(2));
-    EXPECT_EQ (1, arr.GetFirst());
-    EXPECT_EQ (3, arr.GetLast());
+    EXPECT_EQ (1, arr.First());
+    EXPECT_EQ (3, arr.Last());
 
     arr.RemoveAt(0);
     ASSERT_EQ (1, arr.Count());
     EXPECT_EQ (3, arr[0]);
-    EXPECT_EQ (3, arr.GetFirst());
-    EXPECT_EQ (3, arr.GetLast());
+    EXPECT_EQ (3, arr.First());
+    EXPECT_EQ (3, arr.Last());
 
     arr.RemoveAt(0);
     ASSERT_EQ (0, arr.Count());
     EXPECT_ANY_THROW (arr.At(0));
-    EXPECT_ANY_THROW (arr.GetFirst());
-    EXPECT_ANY_THROW (arr.GetLast());
+    EXPECT_ANY_THROW (arr.First());
+    EXPECT_ANY_THROW (arr.Last());
     EXPECT_ANY_THROW(arr.PopLast());
     EXPECT_ANY_THROW(arr.RemoveAt(0));
 
@@ -578,14 +578,14 @@ TEST(ArraySequence_float, RemoveAt) {
     arr.RemoveAt(1);
     ASSERT_EQ (1, arr.Count());
     EXPECT_EQ (1, arr[0]);
-    EXPECT_EQ (1, arr.GetFirst());
-    EXPECT_EQ (1, arr.GetLast());
+    EXPECT_EQ (1, arr.First());
+    EXPECT_EQ (1, arr.Last());
 
     arr.RemoveAt(0);
     ASSERT_EQ (0, arr.Count());
     EXPECT_ANY_THROW (arr.At(0));
-    EXPECT_ANY_THROW (arr.GetFirst());
-    EXPECT_ANY_THROW (arr.GetLast());
+    EXPECT_ANY_THROW (arr.First());
+    EXPECT_ANY_THROW (arr.Last());
     EXPECT_ANY_THROW(arr.PopLast());
     EXPECT_ANY_THROW(arr.RemoveAt(0));
 }

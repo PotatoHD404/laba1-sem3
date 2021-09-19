@@ -5,12 +5,12 @@
 #ifndef LABA2_ICOLLECTION_H
 #define LABA2_ICOLLECTION_H
 
+#include "IEnumerable.hpp"
+
 template<typename T>
-class ICollection {
+class ICollection : public IEnumerable<T> {
 public:
     //Decomposition
-
-    virtual T &At(size_t index) = 0;
 
     virtual size_t Count() = 0;
 
@@ -19,9 +19,11 @@ public:
     //Operations
     virtual void Clear() = 0;
 
-    virtual void Append(T item) = 0;
+    virtual void Add(T item) = 0;
 
     virtual T RemoveAt(size_t index) = 0;
+
+    T Remove(T index) = 0;
 
     virtual ~ICollection() = default;
 };

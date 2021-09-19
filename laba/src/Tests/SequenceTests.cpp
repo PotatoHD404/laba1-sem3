@@ -116,8 +116,12 @@ TEST(Sequence, ArraySequence_Subsequence) {
     EXPECT_EQ (arr1->At(4), arr2->At(4));
     arr2 = unique_ptr<Sequence<int>>(dynamic_cast<Sequence<int> *>(arr1->Subsequence(2, 3)));
     ASSERT_EQ(arr2->Count(), 2);
-//    EXPECT_EQ (arr1->At(2), arr2->At(0));
-//    EXPECT_EQ (arr1->At(3), arr2->At(1));
+}
+
+
+TEST(Sequence, IEnumerator) {
+    Sequence<int> *arr = new ListSequence<int>{1, 2, 3, 4, 5};
+    arr->GetEnumerator();
 }
 
 #endif //TEST_DB_SEQUENCETESTS_H

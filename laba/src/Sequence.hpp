@@ -4,27 +4,32 @@
 #ifndef LABA2_SEQUENCE_H
 #define LABA2_SEQUENCE_H
 
-#include "Enumerable.hpp"
+#include "ICollection.hpp"
 #include <iostream>
 #include <memory>
 
 using namespace std;
 
 template<typename T>
-class Sequence : public Enumerable<T> {
+class Sequence : public ICollection<T> {
 public:
     Sequence() = default;
 
-    //Decomposition
-    T &GetFirst() { return At(0); }
+    virtual T &At(size_t index) = 0;
+//    using iterator = SetIterator<typename BinarySearchTree<T>::iterator>;
+//
+//    iterator begin() const { return this->binary_search_tree.begin(); }
+//
+//    iterator end() const { return this->binary_search_tree.end(); };
 
-    T &GetLast() { return At(this->Count() - 1); }
+    //Decomposition
+    T &First() { return At(0); }
+
+    T &Last() { return At(this->Count() - 1); }
 
     void Set(size_t index, T value) {
         At(index) = value;
     }
-
-    virtual T &At(size_t index) = 0;
 
     virtual T &operator[](size_t index) = 0;
 
