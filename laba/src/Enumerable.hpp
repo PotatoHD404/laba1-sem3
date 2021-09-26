@@ -8,9 +8,16 @@
 #include <vector>
 #include <tuple>
 #include <iostream>
+#include <functional>
+#include <algorithm>
+#include <iterator>
 //#include <variant>
 
 using namespace std;
+namespace Sorts {
+    enum Sort { Shell, Insertion, Quick };
+}
+using namespace Sorts;
 
 template<typename T>
 /*abstract*/
@@ -63,6 +70,75 @@ public:
         }
         return res;
     }
+    Enumerable<T>* Sort(Sort sort = Shell){
+        Enumerable<T>* res = this->Copy();
+        switch (sort) {
+            case Shell:
+                res = this->ShellSort(res);
+                break;
+            case Insertion:
+                res = this->InsertionSort(res);
+                break;
+            case Quick:
+                res = this->QuickSort(res);
+                break;
+            default:
+                std::cout << "Wrong sort type!\n";
+                break;
+        }
+        return res;
+    }
+
+protected:
+
+
+    Enumerable<T>* InsertionSort(Enumerable<T>* arr)
+    {
+
+        //TODO: implement
+        return arr;
+    }
+
+    Enumerable<T>* QuickSort(Enumerable<T>* arr)
+    {
+        auto first = arr->begin();
+        auto last = arr->end();
+        if( first != last ) {
+            auto left  = first;
+            auto right = last;
+            auto pivot = left++;
+
+            while( left != right ) {
+                if( cmp( *left, *pivot ) ) {
+                    ++left;
+                } else {
+                    while( (left != right) && cmp( *pivot, *right ) )
+                        --right;
+                    std::iter_swap( left, right );
+                }
+            }
+
+            --left;
+            std::iter_swap( pivot, left );
+
+            quick_sort( first, left );
+            quick_sort( right, last );
+        }
+        return arr;
+    }
+    Enumerable<T>* ShellSort(Enumerable<T>* arr)
+    {
+        auto first = arr->begin();
+        auto last = arr->end();
+        for( auto d = ( arr->Count() ) / 2; d != 0; d /= 2 )
+            //нужен цикл для first = a[0..d-1]
+            for( auto i = first + d; i != last; ++i )
+                for( auto j = i; j - first >= d && comp( *j, *( j - d ) ); j -= d )
+                    std::swap( *j, *( j - d ) );
+        return arr;
+    }
+
+
 
     virtual ~Enumerable() = default;
 };

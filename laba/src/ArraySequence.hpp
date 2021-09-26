@@ -9,7 +9,9 @@
 
 #include "Enumerable.hpp"
 #include "DynamicArray.hpp"
+#include "BidirectionalIterator.hpp"
 #include <iostream>
+#include <memory>
 #include <cstring>
 
 using namespace std;
@@ -20,6 +22,19 @@ private:
     DynamicArray<T> items;
 
 public:
+    BidirectionalIterator<T>* begin() {
+        return new BidirectionalIterator<T>(*this);
+    }
+
+    BidirectionalIterator<T>* end() {
+        return new BidirectionalIterator<T>(*this, this->Count());
+    }
+
+
+    ArraySequence* Copy(){
+        return new ArraySequence<T>(*this);
+    }
+
     //Creation of the object
     ArraySequence() {
         items = DynamicArray<T>();
@@ -40,7 +55,7 @@ public:
     explicit ArraySequence(T (&items)[N]) : ArraySequence(items, N) {}
 
     ArraySequence(initializer_list<T> items) : ArraySequence() {
-        for (T item : items)
+        for (T item: items)
             this->Append(item);
     }
 
@@ -48,20 +63,15 @@ public:
         items = DynamicArray<T>(list.items);
     }
 
-    explicit ArraySequence(Sequence<T> &list) : ArraySequence((*dynamic_cast<ArraySequence<T> *>(&list))) {
-    }
+    explicit ArraySequence(Sequence<T> &list) : ArraySequence((*dynamic_cast<ArraySequence<T> *>(&list))) {}
 
-    explicit ArraySequence(Sequence<T> *list) : ArraySequence(*list) {
-    }
+    explicit ArraySequence(Sequence<T> *list) : ArraySequence(*list) {}
 
-    explicit ArraySequence(const ArraySequence<T> *list) : ArraySequence(*list) {
-    }
+    explicit ArraySequence(const ArraySequence<T> *list) : ArraySequence(*list) {}
 
-    explicit ArraySequence(const unique_ptr<Sequence<T>> &list) : ArraySequence(list.get()) {
-    }
+    explicit ArraySequence(const unique_ptr<Sequence<T>> &list) : ArraySequence(list.get()) {}
 
-    explicit ArraySequence(const unique_ptr<ArraySequence<T>> &list) : ArraySequence(*list) {
-    }
+    explicit ArraySequence(const unique_ptr<ArraySequence<T>> &list) : ArraySequence(*list) {}
 
     //Decomposition
 
@@ -109,6 +119,7 @@ public:
 
         return true;
     }
+
     bool operator==(ArraySequence<T> &list) {
         size_t len = list.Count();
         if (len != this->items.Count())
@@ -149,7 +160,7 @@ public:
     }
 
     void InsertAt(size_t index, T item) {
-        if(index == 0)
+        if (index == 0)
             return Prepend(item);
         items.Resize(items.Count() + 1);
 

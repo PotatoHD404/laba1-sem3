@@ -6,11 +6,12 @@
 
 #include <iostream>
 #include <cstring>
+#include "ICollection.hpp"
 
 using namespace std;
 
 template<class T>
-class DynamicArray {
+class DynamicArray : ICollection<T> {
 private:
     T *actual_array;
     size_t length;

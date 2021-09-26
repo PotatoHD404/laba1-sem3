@@ -5,11 +5,12 @@
 #ifndef LABA3_IENUMERABLE_HPP
 #define LABA3_IENUMERABLE_HPP
 #include "IEnumerator.hpp"
-template<typename T>
+using namespace std;
+
 class IEnumerable {
 public:
-    virtual IEnumerator<T>& begin() = 0;
-    virtual IEnumerator<T>& end() = 0;
+    virtual Enumerator begin() = 0;
+    virtual Enumerator end() = 0;
     virtual ~IEnumerable() = default;
 };
 

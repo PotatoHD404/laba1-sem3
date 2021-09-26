@@ -21,8 +21,6 @@ public:
 
     virtual void Add(T item) = 0;
 
-    virtual T RemoveAt(size_t index) = 0;
-
     T Remove(T index) = 0;
 
     virtual ~ICollection() = default;

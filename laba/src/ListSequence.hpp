@@ -9,7 +9,9 @@
 #include "LinkedList.hpp"
 #include <iostream>
 #include <cstring>
+#include <memory>
 #include "Enumerable.hpp"
+#include "BidirectionalIterator.hpp"
 
 using namespace std;
 
@@ -20,6 +22,10 @@ private:
 
 
 public:
+    ListSequence* Copy(){
+        return new ListSequence<T>(*this);
+    }
+
     //Creation of the object
     ListSequence() {
         items = LinkedList<T>();

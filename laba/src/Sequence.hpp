@@ -5,22 +5,18 @@
 #define LABA2_SEQUENCE_H
 
 #include "ICollection.hpp"
+#include "ISortable.hpp"
 #include <iostream>
 #include <memory>
 
 using namespace std;
 
 template<typename T>
-class Sequence : public ICollection<T> {
+class Sequence : public ICollection<T>, public ISortable {
 public:
     Sequence() = default;
 
     virtual T &At(size_t index) = 0;
-//    using iterator = SetIterator<typename BinarySearchTree<T>::iterator>;
-//
-//    iterator begin() const { return this->binary_search_tree.begin(); }
-//
-//    iterator end() const { return this->binary_search_tree.end(); };
 
     //Decomposition
     T &First() { return At(0); }
@@ -57,6 +53,8 @@ public:
     }
 
     //Operations
+    virtual Sequence<T> * Copy() = 0;
+
     virtual void Append(T item) = 0;
 
     virtual void Prepend(T item) = 0;

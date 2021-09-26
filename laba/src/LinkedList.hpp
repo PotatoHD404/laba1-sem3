@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <cstring>
+#include "ICollection.hpp"
 
 using namespace std;
 
@@ -71,7 +72,7 @@ public:
     /// \param items - Array of elements
     /// \param count - Count of elements
     LinkedList(T *items, size_t count) : LinkedList() {
-        if (count > 536870912)
+        if ((int) count < 0)
             throw out_of_range("count < 0");
         if (items == NULL)
             throw invalid_argument("items is NULL");
