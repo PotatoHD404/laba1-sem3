@@ -9,7 +9,7 @@
 
 #include "Enumerable.hpp"
 #include "DynamicArray.hpp"
-#include "BidirectionalIterator.hpp"
+#include "RandomAccessIterator.hpp"
 #include <iostream>
 #include <memory>
 #include <cstring>
@@ -22,17 +22,17 @@ private:
     DynamicArray<T> items;
 
 public:
-    BidirectionalIterator<T>* begin() {
-        return new BidirectionalIterator<T>(*this);
+    RandomAccessIterator<T> *begin() {
+        return new RandomAccessIterator<T>(*this);
     }
 
-    BidirectionalIterator<T>* end() {
-        return new BidirectionalIterator<T>(*this, this->Count());
+    RandomAccessIterator<T> *end() {
+        return new RandomAccessIterator<T>(*this, this->Count());
     }
 
 
-    ArraySequence* Copy(){
-        return new ArraySequence<T>(*this);
+    ArraySequence Copy() {
+        return ArraySequence<T>(*this);
     }
 
     //Creation of the object
@@ -56,7 +56,7 @@ public:
 
     ArraySequence(initializer_list<T> items) : ArraySequence() {
         for (T item: items)
-            this->Append(item);
+            this->Add(item);
     }
 
     ArraySequence(ArraySequence<T> const &list) {
@@ -76,7 +76,7 @@ public:
     //Decomposition
 
     T &At(size_t index) {
-        return items.At(index);
+        return items.Get(index);
     }
 
     ArraySequence<T> *GetSubsequence(size_t startIndex, size_t endIndex) {
@@ -88,7 +88,7 @@ public:
             throw range_error("endIndex >= length");
         auto *res = new ArraySequence<T>();
         for (size_t i = startIndex; i < endIndex + 1; ++i) {
-            res->Append(items.At(i));
+            res->Add(items.Get(i));
         }
         return res;
     }
@@ -146,22 +146,22 @@ public:
         items.Resize(count);
     }
 
-    void Append(T item) {
+    void Add(T item) {
         items.Resize(items.Count() + 1);
         items.Set(items.Count() - 1, item);
     }
 
-    void Prepend(T item) {
+    void AddFirst(T item) {
         items.Resize(items.Count() + 1);
         for (size_t i = items.Count() - 1; i > 0; --i) {
-            items.Set(i, items.At(i - 1));
+            items.Set(i, items.Get(i - 1));
         }
         items.Set(0, item);
     }
 
-    void InsertAt(size_t index, T item) {
+    void Insert(size_t index, T item) {
         if (index == 0)
-            return Prepend(item);
+            return AddFirst(item);
         items.Resize(items.Count() + 1);
 
         for (size_t i = items.Count() - 1; i > index; --i) {
@@ -176,16 +176,16 @@ public:
     ArraySequence<T> *Concat(Sequence<T> &list) {
         ArraySequence<T> *res = new ArraySequence<T>();
         for (size_t i = 0; i < items.Count(); ++i) {
-            res->Append(items[i]);
+            res->Add(items[i]);
         }
         for (size_t i = 0; i < list.Count(); ++i) {
-            res->Append(list[i]);
+            res->Add(list[i]);
         }
         return res;
     }
 
     T PopFirst() {
-        T res = items.At(0);
+        T res = items.Get(0);
         for (size_t i = 0; i < items.Count() - 1; ++i) {
             items.Set(i, items[i + 1]);
         }
@@ -194,7 +194,7 @@ public:
     }
 
     T PopLast() {
-        T res = items.At(items.Count() - 1);
+        T res = items.Get(items.Count() - 1);
         items.Resize(items.Count() - 1);
         return res;
     }

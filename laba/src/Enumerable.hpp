@@ -5,52 +5,22 @@
 #define LABA2_ENUMERABLE_H
 
 #include "Sequence.hpp"
-#include <vector>
-#include <tuple>
-#include <iostream>
-#include <functional>
-#include <algorithm>
-#include <iterator>
+#include "RandomAccessIterator.hpp"
 //#include <variant>
 
 using namespace std;
-namespace Sorts {
-    enum Sort { Shell, Insertion, Quick };
-}
-using namespace Sorts;
 
 template<typename T>
 /*abstract*/
 class Enumerable : public Sequence<T> {
 protected:
-    template<typename T1, template<typename> class ChildClass>
-    Enumerable<T1> *Map(T1 (*mapper)(T)) {
-        if (mapper == nullptr)
-            throw std::invalid_argument("mapper is NULL");
-        size_t length = this->Count();
-        Enumerable<T1> *res = new ChildClass<T1>(length);
-        for (size_t i = 0; i < length; i++)
-            res->At(i) = mapper(this->At(i));
-        return res;
-    }
 
-    template<template<typename> class ChildClass>
-    Enumerable<T> *Where(bool(*predicate)(T)) {
-        if (predicate == nullptr)
-            throw std::invalid_argument("predicate is NULL");
-        Enumerable<T> *res = new ChildClass<T>();
-        for (size_t i = 0; i < this->Count(); i++)
-            if (predicate(this->At(i)))
-                res->Append(this->At(i));
-        return res;
-    }
+    virtual RandomAccessIterator<T> begin() {
+        return RandomAccessIterator<T>(*this); }
+
+    virtual RandomAccessIterator<T> end() { return RandomAccessIterator<T>(*this, this->Count()); }
 
 public:
-
-    auto Split(size_t pos) {
-        auto res = make_tuple(this->Subsequence(0, pos), this->Subsequence(pos + 1, this->Count() - 1));
-        return res;
-    }
 
     bool Contains(T item) {
         for (size_t i = 0; i < this->Count(); ++i)
@@ -59,85 +29,77 @@ public:
         return false;
     }
 
-    virtual Enumerable<T> *Subsequence(size_t begin, size_t end) = 0;
-
-    T Reduce(T(*f)(T, T), T const c) {
-        if (f == nullptr)
-            throw std::invalid_argument("mapper is NULL");
-        T res = c;
-        for (size_t i = 0; i < this->Count(); ++i) {
-            res = f(this->At(i), res);
-        }
-        return res;
-    }
-    Enumerable<T>* Sort(Sort sort = Shell){
-        Enumerable<T>* res = this->Copy();
+//     Shell
+    virtual Enumerable<T> &Sort(Sort sort) {
         switch (sort) {
             case Shell:
-                res = this->ShellSort(res);
+                this->ShellSort(*this);
                 break;
             case Insertion:
-                res = this->InsertionSort(res);
+                this->InsertionSort(*this);
                 break;
             case Quick:
-                res = this->QuickSort(res);
+                this->QuickSort(*this);
                 break;
             default:
-                std::cout << "Wrong sort type!\n";
+                throw invalid_argument("Wrong sort type");
                 break;
         }
-        return res;
+        return *this;
+    }
+
+    virtual T Remove(T item) {
+
+        for (auto ptr = this->begin(); ptr < this->end(); ptr++)
+            if (*ptr == item)
+                return this->RemoveAt(ptr.GetPos());
+        throw invalid_argument("Item was not found");
     }
 
 protected:
-
-
-    Enumerable<T>* InsertionSort(Enumerable<T>* arr)
-    {
+    Enumerable<T> &InsertionSort(Enumerable<T> &arr) {
 
         //TODO: implement
         return arr;
     }
 
-    Enumerable<T>* QuickSort(Enumerable<T>* arr)
-    {
-        auto first = arr->begin();
-        auto last = arr->end();
-        if( first != last ) {
-            auto left  = first;
+    Enumerable<T> &QuickSort(Enumerable<T> &arr) {
+        auto first = arr.begin();
+        auto last = arr.end();
+        if (first != last) {
+            auto left = first;
             auto right = last;
             auto pivot = left++;
 
-            while( left != right ) {
-                if( cmp( *left, *pivot ) ) {
+            while (left != right) {
+                if (cmp(*left, *pivot)) {
                     ++left;
                 } else {
-                    while( (left != right) && cmp( *pivot, *right ) )
+                    while ((left != right) && cmp(*pivot, *right))
                         --right;
-                    std::iter_swap( left, right );
+                    std::iter_swap(left, right);
                 }
             }
 
             --left;
-            std::iter_swap( pivot, left );
+            std::iter_swap(pivot, left);
 
-            quick_sort( first, left );
-            quick_sort( right, last );
+            quick_sort(first, left);
+            quick_sort(right, last);
         }
         return arr;
     }
-    Enumerable<T>* ShellSort(Enumerable<T>* arr)
-    {
-        auto first = arr->begin();
-        auto last = arr->end();
-        for( auto d = ( arr->Count() ) / 2; d != 0; d /= 2 )
+
+    Enumerable<T> &ShellSort(Enumerable<T> &arr) {
+        auto first = arr.begin();
+        auto last = arr.end();
+        for (auto d = (arr.Count()) / 2; d != 0; d /= 2)
             //нужен цикл для first = a[0..d-1]
-            for( auto i = first + d; i != last; ++i )
-                for( auto j = i; j - first >= d && comp( *j, *( j - d ) ); j -= d )
-                    std::swap( *j, *( j - d ) );
+            for (auto i = first + d; i != last; ++i)
+                for (auto j = i; j - first >= d && comp(*j, *(j - d)); j -= d)
+                    std::swap(*j, *(j - d));
         return arr;
     }
-
 
 
     virtual ~Enumerable() = default;

@@ -225,40 +225,11 @@ void StartUI() {
     }
 }
 
-#include "IEnumerator.hpp"
-
-template<typename T>
-class VecEnum : public IEnumerator<T, ListSequence> {
-private:
-    size_t n;
-public:
-//    using IEnumerator<T>:: IEnumerator<T, vector>;
-    explicit VecEnum(ListSequence<T> &it) : IEnumerator<T, ListSequence>::IEnumerator(it) {
-        n = 0;
-    }
-
-    bool MoveNext() override {
-        n++;
-        return true;
-    };
-
-    void Reset() override {
-        n = 0;
-    };
-
-    void Set(int n1) {
-        n = n1;
-    }
-};
-
 int main() {
 
 //    MainStartUI();
     ListSequence<int> v = {1, 2, 3, 4, 5};
     vector<int> v1 = {1, 2, 3, 4, 5};
-    auto iterator = VecEnum<int>(v);
-    auto iterator2 = VecEnum<int>(v);
-    iterator2.Set(3);
 //    cout << iterator << endl;
 //    cout << v1.begin() << endl;
 

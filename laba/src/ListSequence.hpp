@@ -11,7 +11,8 @@
 #include <cstring>
 #include <memory>
 #include "Enumerable.hpp"
-#include "BidirectionalIterator.hpp"
+#include "RandomAccessIterator.hpp"
+
 
 using namespace std;
 
@@ -20,10 +21,14 @@ class ListSequence : public Enumerable<T> {
 private:
     LinkedList<T> items;
 
+    class Iterator : public RandomAccessIterator<T> {
+
+    };
+
 
 public:
-    ListSequence* Copy(){
-        return new ListSequence<T>(*this);
+    ListSequence Copy() {
+        return ListSequence<T>(*this);
     }
 
     //Creation of the object
@@ -51,7 +56,7 @@ public:
 
     ListSequence(initializer_list<T> items) : ListSequence() {
         for (T item: items)
-            this->Append(item);
+            this->Add(item);
     }
 
     explicit ListSequence(const LinkedList<T> &list) {
@@ -76,7 +81,7 @@ public:
     //Decomposition
 
     T &At(size_t index) {
-        return items.At(index);
+        return items.Get(index);
     }
 
     ListSequence<T> *Subsequence(size_t startIndex, size_t endIndex) {
@@ -111,67 +116,36 @@ public:
     }
 
     //Operations
-    void Clear() {
-        while (items.Count()) items.PopFirst();
+    ListSequence<T> &Clear() {
+        while (items.Count()) items.RemoveFirst();
+        return *this;
     }
 
-    ListSequence<T> *Clone() const {
-        return new ListSequence<T>(this->items);
+//    ListSequence<T> Copy() const {
+//        return ListSequence<T>(this->items);
+//    }
+
+    ListSequence<T> &Add(T item) {
+        items.Add(item);
+        return *this;
     }
 
-    template<typename T1>
-    ListSequence<T1> *Init() const {
-        return new ListSequence<T1>();
+    ListSequence<T> &AddFirst(T item) {
+        items.AddFirst(item);
+        return *this;
     }
 
-    template<typename T1>
-    ListSequence<T1> *Init(size_t count) const {
-        return new ListSequence<T1>(count);
+    ListSequence<T> &Insert(size_t index, T item) {
+        items.Insert(index, item);
+        return *this;
     }
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "HidingNonVirtualFunction"
-
-    template<typename T1>
-    ListSequence<T1> Map(T1 (*mapper)(T)) {
-        auto *res = dynamic_cast<ListSequence<T1> *>(Enumerable<T>::template Map<T1, ListSequence>(mapper));
-        auto res1 = ListSequence<T1>(res);
-        delete res;
-        return res1;
+    T RemoveFirst() {
+        return items.RemoveFirst();
     }
 
-#pragma clang diagnostic pop
-
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "HidingNonVirtualFunction"
-
-    ListSequence<T> Where(bool(*predicate)(T)) {
-        auto *res = dynamic_cast<ListSequence<T> *>(Enumerable<T>::template Where<ListSequence>(predicate));
-        auto res1 = ListSequence<T>(res);
-        delete res;
-        return res1;
-    }
-
-#pragma clang diagnostic pop
-
-    void Append(T item) {
-        items.Append(item);
-    }
-
-    void Prepend(T item) {
-        items.Prepend(item);
-    }
-
-    void InsertAt(size_t index, T item) {
-        items.InsertAt(index, item);
-    }
-
-    T PopFirst() {
-        return items.PopFirst();
-    }
-
-    T PopLast() {
-        return items.PopLast();
+    T RemoveLast() {
+        return items.RemoveLast();
     }
 
     T RemoveAt(size_t index) {
@@ -180,15 +154,14 @@ public:
         return items.RemoveAt(index);
     }
 
-    ListSequence<T> *Concat(Sequence<T> &list) {
-        auto *res = new ListSequence<T>();
+    ListSequence<T> &Concat(Sequence<T> &list) {
         for (size_t i = 0; i < items.Count(); ++i) {
-            res->Append(items.At(i));
+            this->Add(items.Get(i));
         }
         for (size_t i = 0; i < list.Count(); ++i) {
-            res->Append(list[i]);
+            this->Add(list[i]);
         }
-        return res;
+        return *this;
     }
 
     ListSequence<T> &operator=(const ListSequence<T> &list) {

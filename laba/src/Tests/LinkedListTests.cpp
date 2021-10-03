@@ -31,9 +31,9 @@ TEST(LinkedList, InitCount_Set) {
 }
 
 
-TEST(LinkedList, Append) {
+TEST(LinkedList, Add) {
     LinkedList<int> arr = LinkedList<int>();
-    arr.Append(5);
+    arr.Add(5);
     ASSERT_EQ (1, arr.Count());
     EXPECT_ANY_THROW(arr[-1]);
     EXPECT_ANY_THROW(arr[1]);
@@ -46,7 +46,7 @@ TEST(LinkedList, Append) {
     EXPECT_ANY_THROW(arr.Set(-1, 1));
     EXPECT_ANY_THROW(arr.Set(1, 1));
 
-    arr.Append(5);
+    arr.Add(5);
     ASSERT_EQ (2, arr.Count());
     arr.Set(0, 1);
     EXPECT_EQ (1, arr[0]);
@@ -54,7 +54,7 @@ TEST(LinkedList, Append) {
     EXPECT_EQ (1, arr.GetFirst());
     EXPECT_EQ (5, arr.GetLast());
 
-    arr.Append(3);
+    arr.Add(3);
     ASSERT_EQ (3, arr.Count());
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (5, arr[1]);
@@ -65,7 +65,7 @@ TEST(LinkedList, Append) {
 
 TEST(LinkedList, Prepend) {
     LinkedList<int> arr = LinkedList<int>();
-    arr.Prepend(5);
+    arr.AddFirst(5);
     ASSERT_EQ (1, arr.Count());
     EXPECT_ANY_THROW(arr[-1]);
     EXPECT_ANY_THROW(arr[1]);
@@ -78,14 +78,14 @@ TEST(LinkedList, Prepend) {
     EXPECT_ANY_THROW(arr.Set(-1, 1));
     EXPECT_ANY_THROW(arr.Set(1, 1));
 
-    arr.Prepend(5);
+    arr.AddFirst(5);
     ASSERT_EQ (2, arr.Count());
     EXPECT_EQ (5, arr[0]);
     EXPECT_EQ (4, arr[1]);
     EXPECT_EQ (5, arr.GetFirst());
     EXPECT_EQ (4, arr.GetLast());
 
-    arr.Prepend(3);
+    arr.AddFirst(3);
     ASSERT_EQ (3, arr.Count());
     EXPECT_EQ (3, arr[0]);
     EXPECT_EQ (5, arr[1]);
@@ -99,9 +99,9 @@ TEST(LinkedList, InsertAt) {
     arr[0] = 1;
     arr[1] = 2;
     arr[2] = 3;
-    arr.InsertAt(1, 4);
-    EXPECT_ANY_THROW(arr.InsertAt(4, -1));
-    EXPECT_ANY_THROW(arr.InsertAt(4, 4));
+    arr.Insert(1, 4);
+    EXPECT_ANY_THROW(arr.Insert(4, -1));
+    EXPECT_ANY_THROW(arr.Insert(4, 4));
     ASSERT_EQ (4, arr.Count());
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (4, arr[1]);
@@ -110,7 +110,7 @@ TEST(LinkedList, InsertAt) {
     EXPECT_EQ (1, arr.GetFirst());
     EXPECT_EQ (3, arr.GetLast());
 
-    arr.InsertAt(0, 5);
+    arr.Insert(0, 5);
     ASSERT_EQ (5, arr.Count());
     EXPECT_EQ (5, arr[0]);
     EXPECT_EQ (1, arr[1]);
@@ -120,7 +120,7 @@ TEST(LinkedList, InsertAt) {
     EXPECT_EQ (5, arr.GetFirst());
     EXPECT_EQ (3, arr.GetLast());
 
-    arr.InsertAt(arr.Count() - 1, 6);
+    arr.Insert(arr.Count() - 1, 6);
     ASSERT_EQ (6, arr.Count());
     EXPECT_EQ (5, arr[0]);
     EXPECT_EQ (1, arr[1]);
@@ -137,25 +137,25 @@ TEST(LinkedList, PopFirst) {
     arr[0] = 1;
     arr[1] = 2;
     arr[2] = 3;
-    arr.PopFirst();
+    arr.RemoveFirst();
     ASSERT_EQ (2, arr.Count());
     EXPECT_EQ (2, arr[0]);
     EXPECT_EQ (3, arr[1]);
     EXPECT_EQ (2, arr.GetFirst());
     EXPECT_EQ (3, arr.GetLast());
 
-    arr.PopFirst();
+    arr.RemoveFirst();
     ASSERT_EQ (1, arr.Count());
     EXPECT_EQ (3, arr[0]);
     EXPECT_EQ (3, arr.GetFirst());
     EXPECT_EQ (3, arr.GetLast());
 
-    arr.PopFirst();
+    arr.RemoveFirst();
     ASSERT_EQ (0, arr.Count());
     EXPECT_ANY_THROW (arr[0]);
     EXPECT_ANY_THROW(arr.GetFirst());
     EXPECT_ANY_THROW (arr.GetLast());
-    EXPECT_ANY_THROW (arr.PopFirst(););
+    EXPECT_ANY_THROW (arr.RemoveFirst(););
 }
 
 TEST(LinkedList, PopLast) {
@@ -163,25 +163,25 @@ TEST(LinkedList, PopLast) {
     arr[0] = 1;
     arr[1] = 2;
     arr[2] = 3;
-    arr.PopLast();
+    arr.RemoveLast();
     ASSERT_EQ (2, arr.Count());
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (2, arr[1]);
     EXPECT_EQ (1, arr.GetFirst());
     EXPECT_EQ (2, arr.GetLast());
 
-    arr.PopLast();
+    arr.RemoveLast();
     ASSERT_EQ (1, arr.Count());
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (1, arr.GetFirst());
     EXPECT_EQ (1, arr.GetLast());
 
-    arr.PopLast();
+    arr.RemoveLast();
     ASSERT_EQ (0, arr.Count());
     EXPECT_ANY_THROW (arr[0]);
     EXPECT_ANY_THROW (arr.GetFirst());
     EXPECT_ANY_THROW (arr.GetLast());
-    EXPECT_ANY_THROW(arr.PopLast());
+    EXPECT_ANY_THROW(arr.RemoveLast());
 }
 
 TEST(LinkedList, RemoveAt) {
@@ -210,7 +210,7 @@ TEST(LinkedList, RemoveAt) {
     EXPECT_ANY_THROW (arr[0]);
     EXPECT_ANY_THROW (arr.GetFirst());
     EXPECT_ANY_THROW (arr.GetLast());
-    EXPECT_ANY_THROW(arr.PopLast());
+    EXPECT_ANY_THROW(arr.RemoveLast());
     EXPECT_ANY_THROW(arr.RemoveAt(0));
 
     arr = LinkedList<int>(2);
@@ -228,7 +228,7 @@ TEST(LinkedList, RemoveAt) {
     EXPECT_ANY_THROW (arr[0]);
     EXPECT_ANY_THROW (arr.GetFirst());
     EXPECT_ANY_THROW (arr.GetLast());
-    EXPECT_ANY_THROW(arr.PopLast());
+    EXPECT_ANY_THROW(arr.RemoveLast());
     EXPECT_ANY_THROW(arr.RemoveAt(0));
 }
 
@@ -239,7 +239,7 @@ TEST(LinkedList, InitFromArr) {
     LinkedList<int> arr = LinkedList<int>(a, 5);
     ASSERT_EQ (5, arr.Count());
 
-    arr.Append(6);
+    arr.Add(6);
     ASSERT_EQ (6, arr.Count());
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (2, arr[1]);
@@ -248,7 +248,7 @@ TEST(LinkedList, InitFromArr) {
     EXPECT_EQ (5, arr[4]);
     EXPECT_EQ (6, arr[5]);
 
-    arr.PopLast();
+    arr.RemoveLast();
     EXPECT_ANY_THROW(arr[5]);
     ASSERT_EQ (5, arr.Count());
     arr.Set(0, 0);
@@ -278,7 +278,7 @@ TEST(LinkedList, InitFromLinkedList) {
     arr1.Set(0, 2);
     EXPECT_EQ (arr1[0], 2);
     EXPECT_EQ (arr2[0], 1);
-    arr2.Append(0);
+    arr2.Add(0);
     ASSERT_EQ (5, arr1.Count());
     ASSERT_EQ (6, arr2.Count());
 

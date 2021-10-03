@@ -57,7 +57,7 @@ public:
     }
 
     //Decomposition
-    T &At(size_t index) {
+    T &Get(size_t index) {
         if (index < 0 || index >= length)
             throw out_of_range("index < 0 or index >= length");
         return actual_array[index];
@@ -66,7 +66,7 @@ public:
     void Set(size_t index, T value) {
         if (index < 0 || index >= length)
             throw range_error("index < 0 or index >= length");
-        At(index) = value;
+        Get(index) = value;
     }
 
     DynamicArray<T> GetSubArray(size_t startIndex, size_t endIndex) {
@@ -109,18 +109,7 @@ public:
         actual_array = new_array;
     }
 
-    DynamicArray<T> &operator=(const DynamicArray<T> &list) {
-        this->~DynamicArray();
-        length = list.length;
-        if (length > 0) {
-            actual_array = new T[length]();
-            for (size_t i = 0; i < length; ++i) {
-                actual_array[i] = list.actual_array[i];
-            }
-        } else
-            actual_array = new T[1]();
-        return *this;
-    }
+    DynamicArray<T> &operator=(const DynamicArray<T> &list) = default;
 
     //Termination
     ~DynamicArray() { delete[] actual_array; }

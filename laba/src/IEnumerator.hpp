@@ -6,6 +6,7 @@
 
 #ifndef LABA3_IENUMERATOR_H
 #define LABA3_IENUMERATOR_H
+
 // https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
 // Derived
 template<typename T, template<typename> class Child>
@@ -19,40 +20,29 @@ public:
 //    explicit IEnumerator(Iter<T> &it, size_t pos) = 0;
 
 //    IEnumerator(const IEnumerator &other) = 0;
+//    virtual Child<T> Init() = 0;
 
     virtual T &operator*() const = 0;
 
-    virtual T *operator->() const = 0;
+//    virtual T *operator->() const = 0;
 
     // Prefix increment
-    virtual Child<T> operator++() = 0;
+    virtual Child<T>& operator++() = 0;
 
     // Postfix increment
     virtual Child<T> operator++(int) = 0; // NOLINT(cert-dcl21-cpp)
 
-    virtual bool Equals(const IEnumerator *b) const = 0;
+    virtual bool Equals(const IEnumerator &b) const = 0;
 
-    size_t GetPos() {
+    [[nodiscard]] size_t GetPos() const {
         return pos;
     }
 
-    virtual IEnumerator &operator-(const IEnumerator *b) const = 0;
-
-    virtual IEnumerator &operator-(const size_t &b) const = 0;
-
-    virtual IEnumerator &operator/(const IEnumerator *b) const = 0;
-
-    virtual IEnumerator &operator/(const size_t &b) const = 0;
-
-    virtual IEnumerator &operator+(const IEnumerator *b) const = 0;
-
-    virtual IEnumerator &operator+(const size_t &b) const = 0;
-
-    friend bool operator==(const IEnumerator *a, const IEnumerator *b) {
+    friend bool operator==(const IEnumerator &a, const IEnumerator &b) {
         return a->Equals(b);
     }
 
-    friend bool operator!=(const IEnumerator *a, const IEnumerator *b) {
+    friend bool operator!=(const IEnumerator &a, const IEnumerator &b) {
         return !a->Equals(b);
     }
 

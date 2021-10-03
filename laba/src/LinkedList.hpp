@@ -10,8 +10,6 @@
 
 using namespace std;
 
-///
-/// \tparam T - type
 template<typename T>
 class LinkedList {
 private:
@@ -34,9 +32,6 @@ private:
         Node(T data, Node *next) : next(next), data(data) {}
     };
 
-    ///
-    /// \param index - index of node
-    /// \return - posize_ter to the node of index
     Node *GetNode(size_t index) {
         Node *res = head;
         for (size_t i = 0; i < index; i++) {
@@ -48,11 +43,9 @@ private:
 
 public:
     //Creation of the object
-    /// Generates empty LinkedList
+
     LinkedList() : head(NULL), tail(NULL), length() {}
 
-/// Generates LinkedList with some count of elements
-/// \param count - Number of elements in List
     explicit LinkedList(size_t count) : LinkedList() {
         if (count >= 536870912)
             throw out_of_range("count < 0");
@@ -68,9 +61,6 @@ public:
         }
     }
 
-    /// Generates LinkedList from array of items
-    /// \param items - Array of elements
-    /// \param count - Count of elements
     LinkedList(T *items, size_t count) : LinkedList() {
         if ((int) count < 0)
             throw out_of_range("count < 0");
@@ -88,8 +78,6 @@ public:
         }
     }
 
-    /// Copies LinkedList
-    /// \param list
     LinkedList(const LinkedList<T> &list) : LinkedList() {
         if (list.length > 0) {
             Node *tmp = list.head;
@@ -107,26 +95,20 @@ public:
     }
 
     //Decomposition
-    /// Returns first element of LinkedList
-    /// \return First element
+
     T &GetFirst() {
         if (!head)
             throw out_of_range("");
         return head->data;
     }
 
-    /// Returns last element of LinkedList
-    /// \return Last element
     T &GetLast() {
         if (!tail)
             throw out_of_range("");
         return tail->data;
     }
 
-    ///  Returns element with index i from LinkedList
-    /// \param index
-    /// \return
-    T &At(size_t index) {
+    T &Get(size_t index) {
         if (index < 0 || index >= length)
             throw out_of_range("index < 0 or index >= length");
         if (index == 0)
@@ -136,19 +118,12 @@ public:
         return GetNode(index)->data;
     }
 
-    ///
-    /// \param index
-    /// \param value
     void Set(size_t index, T value) {
         if (index < 0 || index >= length)
             throw range_error("index < 0 or index >= length");
-        At(index) = value;
+        Get(index) = value;
     }
 
-    ///
-    /// \param startIndex
-    /// \param endIndex
-    /// \return
     LinkedList<T> GetSubList(size_t startIndex, size_t endIndex) {
         if (startIndex < 0 || startIndex >= length)
             throw range_error("index < 0 or index >= length");
@@ -159,28 +134,21 @@ public:
         LinkedList<T> res;
         Node *tmp = GetNode(startIndex);
         for (size_t i = startIndex; i < endIndex + 1; ++i) {
-            res.Append(tmp->data);
+            res.Add(tmp->data);
             tmp = tmp->next;
         }
         return res;
     }
 
-    ///
-    /// \return
     size_t Count() {
         return length;
     }
 
-    ///
-    /// \param index
-    /// \return
-    T &operator[](size_t index) { return At(index); }
+    T &operator[](size_t index) { return Get(index); }
 
     //Operations
 
-    ///
-    /// \param item
-    void Append(T item) {
+    void Add(T item) {
         Node *tmp = new Node(item);
         if (head == NULL)
             head = tmp;
@@ -190,9 +158,7 @@ public:
         ++length;
     }
 
-    ///
-    /// \param item
-    void Prepend(T item) {
+    void AddFirst(T item) {
         Node *tmp = new Node(item);
         if (head == NULL) {
             head = tmp;
@@ -204,13 +170,11 @@ public:
         ++length;
     }
 
-    ///
-    /// \return
-    T PopLast() {
+    T RemoveLast() {
         if (length < 1)
             throw range_error("length = 0");
         if (length == 1) {
-            return this->PopFirst();
+            return this->RemoveFirst();
         }
         Node *prev = GetNode(length - 2);
         tail = prev;
@@ -220,8 +184,7 @@ public:
         return data;
     }
 
-    ///
-    T PopFirst() {
+    T RemoveFirst() {
         if (length < 1)
             throw range_error("length = 0");
         Node *prev = head;
@@ -236,17 +199,14 @@ public:
         return data;
     }
 
-    ///
-    /// \param item
-    /// \param index
-    void InsertAt(size_t index, T item) {
+    void Insert(size_t index, T item) {
         if (index < 0 || index >= length)
             throw range_error("index < 0 or index >= length");
         if (index == length - 1) {
-            this->Append(item);
+            this->Add(item);
             return;
         } else if (index == 0) {
-            this->Prepend(item);
+            this->AddFirst(item);
             return;
         }
 
@@ -259,15 +219,13 @@ public:
         ++length;
     }
 
-    ///
-    /// \param index
     T RemoveAt(size_t index) {
         if (index < 0 || index >= length)
             throw range_error("index < 0 or index >= length");
         if (index == length - 1)
-            return this->PopLast();
+            return this->RemoveLast();
         else if (index == 0)
-            return this->PopFirst();
+            return this->RemoveFirst();
 
         Node *prev = GetNode(index - 1);
         Node *next = (prev->next)->next;
@@ -279,51 +237,24 @@ public:
 
     }
 
-    ///
-    /// \param list
-    /// \return
     LinkedList<T> Concat(LinkedList<T> &list) {
         LinkedList<T> res;
         for (size_t i = 0; i < length; ++i) {
-            res.Append(this->At(i));
+            res.Add(this->Get(i));
         }
         for (size_t i = 0; i < list.length; ++i) {
-            res.Append(list[i]);
+            res.Add(list[i]);
         }
         return res;
     }
 
-    ///
-    /// \param list
-    /// \return
-    LinkedList<T> &operator=(const LinkedList<T> &list) {
-        this->~LinkedList();
-        if (list.length > 0) {
-            Node *tmp = list.head;
-            head = new Node(tmp->data);
-            Node *prev = head;
-            tmp = tmp->next;
-            while (tmp != NULL) {
-                prev->next = new Node(tmp->data);
-                prev = prev->next;
-                tmp = tmp->next;
-            }
-            tail = prev;
-            length = list.length;
-        } else {
-            head = nullptr;
-            tail = nullptr;
-            length = 0;
-        }
-        return *this;
-    }
+    LinkedList<T> &operator=(const LinkedList<T> &list) = default;
 
     //Termination
 
-    ///
     ~LinkedList() {
         while (length)
-            PopFirst();
+            RemoveFirst();
     }
 };
 
