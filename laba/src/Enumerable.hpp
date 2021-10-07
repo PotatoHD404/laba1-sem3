@@ -15,8 +15,9 @@ template<typename T>
 /*abstract*/
 class Enumerable : public Sequence<T>, public IEnumerable<T>, public ISorter<T> {
 public:
-    virtual RandomAccessIterator <T> begin() { return RandomAccessIterator<T>(*this); }
-    virtual RandomAccessIterator <T> end() { return RandomAccessIterator<T>(*this, this->Count()); }
+    virtual RandomAccessIterator<T> begin() { return RandomAccessIterator<T>(*this); }
+
+    virtual RandomAccessIterator<T> end() { return RandomAccessIterator<T>(*this, this->Count()); }
 
     bool Contains(T item) {
         for (size_t i = 0; i < this->Count(); ++i)
@@ -26,26 +27,13 @@ public:
     }
 
 //     Shell
-    virtual Enumerable<T> &Sort(Sorts::Sort sort) {
-        switch (sort) {
-            case Sorts::Shell:
-                this->ShellSort(*this);
-                break;
-            case Sorts::Insertion:
-                this->InsertionSort(*this);
-                break;
-            case Sorts::Quick:
-                this->QuickSort(*this);
-                break;
-            default:
-                throw invalid_argument("Wrong sort type");
-                break;
-        }
-        return *this;
+    virtual Enumerable<T> &Sort() = 0;
+
+    virtual Enumerable<T> &Sort(Sorts::ISort<T>& sort) {
+        return sort.Sort(*this);
     }
 
     virtual T Remove(T item) {
-
         for (auto ptr = this->begin(); ptr < this->end(); ptr++)
             if (*ptr == item)
                 return this->RemoveAt(ptr.GetPos());

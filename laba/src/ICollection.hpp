@@ -5,6 +5,9 @@
 #ifndef LABA2_ICOLLECTION_H
 #define LABA2_ICOLLECTION_H
 
+
+
+
 template<typename T>
 class ICollection {
 public:

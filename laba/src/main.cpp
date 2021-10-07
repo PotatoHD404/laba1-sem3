@@ -225,20 +225,12 @@ void StartUI() {
     }
 }
 
-static const char* ENUM_STRINGS[MyEnum_Last] =
-        {
-                "MyEnum_member1",
-                "MyEnum_member2",
-        };
+std::vector a = {1,2,3,4,5};
 
-
-BEGIN_SMART_ENUM(MyEnum)
-ENUM_MEMBER(member1)
-ENUM_MEMBER(member2)
-END_SMART_ENUM(MyEnum)
 
 int main() {
 
+    a.push_back(5);
 
 //    MainStartUI();
 
