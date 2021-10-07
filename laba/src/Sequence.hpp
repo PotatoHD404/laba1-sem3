@@ -10,28 +10,25 @@
 
 using namespace std;
 
-namespace Sorts {
-    enum Sort {
-        Shell, Insertion, Quick
-    };
-}
-using namespace Sorts;
-
 template<typename T>
 class Sequence : public ICollection<T> {
 public:
     Sequence() = default;
 
-    virtual T &At(size_t index) = 0;
+    virtual T &Get(size_t index) = 0;
+
+    virtual T GetConst(size_t index) const = 0;
 
     //Decomposition
-    T &First() { return At(0); }
+    virtual T &First() { return Get(0); }
 
-    T &Last() { return At(this->Count() - 1); }
+    virtual T &Last() { return Get(this->Count() - 1); }
 
     void Set(size_t index, T value) {
-        At(index) = value;
+        Get(index) = value;
     }
+
+    virtual bool operator==(const Sequence<T> &list) = 0;
 
     virtual T &operator[](size_t index) = 0;
 
@@ -79,8 +76,6 @@ public:
     virtual Sequence<T> &Concat(const unique_ptr<Sequence<T>> &list) {
         return Concat(*list);
     }
-
-    virtual Sequence<T> &Sort(Sort) = 0;
 
     virtual ~Sequence() = default;
 };

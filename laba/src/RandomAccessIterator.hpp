@@ -12,20 +12,18 @@ using namespace std;
 
 //#include "BidirectionalIterator.hpp"
 
+
 template<typename T>
 class RandomAccessIterator : public IEnumerator<T, RandomAccessIterator> {
 private:
-    size_t pos;
-//    ICollection<T>* it;
     Sequence<T> &iterable;
+    size_t pos;
 //    using IEnumerator = IEnumerator<T, RandomAccessIterator>;
-//    using iterator_category = std::forward_iterator_tag;
-//    using difference_type   = std::ptrdiff_t;
 
 public:
-    explicit RandomAccessIterator(const Sequence<T> &it, size_t pos = 0) : iterable(it), pos(pos) {}
+    explicit RandomAccessIterator(Sequence<T> &it, size_t pos = 0) : iterable(it), pos(pos) {}
 
-    RandomAccessIterator(const RandomAccessIterator &other) : IEnumerator<T, RandomAccessIterator>(other.iterable),
+    RandomAccessIterator(const RandomAccessIterator &other) : iterable(other.iterable),
                                                               pos(other.pos) {}
 
     virtual T &operator*() const { return iterable[pos]; }
@@ -56,12 +54,13 @@ public:
         return tmp;
     }
 
-    virtual RandomAccessIterator operator-=(size_t num) {
-
+    virtual RandomAccessIterator &operator-=(size_t num) {
+        *this = *this - num;
+        return *this;
     };
 
-    virtual bool Equals(const IEnumerator<T, RandomAccessIterator> &b) const {
-        return (*this)->iterable == b.iterable && this->GetPos() == b.GetPos();
+    virtual bool Equals(const RandomAccessIterator &b) const {
+        return this->iterable == b.iterable && this->GetPos() == b.GetPos();
     }
 
     virtual RandomAccessIterator operator-(const RandomAccessIterator &b) const {
@@ -121,6 +120,12 @@ public:
 
     virtual bool operator>=(const RandomAccessIterator<T> &b) const {
         return this->GetPos() >= b.GetPos();
+    }
+
+    RandomAccessIterator<T> &operator=(const RandomAccessIterator<T> &list) {
+        this->iterable = list.iterable;
+        this->pos = list.pos;
+        return *this;
     }
 
 // c++ stuff

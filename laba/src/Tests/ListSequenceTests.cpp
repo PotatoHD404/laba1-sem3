@@ -1,8 +1,6 @@
 //
 // Created by korna on 17.04.2021.
 //
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "cert-err58-cpp"
 
 
 
@@ -315,56 +313,56 @@ TEST(ListSequence_int, InitFromListSequence) {
     ASSERT_EQ (0, arr2.Count());
 }
 
-TEST(ListSequence_int, Concat) {
-    int a[] = {1, 2, 3, 4, 5};
-    ListSequence<int> arr1 = ListSequence<int>(a, 5);
-    ListSequence<int> arr2 = ListSequence<int>(arr1);
-    std::unique_ptr<ListSequence<int>> arr3 = std::unique_ptr<ListSequence<int>>(arr1.Concat(arr2));
-    ASSERT_EQ (arr1.Count() + arr2.Count(), arr3->Count());
-    EXPECT_EQ (arr1[0], arr3->At(0));
-    EXPECT_EQ (arr1[1], arr3->At(1));
-    EXPECT_EQ (arr1[2], arr3->At(2));
-    EXPECT_EQ (arr1[3], arr3->At(3));
-    EXPECT_EQ (arr1[4], arr3->At(4));
-    EXPECT_EQ (arr2[0], arr3->At(5));
-    EXPECT_EQ (arr2[1], arr3->At(6));
-    EXPECT_EQ (arr2[2], arr3->At(7));
-    EXPECT_EQ (arr2[3], arr3->At(8));
-    EXPECT_EQ (arr2[4], arr3->At(9));
-
-    ListSequence<int> arr4 = ListSequence<int>();
-    arr3 = std::unique_ptr<ListSequence<int>>(arr1.Concat(arr4));
-    ASSERT_EQ (arr1.Count() + arr4.Count(), arr3->Count());
-    EXPECT_EQ (arr1[0], arr3->At(0));
-    EXPECT_EQ (arr1[1], arr3->At(1));
-    EXPECT_EQ (arr1[2], arr3->At(2));
-    EXPECT_EQ (arr1[3], arr3->At(3));
-    EXPECT_EQ (arr1[4], arr3->At(4));
-}
-
-TEST(ListSequence_int, Subsequence) {
-    int a[] = {1, 2, 3, 4, 5};
-    ListSequence<int> arr1 = ListSequence<int>(a, 5);
-    unique_ptr<ListSequence<int>>
-            arr2 = unique_ptr<ListSequence<int>>(arr1.Subsequence(0, 0));
-    ASSERT_EQ(arr2->Count(), 1);
-    EXPECT_EQ (arr1[0], 1);
-    EXPECT_ANY_THROW(arr2->At(1));
-    EXPECT_ANY_THROW(arr1.Subsequence(-1, 0));
-    EXPECT_ANY_THROW(arr1.Subsequence(1, 0));
-    EXPECT_ANY_THROW(arr1.Subsequence(1, 5));
-    arr2 = unique_ptr<ListSequence<int>>(arr1.Subsequence(0, 4));
-    ASSERT_EQ(arr2->Count(), 5);
-    EXPECT_EQ (arr1[0], arr2->At(0));
-    EXPECT_EQ (arr1[1], arr2->At(1));
-    EXPECT_EQ (arr1[2], arr2->At(2));
-    EXPECT_EQ (arr1[3], arr2->At(3));
-    EXPECT_EQ (arr1[4], arr2->At(4));
-    arr2 = unique_ptr<ListSequence<int>>(arr1.Subsequence(2, 3));
-    ASSERT_EQ(arr2->Count(), 2);
-    EXPECT_EQ (arr1[2], arr2->At(0));
-    EXPECT_EQ (arr1[3], arr2->At(1));
-}
+//TEST(ListSequence_int, Concat) {
+//    int a[] = {1, 2, 3, 4, 5};
+//    ListSequence<int> arr1 = ListSequence<int>(a, 5);
+//    ListSequence<int> arr2 = ListSequence<int>(arr1);
+//    std::unique_ptr<ListSequence<int>> arr3 = std::unique_ptr<ListSequence<int>>(arr1.Concat(arr2));
+//    ASSERT_EQ (arr1.Count() + arr2.Count(), arr3->Count());
+//    EXPECT_EQ (arr1[0], arr3->Get(0));
+//    EXPECT_EQ (arr1[1], arr3->Get(1));
+//    EXPECT_EQ (arr1[2], arr3->Get(2));
+//    EXPECT_EQ (arr1[3], arr3->Get(3));
+//    EXPECT_EQ (arr1[4], arr3->Get(4));
+//    EXPECT_EQ (arr2[0], arr3->Get(5));
+//    EXPECT_EQ (arr2[1], arr3->Get(6));
+//    EXPECT_EQ (arr2[2], arr3->Get(7));
+//    EXPECT_EQ (arr2[3], arr3->Get(8));
+//    EXPECT_EQ (arr2[4], arr3->Get(9));
+//
+//    ListSequence<int> arr4 = ListSequence<int>();
+//    arr3 = std::unique_ptr<ListSequence<int>>(arr1.Concat(arr4));
+//    ASSERT_EQ (arr1.Count() + arr4.Count(), arr3->Count());
+//    EXPECT_EQ (arr1[0], arr3->Get(0));
+//    EXPECT_EQ (arr1[1], arr3->Get(1));
+//    EXPECT_EQ (arr1[2], arr3->Get(2));
+//    EXPECT_EQ (arr1[3], arr3->Get(3));
+//    EXPECT_EQ (arr1[4], arr3->Get(4));
+//}
+//
+//TEST(ListSequence_int, Subsequence) {
+//    int a[] = {1, 2, 3, 4, 5};
+//    ListSequence<int> arr1 = ListSequence<int>(a, 5);
+//    unique_ptr<ListSequence<int>>
+//            arr2 = unique_ptr<ListSequence<int>>(arr1.Subsequence(0, 0));
+//    ASSERT_EQ(arr2->Count(), 1);
+//    EXPECT_EQ (arr1[0], 1);
+//    EXPECT_ANY_THROW(arr2->Get(1));
+//    EXPECT_ANY_THROW(arr1.Subsequence(-1, 0));
+//    EXPECT_ANY_THROW(arr1.Subsequence(1, 0));
+//    EXPECT_ANY_THROW(arr1.Subsequence(1, 5));
+//    arr2 = unique_ptr<ListSequence<int>>(arr1.Subsequence(0, 4));
+//    ASSERT_EQ(arr2->Count(), 5);
+//    EXPECT_EQ (arr1[0], arr2->Get(0));
+//    EXPECT_EQ (arr1[1], arr2->Get(1));
+//    EXPECT_EQ (arr1[2], arr2->Get(2));
+//    EXPECT_EQ (arr1[3], arr2->Get(3));
+//    EXPECT_EQ (arr1[4], arr2->Get(4));
+//    arr2 = unique_ptr<ListSequence<int>>(arr1.Subsequence(2, 3));
+//    ASSERT_EQ(arr2->Count(), 2);
+//    EXPECT_EQ (arr1[2], arr2->Get(0));
+//    EXPECT_EQ (arr1[3], arr2->Get(1));
+//}
 
 TEST(ListSequence_float, InitDefault) {
     ListSequence<float> arr = ListSequence<float>();
@@ -676,56 +674,56 @@ TEST(ListSequence_float, InitFromListSequence) {
     ASSERT_EQ (0, arr2.Count());
 }
 
-TEST(ListSequence_float, Concat) {
-    float a[] = {1, 2, 3, 4, 5};
-    ListSequence<float> arr1 = ListSequence<float>(a, 5);
-    ListSequence<float> arr2 = ListSequence<float>(arr1);
-    std::unique_ptr<ListSequence<float>> arr3 = std::unique_ptr<ListSequence<float>>(arr1.Concat(arr2));
-    ASSERT_EQ (arr1.Count() + arr2.Count(), arr3->Count());
-    EXPECT_EQ (arr1[0], arr3->At(0));
-    EXPECT_EQ (arr1[1], arr3->At(1));
-    EXPECT_EQ (arr1[2], arr3->At(2));
-    EXPECT_EQ (arr1[3], arr3->At(3));
-    EXPECT_EQ (arr1[4], arr3->At(4));
-    EXPECT_EQ (arr2[0], arr3->At(5));
-    EXPECT_EQ (arr2[1], arr3->At(6));
-    EXPECT_EQ (arr2[2], arr3->At(7));
-    EXPECT_EQ (arr2[3], arr3->At(8));
-    EXPECT_EQ (arr2[4], arr3->At(9));
-
-    ListSequence<float> arr4 = ListSequence<float>();
-    arr3 = std::unique_ptr<ListSequence<float>>(arr1.Concat(arr4));
-    ASSERT_EQ (arr1.Count() + arr4.Count(), arr3->Count());
-    EXPECT_EQ (arr1[0], arr3->At(0));
-    EXPECT_EQ (arr1[1], arr3->At(1));
-    EXPECT_EQ (arr1[2], arr3->At(2));
-    EXPECT_EQ (arr1[3], arr3->At(3));
-    EXPECT_EQ (arr1[4], arr3->At(4));
-}
-
-TEST(ListSequence_float, Subsequence) {
-    float a[] = {1, 2, 3, 4, 5};
-    ListSequence<float> arr1 = ListSequence<float>(a, 5);
-    unique_ptr<ListSequence<float>>
-            arr2 = unique_ptr<ListSequence<float>>(arr1.Subsequence(0, 0));
-    ASSERT_EQ(arr2->Count(), 1);
-    EXPECT_EQ (arr1[0], 1);
-    EXPECT_ANY_THROW(arr2->At(1));
-    EXPECT_ANY_THROW(arr1.Subsequence(-1, 0));
-    EXPECT_ANY_THROW(arr1.Subsequence(1, 0));
-    EXPECT_ANY_THROW(arr1.Subsequence(1, 5));
-    arr2 = unique_ptr<ListSequence<float>>(arr1.Subsequence(0, 4));
-    ASSERT_EQ(arr2->Count(), 5);
-    EXPECT_EQ (arr1[0], arr2->At(0));
-    EXPECT_EQ (arr1[1], arr2->At(1));
-    EXPECT_EQ (arr1[2], arr2->At(2));
-    EXPECT_EQ (arr1[3], arr2->At(3));
-    EXPECT_EQ (arr1[4], arr2->At(4));
-    arr2 = unique_ptr<ListSequence<float>>(arr1.Subsequence(2, 3));
-    ASSERT_EQ(arr2->Count(), 2);
-    EXPECT_EQ (arr1[2], arr2->At(0));
-    EXPECT_EQ (arr1[3], arr2->At(1));
-}
+//TEST(ListSequence_float, Concat) {
+//    float a[] = {1, 2, 3, 4, 5};
+//    ListSequence<float> arr1 = ListSequence<float>(a, 5);
+//    ListSequence<float> arr2 = ListSequence<float>(arr1);
+//    std::unique_ptr<ListSequence<float>> arr3 = std::unique_ptr<ListSequence<float>>(arr1.Concat(arr2));
+//    ASSERT_EQ (arr1.Count() + arr2.Count(), arr3->Count());
+//    EXPECT_EQ (arr1[0], arr3->Get(0));
+//    EXPECT_EQ (arr1[1], arr3->Get(1));
+//    EXPECT_EQ (arr1[2], arr3->Get(2));
+//    EXPECT_EQ (arr1[3], arr3->Get(3));
+//    EXPECT_EQ (arr1[4], arr3->Get(4));
+//    EXPECT_EQ (arr2[0], arr3->Get(5));
+//    EXPECT_EQ (arr2[1], arr3->Get(6));
+//    EXPECT_EQ (arr2[2], arr3->Get(7));
+//    EXPECT_EQ (arr2[3], arr3->Get(8));
+//    EXPECT_EQ (arr2[4], arr3->Get(9));
+//
+//    ListSequence<float> arr4 = ListSequence<float>();
+//    arr3 = std::unique_ptr<ListSequence<float>>(arr1.Concat(arr4));
+//    ASSERT_EQ (arr1.Count() + arr4.Count(), arr3->Count());
+//    EXPECT_EQ (arr1[0], arr3->Get(0));
+//    EXPECT_EQ (arr1[1], arr3->Get(1));
+//    EXPECT_EQ (arr1[2], arr3->Get(2));
+//    EXPECT_EQ (arr1[3], arr3->Get(3));
+//    EXPECT_EQ (arr1[4], arr3->Get(4));
+//}
+//
+//TEST(ListSequence_float, Subsequence) {
+//    float a[] = {1, 2, 3, 4, 5};
+//    ListSequence<float> arr1 = ListSequence<float>(a, 5);
+//    unique_ptr<ListSequence<float>>
+//            arr2 = unique_ptr<ListSequence<float>>(arr1.Subsequence(0, 0));
+//    ASSERT_EQ(arr2->Count(), 1);
+//    EXPECT_EQ (arr1[0], 1);
+//    EXPECT_ANY_THROW(arr2->Get(1));
+//    EXPECT_ANY_THROW(arr1.Subsequence(-1, 0));
+//    EXPECT_ANY_THROW(arr1.Subsequence(1, 0));
+//    EXPECT_ANY_THROW(arr1.Subsequence(1, 5));
+//    arr2 = unique_ptr<ListSequence<float>>(arr1.Subsequence(0, 4));
+//    ASSERT_EQ(arr2->Count(), 5);
+//    EXPECT_EQ (arr1[0], arr2->Get(0));
+//    EXPECT_EQ (arr1[1], arr2->Get(1));
+//    EXPECT_EQ (arr1[2], arr2->Get(2));
+//    EXPECT_EQ (arr1[3], arr2->Get(3));
+//    EXPECT_EQ (arr1[4], arr2->Get(4));
+//    arr2 = unique_ptr<ListSequence<float>>(arr1.Subsequence(2, 3));
+//    ASSERT_EQ(arr2->Count(), 2);
+//    EXPECT_EQ (arr1[2], arr2->Get(0));
+//    EXPECT_EQ (arr1[3], arr2->Get(1));
+//}
 
 
 TEST(ListSequence_int, Equals) {

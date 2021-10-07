@@ -6,39 +6,35 @@
 
 #include "Sequence.hpp"
 #include "RandomAccessIterator.hpp"
-//#include <variant>
+#include "IEnumerable.hpp"
+#include "ISorter.hpp"
 
 using namespace std;
 
 template<typename T>
 /*abstract*/
-class Enumerable : public Sequence<T> {
-protected:
-
-    virtual RandomAccessIterator<T> begin() {
-        return RandomAccessIterator<T>(*this); }
-
-    virtual RandomAccessIterator<T> end() { return RandomAccessIterator<T>(*this, this->Count()); }
-
+class Enumerable : public Sequence<T>, public IEnumerable<T>, public ISorter<T> {
 public:
+    virtual RandomAccessIterator <T> begin() { return RandomAccessIterator<T>(*this); }
+    virtual RandomAccessIterator <T> end() { return RandomAccessIterator<T>(*this, this->Count()); }
 
     bool Contains(T item) {
         for (size_t i = 0; i < this->Count(); ++i)
-            if (this->At(i) == item)
+            if (this->Get(i) == item)
                 return true;
         return false;
     }
 
 //     Shell
-    virtual Enumerable<T> &Sort(Sort sort) {
+    virtual Enumerable<T> &Sort(Sorts::Sort sort) {
         switch (sort) {
-            case Shell:
+            case Sorts::Shell:
                 this->ShellSort(*this);
                 break;
-            case Insertion:
+            case Sorts::Insertion:
                 this->InsertionSort(*this);
                 break;
-            case Quick:
+            case Sorts::Quick:
                 this->QuickSort(*this);
                 break;
             default:
@@ -64,40 +60,40 @@ protected:
     }
 
     Enumerable<T> &QuickSort(Enumerable<T> &arr) {
-        auto first = arr.begin();
-        auto last = arr.end();
-        if (first != last) {
-            auto left = first;
-            auto right = last;
-            auto pivot = left++;
-
-            while (left != right) {
-                if (cmp(*left, *pivot)) {
-                    ++left;
-                } else {
-                    while ((left != right) && cmp(*pivot, *right))
-                        --right;
-                    std::iter_swap(left, right);
-                }
-            }
-
-            --left;
-            std::iter_swap(pivot, left);
-
-            quick_sort(first, left);
-            quick_sort(right, last);
-        }
+//        auto first = arr.begin();
+//        auto last = arr.end();
+//        if (first != last) {
+//            auto left = first;
+//            auto right = last;
+//            auto pivot = left++;
+//
+//            while (left != right) {
+//                if (cmp(*left, *pivot)) {
+//                    ++left;
+//                } else {
+//                    while ((left != right) && cmp(*pivot, *right))
+//                        --right;
+//                    std::iter_swap(left, right);
+//                }
+//            }
+//
+//            --left;
+//            std::iter_swap(pivot, left);
+//
+//            quick_sort(first, left);
+//            quick_sort(right, last);
+//        }
         return arr;
     }
 
     Enumerable<T> &ShellSort(Enumerable<T> &arr) {
-        auto first = arr.begin();
-        auto last = arr.end();
-        for (auto d = (arr.Count()) / 2; d != 0; d /= 2)
-            //нужен цикл для first = a[0..d-1]
-            for (auto i = first + d; i != last; ++i)
-                for (auto j = i; j - first >= d && comp(*j, *(j - d)); j -= d)
-                    std::swap(*j, *(j - d));
+//        auto first = arr.begin();
+//        auto last = arr.end();
+//        for (auto d = (arr.Count()) / 2; d != 0; d /= 2)
+//            //нужен цикл для first = a[0..d-1]
+//            for (auto i = first + d; i != last; ++i)
+//                for (auto j = i; j - first >= d && comp(*j, *(j - d)); j -= d)
+//                    std::swap(*j, *(j - d));
         return arr;
     }
 

@@ -11,7 +11,7 @@
 using namespace std;
 
 template<typename T>
-class LinkedList {
+class LinkedList : public ICollection<T> {
 private:
     class Node;
 
@@ -79,19 +79,7 @@ public:
     }
 
     LinkedList(const LinkedList<T> &list) : LinkedList() {
-        if (list.length > 0) {
-            Node *tmp = list.head;
-            head = new Node(tmp->data);
-            Node *prev = head;
-            tmp = tmp->next;
-            while (tmp != NULL) {
-                prev->next = new Node(tmp->data);
-                prev = prev->next;
-                tmp = tmp->next;
-            }
-            tail = prev;
-            length = list.length;
-        }
+        *this = list;
     }
 
     //Decomposition
@@ -118,11 +106,32 @@ public:
         return GetNode(index)->data;
     }
 
-    void Set(size_t index, T value) {
+    T GetConst(size_t index) const {
+        if (index < 0 || index >= length)
+            throw out_of_range("index < 0 or index >= length");
+        if (index == 0)
+            return head->data;
+        if (index == length - 1)
+            return tail->data;
+        Node *res = head;
+        for (size_t i = 0; i < index; i++) {
+            res = res->next;
+        }
+        return res->data;
+    }
+
+    LinkedList<T> &Set(size_t index, T value) {
         if (index < 0 || index >= length)
             throw range_error("index < 0 or index >= length");
         Get(index) = value;
+        return *this;
     }
+
+    virtual bool Contains(T item) {};
+
+    virtual LinkedList<T> &Clear() {};
+
+    virtual T Remove(T item) {};
 
     LinkedList<T> GetSubList(size_t startIndex, size_t endIndex) {
         if (startIndex < 0 || startIndex >= length)
@@ -140,7 +149,7 @@ public:
         return res;
     }
 
-    size_t Count() {
+    [[nodiscard]] size_t Count() const {
         return length;
     }
 
@@ -148,7 +157,7 @@ public:
 
     //Operations
 
-    void Add(T item) {
+    LinkedList<T> &Add(T item) {
         Node *tmp = new Node(item);
         if (head == NULL)
             head = tmp;
@@ -156,9 +165,10 @@ public:
             tail->next = tmp;
         tail = tmp;
         ++length;
+        return *this;
     }
 
-    void AddFirst(T item) {
+    LinkedList<T> &AddFirst(T item) {
         Node *tmp = new Node(item);
         if (head == NULL) {
             head = tmp;
@@ -168,6 +178,7 @@ public:
             head = tmp;
         }
         ++length;
+        return *this;
     }
 
     T RemoveLast() {
@@ -199,15 +210,14 @@ public:
         return data;
     }
 
-    void Insert(size_t index, T item) {
+    LinkedList<T> &Insert(size_t index, T item) {
         if (index < 0 || index >= length)
             throw range_error("index < 0 or index >= length");
         if (index == length - 1) {
-            this->Add(item);
-            return;
+            return this->Add(item);
         } else if (index == 0) {
-            this->AddFirst(item);
-            return;
+
+            return this->AddFirst(item);;
         }
 
 
@@ -217,6 +227,7 @@ public:
         prev->next = tmp;
         tmp->next = next;
         ++length;
+        return *this;
     }
 
     T RemoveAt(size_t index) {
@@ -248,7 +259,30 @@ public:
         return res;
     }
 
-    LinkedList<T> &operator=(const LinkedList<T> &list) = default;
+    LinkedList<T> &operator=(const LinkedList<T> &list) {
+        if(&list != this) {
+            while (length)
+                RemoveFirst();
+            if (list.length > 0) {
+                Node *tmp = list.head;
+                head = new Node(tmp->data);
+                Node *prev = head;
+                tmp = tmp->next;
+                while (tmp != NULL) {
+                    prev->next = new Node(tmp->data);
+                    prev = prev->next;
+                    tmp = tmp->next;
+                }
+                tail = prev;
+                length = list.length;
+            } else {
+                head = nullptr;
+                tail = nullptr;
+                length = 0;
+            }
+        }
+        return *this;
+    }
 
     //Termination
 

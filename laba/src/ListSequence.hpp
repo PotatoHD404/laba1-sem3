@@ -1,8 +1,6 @@
 //
 // Created by korna on 20.03.2021.
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunknown-pragmas"
 #ifndef LABA2_LISTSEQUENCE_H
 #define LABA2_LISTSEQUENCE_H
 
@@ -32,23 +30,17 @@ public:
     }
 
     //Creation of the object
-    ListSequence() {
-        items = LinkedList<T>();
-    }
+    ListSequence() : items() {}
 
     explicit ListSequence(int count) : ListSequence((size_t) count) {
     }
 
-    explicit ListSequence(size_t count) {
-        items = LinkedList<T>(count);
+    explicit ListSequence(size_t count) : items(count) {}
+
+    ListSequence(T *items, size_t count) : items(items, count) {
     }
 
-    ListSequence(T *items, size_t count) {
-        this->items = LinkedList<T>(items, count);
-    }
-
-    ListSequence(const ListSequence<T> &list) {
-        items = LinkedList<T>(list.items);
+    ListSequence(const ListSequence<T> &list) : items(list.items) {
     }
 
     template<size_t N>
@@ -59,8 +51,7 @@ public:
             this->Add(item);
     }
 
-    explicit ListSequence(const LinkedList<T> &list) {
-        items = LinkedList<T>(list);
+    explicit ListSequence(const LinkedList<T> &list) : items(list) {
     }
 
     explicit ListSequence(Sequence<T> &list) : ListSequence((*dynamic_cast<ListSequence<T> *>(&list))) {
@@ -80,9 +71,11 @@ public:
 
     //Decomposition
 
-    T &At(size_t index) {
+    virtual T &Get(size_t index) {
         return items.Get(index);
     }
+
+    virtual T GetConst(size_t index) const { return items.GetConst(index); }
 
     ListSequence<T> *Subsequence(size_t startIndex, size_t endIndex) {
         if (startIndex < 0 || startIndex >= items.Count())
@@ -96,20 +89,21 @@ public:
         return res;
     }
 
-    size_t Count() {
+    [[nodiscard]] size_t Count() const {
         return items.Count();
     }
 
     T &operator[](size_t index) {
         return items[index];
     }
+//    virtual bool operator==(const Sequence<T> &list) = 0;
 
-    bool operator==(ListSequence<T> list) {
+    virtual bool operator==(const Sequence<T> &list) {
         size_t len = list.Count();
-        if (len != this->items.Count())
+        if (len != this->Count())
             return false;
         for (size_t i = 0; i < len; ++i)
-            if (this->At(i) != list.At(i))
+            if (this->GetConst(i) != list.GetConst(i))
                 return false;
 
         return true;
@@ -164,12 +158,8 @@ public:
         return *this;
     }
 
-    ListSequence<T> &operator=(const ListSequence<T> &list) {
-        items = LinkedList<T>(list.items);
-        return *this;
-    }
+    ListSequence<T> &operator=(const ListSequence<T> &list) = default;
 };
 
 
 #endif //LABA2_LISTSEQUENCE_H
-#pragma clang diagnostic pop

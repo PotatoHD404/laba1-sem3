@@ -69,48 +69,48 @@ using namespace std;
 //    EXPECT_ANY_THROW(ArraySequence<int>::UnZip<ArraySequence>(badInput1));
 //}
 //
-int Pow(int x) {
-    return x * x;
-}
+//int Pow(int x) {
+//    return x * x;
+//}
+//
+//bool IsEven(int x) {
+//    return x % 2 == 0;
+//}
 
-bool IsEven(int x) {
-    return x % 2 == 0;
-}
 
-
-TEST(Enumerable, ListSequence_Map) {
-    ListSequence<int> arr = {11, 12, 3, 4, -5};
-    ListSequence<int> res = arr.Map(Pow);
-    EXPECT_TRUE(res == ListSequence<int>({121, 144, 9, 16, 25}));
-    ListSequence<int> res1 = ListSequence<int>({}).Map(Pow);
-    EXPECT_TRUE(res1 == ListSequence<int>({}));
-    ListSequence<bool> res2 = ListSequence<int>({11, 12, 3, 4, 6}).Map(IsEven);
-    EXPECT_TRUE(res2 == ListSequence<bool>({false, true, false, true, true}));
-    int (*wrong)(int) = nullptr;
-    EXPECT_ANY_THROW(arr.Map(wrong));
-}
-
-int f(int x, int y) {
-    return x + y;
-}
-
-TEST(Enumerable, ListSequence_Reduce) {
-    ListSequence<int> arr = {11, 12, 3, 4, -5};
-    EXPECT_EQ(arr.Reduce(f, 0), 25);
-    int res2 = ListSequence<int>({}).Reduce(f, -1);
-    EXPECT_EQ(res2, -1);
-    int (*wrong)(int, int) = nullptr;
-    EXPECT_ANY_THROW(arr.Reduce(wrong, 0));
-}
-
-TEST(Enumerable, ListSequence_Where) {
-    ListSequence<int> arr = {11, 12, 3, 4, -5};
-    EXPECT_TRUE(arr.Where(IsEven) == ListSequence<int>({12, 4}));
-    ListSequence<int> res2 = ListSequence<int>({}).Where(IsEven);
-    EXPECT_TRUE(res2 == ListSequence<int>());
-    bool (*wrong)(int) = nullptr;
-    EXPECT_ANY_THROW(arr.Where(wrong));
-}
+//TEST(Enumerable, ListSequence_Map) {
+//    ListSequence<int> arr = {11, 12, 3, 4, -5};
+//    ListSequence<int> res = arr.Map(Pow);
+//    EXPECT_TRUE(res == ListSequence<int>({121, 144, 9, 16, 25}));
+//    ListSequence<int> res1 = ListSequence<int>({}).Map(Pow);
+//    EXPECT_TRUE(res1 == ListSequence<int>({}));
+//    ListSequence<bool> res2 = ListSequence<int>({11, 12, 3, 4, 6}).Map(IsEven);
+//    EXPECT_TRUE(res2 == ListSequence<bool>({false, true, false, true, true}));
+//    int (*wrong)(int) = nullptr;
+//    EXPECT_ANY_THROW(arr.Map(wrong));
+//}
+//
+//int f(int x, int y) {
+//    return x + y;
+//}
+//
+//TEST(Enumerable, ListSequence_Reduce) {
+//    ListSequence<int> arr = {11, 12, 3, 4, -5};
+//    EXPECT_EQ(arr.Reduce(f, 0), 25);
+//    int res2 = ListSequence<int>({}).Reduce(f, -1);
+//    EXPECT_EQ(res2, -1);
+//    int (*wrong)(int, int) = nullptr;
+//    EXPECT_ANY_THROW(arr.Reduce(wrong, 0));
+//}
+//
+//TEST(Enumerable, ListSequence_Where) {
+//    ListSequence<int> arr = {11, 12, 3, 4, -5};
+//    EXPECT_TRUE(arr.Where(IsEven) == ListSequence<int>({12, 4}));
+//    ListSequence<int> res2 = ListSequence<int>({}).Where(IsEven);
+//    EXPECT_TRUE(res2 == ListSequence<int>());
+//    bool (*wrong)(int) = nullptr;
+//    EXPECT_ANY_THROW(arr.Where(wrong));
+//}
 
 TEST(Enumerable, ListSequence_Contains) {
     ListSequence<int> arr = {11, 12, 3, 4, -5};
@@ -122,11 +122,11 @@ TEST(Enumerable, ListSequence_Contains) {
     EXPECT_FALSE(arr.Contains(-5));
 }
 
-TEST(Enumerable, ListSequence_Split) {
-    ListSequence<int> arr = {11, 12, 3, 4, -5};
-    auto[a, b] = arr.Split(0);
-    EXPECT_TRUE(*dynamic_cast<ListSequence<int> *>(a) == ListSequence<int>({11}));
-    EXPECT_TRUE(*dynamic_cast<ListSequence<int> *>(b) == ListSequence<int>({12, 3, 4, -5}));
-    delete a;
-    delete b;
-}
+//TEST(Enumerable, ListSequence_Split) {
+//    ListSequence<int> arr = {11, 12, 3, 4, -5};
+//    auto[a, b] = arr.Split(0);
+//    EXPECT_TRUE(*dynamic_cast<ListSequence<int> *>(a) == ListSequence<int>({11}));
+//    EXPECT_TRUE(*dynamic_cast<ListSequence<int> *>(b) == ListSequence<int>({12, 3, 4, -5}));
+//    delete a;
+//    delete b;
+//}

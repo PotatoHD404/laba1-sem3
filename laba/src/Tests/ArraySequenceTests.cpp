@@ -1,8 +1,6 @@
 //
 // Created by korna on 17.04.2021.
 //
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "cert-err58-cpp"
 
 
 
@@ -41,8 +39,8 @@ TEST(ArraySequence_int, Add) {
     ArraySequence<int> arr = ArraySequence<int>();
     arr.Add(5);
     ASSERT_EQ (1, arr.Count());
-    EXPECT_ANY_THROW(arr.At(-1));
-    EXPECT_ANY_THROW(arr.At(1));
+    EXPECT_ANY_THROW(arr.Get(-1));
+    EXPECT_ANY_THROW(arr.Get(1));
     EXPECT_EQ (5, arr[0]);
 
     arr[0] = 4;
@@ -73,8 +71,8 @@ TEST(ArraySequence_int, Prepend) {
     ArraySequence<int> arr = ArraySequence<int>();
     arr.AddFirst(5);
     ASSERT_EQ (1, arr.Count());
-    EXPECT_ANY_THROW(arr.At(-1));
-    EXPECT_ANY_THROW(arr.At(1));
+    EXPECT_ANY_THROW(arr.Get(-1));
+    EXPECT_ANY_THROW(arr.Get(1));
     EXPECT_EQ (5, arr[0]);
 
     arr[0] = 4;
@@ -141,25 +139,25 @@ TEST(ArraySequence_int, PopFirst) {
     arr[0] = 1;
     arr[1] = 2;
     arr[2] = 3;
-    arr.PopFirst();
+    arr.RemoveFirst();
     ASSERT_EQ (2, arr.Count());
     EXPECT_EQ (2, arr[0]);
     EXPECT_EQ (3, arr[1]);
     EXPECT_EQ (2, arr.First());
     EXPECT_EQ (3, arr.Last());
 
-    arr.PopFirst();
+    arr.RemoveFirst();
     ASSERT_EQ (1, arr.Count());
     EXPECT_EQ (3, arr[0]);
     EXPECT_EQ (3, arr.First());
     EXPECT_EQ (3, arr.Last());
 
-    arr.PopFirst();
+    arr.RemoveFirst();
     ASSERT_EQ (0, arr.Count());
-    EXPECT_ANY_THROW (arr.At(0));
+    EXPECT_ANY_THROW (arr.Get(0));
     EXPECT_ANY_THROW(arr.First());
     EXPECT_ANY_THROW (arr.Last());
-    EXPECT_ANY_THROW (arr.PopFirst(););
+    EXPECT_ANY_THROW (arr.RemoveFirst(););
 }
 
 TEST(ArraySequence_int, PopLast) {
@@ -167,25 +165,25 @@ TEST(ArraySequence_int, PopLast) {
     arr[0] = 1;
     arr[1] = 2;
     arr[2] = 3;
-    arr.PopLast();
+    arr.RemoveLast();
     ASSERT_EQ (2, arr.Count());
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (2, arr[1]);
     EXPECT_EQ (1, arr.First());
     EXPECT_EQ (2, arr.Last());
 
-    arr.PopLast();
+    arr.RemoveLast();
     ASSERT_EQ (1, arr.Count());
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (1, arr.First());
     EXPECT_EQ (1, arr.Last());
 
-    arr.PopLast();
+    arr.RemoveLast();
     ASSERT_EQ (0, arr.Count());
-    EXPECT_ANY_THROW (arr.At(0));
+    EXPECT_ANY_THROW (arr.Get(0));
     EXPECT_ANY_THROW (arr.First());
     EXPECT_ANY_THROW (arr.Last());
-    EXPECT_ANY_THROW(arr.PopLast());
+    EXPECT_ANY_THROW(arr.RemoveLast());
 }
 
 TEST(ArraySequence_int, RemoveAt) {
@@ -199,7 +197,7 @@ TEST(ArraySequence_int, RemoveAt) {
     ASSERT_EQ (2, arr.Count());
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (3, arr[1]);
-    ASSERT_ANY_THROW (arr.At(2));
+    ASSERT_ANY_THROW (arr.Get(2));
     EXPECT_EQ (1, arr.First());
     EXPECT_EQ (3, arr.Last());
 
@@ -211,10 +209,10 @@ TEST(ArraySequence_int, RemoveAt) {
 
     arr.RemoveAt(0);
     ASSERT_EQ (0, arr.Count());
-    EXPECT_ANY_THROW (arr.At(0));
+    EXPECT_ANY_THROW (arr.Get(0));
     EXPECT_ANY_THROW (arr.First());
     EXPECT_ANY_THROW (arr.Last());
-    EXPECT_ANY_THROW(arr.PopLast());
+    EXPECT_ANY_THROW(arr.RemoveLast());
     EXPECT_ANY_THROW(arr.RemoveAt(0));
 
     arr = ArraySequence<int>(2);
@@ -229,10 +227,10 @@ TEST(ArraySequence_int, RemoveAt) {
 
     arr.RemoveAt(0);
     ASSERT_EQ (0, arr.Count());
-    EXPECT_ANY_THROW (arr.At(0));
+    EXPECT_ANY_THROW (arr.Get(0));
     EXPECT_ANY_THROW (arr.First());
     EXPECT_ANY_THROW (arr.Last());
-    EXPECT_ANY_THROW(arr.PopLast());
+    EXPECT_ANY_THROW(arr.RemoveLast());
     EXPECT_ANY_THROW(arr.RemoveAt(0));
 }
 
@@ -252,8 +250,8 @@ TEST(ArraySequence_int, InitFromArr) {
     EXPECT_EQ (5, arr[4]);
     EXPECT_EQ (6, arr[5]);
 
-    arr.PopLast();
-    EXPECT_ANY_THROW(arr.At(5));
+    arr.RemoveLast();
+    EXPECT_ANY_THROW(arr.Get(5));
     ASSERT_EQ (5, arr.Count());
     arr.Set(0, 0);
     EXPECT_EQ (1, a[0]);
@@ -294,7 +292,7 @@ TEST(ArraySequence_int, InitFromArraySequence) {
     int a[] = {1, 2, 3, 4, 5, 6};
     ArraySequence<int> arr1 = ArraySequence<int>(a, 5);
     ASSERT_EQ (5, arr1.Count());
-    EXPECT_ANY_THROW(arr1.At(5));
+    EXPECT_ANY_THROW(arr1.Get(5));
     ArraySequence<int> arr2 = ArraySequence<int>(arr1);
     ASSERT_EQ (5, arr2.Count());
     EXPECT_EQ (arr1[0], arr2[0]);
@@ -315,32 +313,32 @@ TEST(ArraySequence_int, InitFromArraySequence) {
     ASSERT_EQ (0, arr2.Count());
 }
 
-TEST(ArraySequence_int, Concat) {
-    int a[] = {1, 2, 3, 4, 5};
-    ArraySequence<int> arr1 = ArraySequence<int>(a, 5);
-    ArraySequence<int> arr2 = ArraySequence<int>(arr1);
-    std::unique_ptr<ArraySequence<int>> arr3 = std::unique_ptr<ArraySequence<int>>(arr1.Concat(arr2));
-    ASSERT_EQ (arr1.Count() + arr2.Count(), arr3->Count());
-    EXPECT_EQ (arr1[0], arr3->At(0));
-    EXPECT_EQ (arr1[1], arr3->At(1));
-    EXPECT_EQ (arr1[2], arr3->At(2));
-    EXPECT_EQ (arr1[3], arr3->At(3));
-    EXPECT_EQ (arr1[4], arr3->At(4));
-    EXPECT_EQ (arr2[0], arr3->At(5));
-    EXPECT_EQ (arr2[1], arr3->At(6));
-    EXPECT_EQ (arr2[2], arr3->At(7));
-    EXPECT_EQ (arr2[3], arr3->At(8));
-    EXPECT_EQ (arr2[4], arr3->At(9));
-
-    ArraySequence<int> arr4 = ArraySequence<int>();
-    arr3 = std::unique_ptr<ArraySequence<int>>(arr1.Concat(arr4));
-    ASSERT_EQ (arr1.Count() + arr4.Count(), arr3->Count());
-    EXPECT_EQ (arr1[0], arr3->At(0));
-    EXPECT_EQ (arr1[1], arr3->At(1));
-    EXPECT_EQ (arr1[2], arr3->At(2));
-    EXPECT_EQ (arr1[3], arr3->At(3));
-    EXPECT_EQ (arr1[4], arr3->At(4));
-}
+//TEST(ArraySequence_int, Concat) {
+//    int a[] = {1, 2, 3, 4, 5};
+//    ArraySequence<int> arr1 = ArraySequence<int>(a, 5);
+//    ArraySequence<int> arr2 = ArraySequence<int>(arr1);
+//    std::unique_ptr<ArraySequence<int>> arr3 = std::unique_ptr<ArraySequence<int>>(arr1.Concat(arr2));
+//    ASSERT_EQ (arr1.Count() + arr2.Count(), arr3->Count());
+//    EXPECT_EQ (arr1[0], arr3->Get(0));
+//    EXPECT_EQ (arr1[1], arr3->Get(1));
+//    EXPECT_EQ (arr1[2], arr3->Get(2));
+//    EXPECT_EQ (arr1[3], arr3->Get(3));
+//    EXPECT_EQ (arr1[4], arr3->Get(4));
+//    EXPECT_EQ (arr2[0], arr3->Get(5));
+//    EXPECT_EQ (arr2[1], arr3->Get(6));
+//    EXPECT_EQ (arr2[2], arr3->Get(7));
+//    EXPECT_EQ (arr2[3], arr3->Get(8));
+//    EXPECT_EQ (arr2[4], arr3->Get(9));
+//
+//    ArraySequence<int> arr4 = ArraySequence<int>();
+//    arr3 = std::unique_ptr<ArraySequence<int>>(arr1.Concat(arr4));
+//    ASSERT_EQ (arr1.Count() + arr4.Count(), arr3->Count());
+//    EXPECT_EQ (arr1[0], arr3->Get(0));
+//    EXPECT_EQ (arr1[1], arr3->Get(1));
+//    EXPECT_EQ (arr1[2], arr3->Get(2));
+//    EXPECT_EQ (arr1[3], arr3->Get(3));
+//    EXPECT_EQ (arr1[4], arr3->Get(4));
+//}
 
 TEST(ArraySequence_int, GetSubsequence) {
     int a[] = {1, 2, 3, 4, 5};
@@ -349,21 +347,21 @@ TEST(ArraySequence_int, GetSubsequence) {
             arr2 = unique_ptr<ArraySequence<int>>(arr1.GetSubsequence(0, 0));
     ASSERT_EQ(arr2->Count(), 1);
     EXPECT_EQ (arr1[0], 1);
-    EXPECT_ANY_THROW(arr2->At(1));
+    EXPECT_ANY_THROW(arr2->Get(1));
     EXPECT_ANY_THROW(arr1.GetSubsequence(-1, 0));
     EXPECT_ANY_THROW(arr1.GetSubsequence(1, 0));
     EXPECT_ANY_THROW(arr1.GetSubsequence(1, 5));
     arr2 = unique_ptr<ArraySequence<int>>(arr1.GetSubsequence(0, 4));
     ASSERT_EQ(arr2->Count(), 5);
-    EXPECT_EQ (arr1[0], arr2->At(0));
-    EXPECT_EQ (arr1[1], arr2->At(1));
-    EXPECT_EQ (arr1[2], arr2->At(2));
-    EXPECT_EQ (arr1[3], arr2->At(3));
-    EXPECT_EQ (arr1[4], arr2->At(4));
+    EXPECT_EQ (arr1[0], arr2->Get(0));
+    EXPECT_EQ (arr1[1], arr2->Get(1));
+    EXPECT_EQ (arr1[2], arr2->Get(2));
+    EXPECT_EQ (arr1[3], arr2->Get(3));
+    EXPECT_EQ (arr1[4], arr2->Get(4));
     arr2 = unique_ptr<ArraySequence<int>>(arr1.GetSubsequence(2, 3));
     ASSERT_EQ(arr2->Count(), 2);
-    EXPECT_EQ (arr1[2], arr2->At(0));
-    EXPECT_EQ (arr1[3], arr2->At(1));
+    EXPECT_EQ (arr1[2], arr2->Get(0));
+    EXPECT_EQ (arr1[3], arr2->Get(1));
 }
 
 TEST(ArraySequence_float, InitDefault) {
@@ -395,8 +393,8 @@ TEST(ArraySequence_float, Add) {
     ArraySequence<float> arr = ArraySequence<float>();
     arr.Add(5);
     ASSERT_EQ (1, arr.Count());
-    EXPECT_ANY_THROW(arr.At(-1));
-    EXPECT_ANY_THROW(arr.At(1));
+    EXPECT_ANY_THROW(arr.Get(-1));
+    EXPECT_ANY_THROW(arr.Get(1));
     EXPECT_EQ (5, arr[0]);
 
     arr[0] = 4;
@@ -427,8 +425,8 @@ TEST(ArraySequence_float, Prepend) {
     ArraySequence<float> arr = ArraySequence<float>();
     arr.AddFirst(5);
     ASSERT_EQ (1, arr.Count());
-    EXPECT_ANY_THROW(arr.At(-1));
-    EXPECT_ANY_THROW(arr.At(1));
+    EXPECT_ANY_THROW(arr.Get(-1));
+    EXPECT_ANY_THROW(arr.Get(1));
     EXPECT_EQ (5, arr[0]);
 
     arr[0] = 4;
@@ -495,25 +493,25 @@ TEST(ArraySequence_float, PopFirst) {
     arr[0] = 1;
     arr[1] = 2;
     arr[2] = 3;
-    arr.PopFirst();
+    arr.RemoveFirst();
     ASSERT_EQ (2, arr.Count());
     EXPECT_EQ (2, arr[0]);
     EXPECT_EQ (3, arr[1]);
     EXPECT_EQ (2, arr.First());
     EXPECT_EQ (3, arr.Last());
 
-    arr.PopFirst();
+    arr.RemoveFirst();
     ASSERT_EQ (1, arr.Count());
     EXPECT_EQ (3, arr[0]);
     EXPECT_EQ (3, arr.First());
     EXPECT_EQ (3, arr.Last());
 
-    arr.PopFirst();
+    arr.RemoveFirst();
     ASSERT_EQ (0, arr.Count());
-    EXPECT_ANY_THROW (arr.At(0));
+    EXPECT_ANY_THROW (arr.Get(0));
     EXPECT_ANY_THROW(arr.First());
     EXPECT_ANY_THROW (arr.Last());
-    EXPECT_ANY_THROW (arr.PopFirst(););
+    EXPECT_ANY_THROW (arr.RemoveFirst(););
 }
 
 TEST(ArraySequence_float, PopLast) {
@@ -521,25 +519,25 @@ TEST(ArraySequence_float, PopLast) {
     arr[0] = 1;
     arr[1] = 2;
     arr[2] = 3;
-    arr.PopLast();
+    arr.RemoveLast();
     ASSERT_EQ (2, arr.Count());
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (2, arr[1]);
     EXPECT_EQ (1, arr.First());
     EXPECT_EQ (2, arr.Last());
 
-    arr.PopLast();
+    arr.RemoveLast();
     ASSERT_EQ (1, arr.Count());
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (1, arr.First());
     EXPECT_EQ (1, arr.Last());
 
-    arr.PopLast();
+    arr.RemoveLast();
     ASSERT_EQ (0, arr.Count());
-    EXPECT_ANY_THROW (arr.At(0));
+    EXPECT_ANY_THROW (arr.Get(0));
     EXPECT_ANY_THROW (arr.First());
     EXPECT_ANY_THROW (arr.Last());
-    EXPECT_ANY_THROW(arr.PopLast());
+    EXPECT_ANY_THROW(arr.RemoveLast());
 }
 
 TEST(ArraySequence_float, RemoveAt) {
@@ -553,7 +551,7 @@ TEST(ArraySequence_float, RemoveAt) {
     ASSERT_EQ (2, arr.Count());
     EXPECT_EQ (1, arr[0]);
     EXPECT_EQ (3, arr[1]);
-    ASSERT_ANY_THROW (arr.At(2));
+    ASSERT_ANY_THROW (arr.Get(2));
     EXPECT_EQ (1, arr.First());
     EXPECT_EQ (3, arr.Last());
 
@@ -565,10 +563,10 @@ TEST(ArraySequence_float, RemoveAt) {
 
     arr.RemoveAt(0);
     ASSERT_EQ (0, arr.Count());
-    EXPECT_ANY_THROW (arr.At(0));
+    EXPECT_ANY_THROW (arr.Get(0));
     EXPECT_ANY_THROW (arr.First());
     EXPECT_ANY_THROW (arr.Last());
-    EXPECT_ANY_THROW(arr.PopLast());
+    EXPECT_ANY_THROW(arr.RemoveLast());
     EXPECT_ANY_THROW(arr.RemoveAt(0));
 
     arr = ArraySequence<float>(2);
@@ -583,10 +581,10 @@ TEST(ArraySequence_float, RemoveAt) {
 
     arr.RemoveAt(0);
     ASSERT_EQ (0, arr.Count());
-    EXPECT_ANY_THROW (arr.At(0));
+    EXPECT_ANY_THROW (arr.Get(0));
     EXPECT_ANY_THROW (arr.First());
     EXPECT_ANY_THROW (arr.Last());
-    EXPECT_ANY_THROW(arr.PopLast());
+    EXPECT_ANY_THROW(arr.RemoveLast());
     EXPECT_ANY_THROW(arr.RemoveAt(0));
 }
 
@@ -606,8 +604,8 @@ TEST(ArraySequence_float, InitFromArr) {
     EXPECT_EQ (5, arr[4]);
     EXPECT_EQ (6, arr[5]);
 
-    arr.PopLast();
-    EXPECT_ANY_THROW(arr.At(5));
+    arr.RemoveLast();
+    EXPECT_ANY_THROW(arr.Get(5));
     ASSERT_EQ (5, arr.Count());
     arr.Set(0, 0);
     EXPECT_EQ (1, a[0]);
@@ -648,14 +646,14 @@ TEST(ArraySequence_float, InitFromArr) {
     arr.Add(6);
     ASSERT_EQ (1, arr.Count());
     EXPECT_EQ (6, arr[0]);
-    EXPECT_ANY_THROW(arr.At(1));
+    EXPECT_ANY_THROW(arr.Get(1));
 }
 
 TEST(ArraySequence_float, InitFromArraySequence) {
     float a[] = {1, 2, 3, 4, 5, 6};
     ArraySequence<float> arr1 = ArraySequence<float>(a, 5);
     ASSERT_EQ (5, arr1.Count());
-    EXPECT_ANY_THROW(arr1.At(5));
+    EXPECT_ANY_THROW(arr1.Get(5));
     ArraySequence<float> arr2 = ArraySequence<float>(arr1);
     ASSERT_EQ (5, arr2.Count());
     EXPECT_EQ (arr1[0], arr2[0]);
@@ -676,32 +674,32 @@ TEST(ArraySequence_float, InitFromArraySequence) {
     ASSERT_EQ (0, arr2.Count());
 }
 
-TEST(ArraySequence_float, Concat) {
-    float a[] = {1, 2, 3, 4, 5};
-    ArraySequence<float> arr1 = ArraySequence<float>(a, 5);
-    ArraySequence<float> arr2 = ArraySequence<float>(arr1);
-    std::unique_ptr<ArraySequence<float>> arr3 = std::unique_ptr<ArraySequence<float>>(arr1.Concat(arr2));
-    ASSERT_EQ (arr1.Count() + arr2.Count(), arr3->Count());
-    EXPECT_EQ (arr1[0], arr3->At(0));
-    EXPECT_EQ (arr1[1], arr3->At(1));
-    EXPECT_EQ (arr1[2], arr3->At(2));
-    EXPECT_EQ (arr1[3], arr3->At(3));
-    EXPECT_EQ (arr1[4], arr3->At(4));
-    EXPECT_EQ (arr2[0], arr3->At(5));
-    EXPECT_EQ (arr2[1], arr3->At(6));
-    EXPECT_EQ (arr2[2], arr3->At(7));
-    EXPECT_EQ (arr2[3], arr3->At(8));
-    EXPECT_EQ (arr2[4], arr3->At(9));
-
-    ArraySequence<float> arr4 = ArraySequence<float>();
-    arr3 = std::unique_ptr<ArraySequence<float>>(arr1.Concat(arr4));
-    ASSERT_EQ (arr1.Count() + arr4.Count(), arr3->Count());
-    EXPECT_EQ (arr1[0], arr3->At(0));
-    EXPECT_EQ (arr1[1], arr3->At(1));
-    EXPECT_EQ (arr1[2], arr3->At(2));
-    EXPECT_EQ (arr1[3], arr3->At(3));
-    EXPECT_EQ (arr1[4], arr3->At(4));
-}
+//TEST(ArraySequence_float, Concat) {
+//    float a[] = {1, 2, 3, 4, 5};
+//    ArraySequence<float> arr1 = ArraySequence<float>(a, 5);
+//    ArraySequence<float> arr2 = ArraySequence<float>(arr1);
+//    std::unique_ptr<ArraySequence<float>> arr3 = std::unique_ptr<ArraySequence<float>>(arr1.Concat(arr2));
+//    ASSERT_EQ (arr1.Count() + arr2.Count(), arr3->Count());
+//    EXPECT_EQ (arr1[0], arr3->Get(0));
+//    EXPECT_EQ (arr1[1], arr3->Get(1));
+//    EXPECT_EQ (arr1[2], arr3->Get(2));
+//    EXPECT_EQ (arr1[3], arr3->Get(3));
+//    EXPECT_EQ (arr1[4], arr3->Get(4));
+//    EXPECT_EQ (arr2[0], arr3->Get(5));
+//    EXPECT_EQ (arr2[1], arr3->Get(6));
+//    EXPECT_EQ (arr2[2], arr3->Get(7));
+//    EXPECT_EQ (arr2[3], arr3->Get(8));
+//    EXPECT_EQ (arr2[4], arr3->Get(9));
+//
+//    ArraySequence<float> arr4 = ArraySequence<float>();
+//    arr3 = std::unique_ptr<ArraySequence<float>>(arr1.Concat(arr4));
+//    ASSERT_EQ (arr1.Count() + arr4.Count(), arr3->Count());
+//    EXPECT_EQ (arr1[0], arr3->Get(0));
+//    EXPECT_EQ (arr1[1], arr3->Get(1));
+//    EXPECT_EQ (arr1[2], arr3->Get(2));
+//    EXPECT_EQ (arr1[3], arr3->Get(3));
+//    EXPECT_EQ (arr1[4], arr3->Get(4));
+//}
 
 TEST(ArraySequence_float, GetSubsequence) {
     float a[] = {1, 2, 3, 4, 5};
@@ -710,21 +708,21 @@ TEST(ArraySequence_float, GetSubsequence) {
             arr2 = unique_ptr<ArraySequence<float>>(arr1.GetSubsequence(0, 0));
     ASSERT_EQ(arr2->Count(), 1);
     EXPECT_EQ (arr1[0], 1);
-    EXPECT_ANY_THROW(arr2->At(1));
+    EXPECT_ANY_THROW(arr2->Get(1));
     EXPECT_ANY_THROW(arr1.GetSubsequence(-1, 0));
     EXPECT_ANY_THROW(arr1.GetSubsequence(1, 0));
     EXPECT_ANY_THROW(arr1.GetSubsequence(1, 5));
     arr2 = unique_ptr<ArraySequence<float>>(arr1.GetSubsequence(0, 4));
     ASSERT_EQ(arr2->Count(), 5);
-    EXPECT_EQ (arr1[0], arr2->At(0));
-    EXPECT_EQ (arr1[1], arr2->At(1));
-    EXPECT_EQ (arr1[2], arr2->At(2));
-    EXPECT_EQ (arr1[3], arr2->At(3));
-    EXPECT_EQ (arr1[4], arr2->At(4));
+    EXPECT_EQ (arr1[0], arr2->Get(0));
+    EXPECT_EQ (arr1[1], arr2->Get(1));
+    EXPECT_EQ (arr1[2], arr2->Get(2));
+    EXPECT_EQ (arr1[3], arr2->Get(3));
+    EXPECT_EQ (arr1[4], arr2->Get(4));
     arr2 = unique_ptr<ArraySequence<float>>(arr1.GetSubsequence(2, 3));
     ASSERT_EQ(arr2->Count(), 2);
-    EXPECT_EQ (arr1[2], arr2->At(0));
-    EXPECT_EQ (arr1[3], arr2->At(1));
+    EXPECT_EQ (arr1[2], arr2->Get(0));
+    EXPECT_EQ (arr1[3], arr2->Get(1));
 }
 
 

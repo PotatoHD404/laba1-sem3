@@ -10,7 +10,7 @@ mkdir "$HOME"/gtest_build && cd "$HOME"/gtest_build || exit
 
 wget --no-check-certificate -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | \
 gpg --dearmor - | \
-tee /etc/apt/trusted.gpg.d/kit^[[2~ware.gpg >/dev/null && \
+sudo tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null && \
 sudo apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
 sudo apt install -y kitware-archive-keyring && \
 sudo apt update

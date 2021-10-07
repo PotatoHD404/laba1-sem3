@@ -6,7 +6,6 @@
 
 #ifndef LABA3_IENUMERATOR_H
 #define LABA3_IENUMERATOR_H
-
 // https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
 // Derived
 template<typename T, template<typename> class Child>
@@ -32,7 +31,7 @@ public:
     // Postfix increment
     virtual Child<T> operator++(int) = 0; // NOLINT(cert-dcl21-cpp)
 
-    virtual bool Equals(const IEnumerator &b) const = 0;
+    virtual bool Equals(const Child<T> &b) const = 0;
 
     [[nodiscard]] size_t GetPos() const {
         return pos;

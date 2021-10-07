@@ -45,15 +45,8 @@ public:
         length = count;
     }
 
-    DynamicArray(DynamicArray<T> const &dynamicArray) {
-        length = dynamicArray.length;
-        if (length > 0) {
-            actual_array = new T[length]();
-            for (size_t i = 0; i < length; ++i) {
-                actual_array[i] = dynamicArray.actual_array[i];
-            }
-        } else
-            actual_array = new T[1]();
+    DynamicArray(const DynamicArray<T> &list) : DynamicArray() {
+        *this = list;
     }
 
     //Decomposition
@@ -63,11 +56,26 @@ public:
         return actual_array[index];
     }
 
-    void Set(size_t index, T value) {
+    virtual T GetConst(size_t index) const {
+        if (index < 0 || index >= length)
+            throw out_of_range("index < 0 or index >= length");
+        return actual_array[index];
+    }
+
+    DynamicArray<T> &Set(size_t index, T value) {
         if (index < 0 || index >= length)
             throw range_error("index < 0 or index >= length");
         Get(index) = value;
+        return *this;
     }
+
+    virtual bool Contains(T item) {};
+
+    virtual DynamicArray<T> &Clear() {};
+
+    virtual DynamicArray<T> &Add(T item) {};
+
+    virtual T Remove(T item) {};
 
     DynamicArray<T> GetSubArray(size_t startIndex, size_t endIndex) {
         if (startIndex < 0 || startIndex >= length)
@@ -86,12 +94,12 @@ public:
         return res;
     }
 
-    size_t Count() { return length; }
+    size_t Count() const { return length; }
 
     T &operator[](size_t index) { return actual_array[index]; }
 
     //Operations
-    void Resize(size_t new_length) {
+    DynamicArray<T> &Resize(size_t new_length) {
         if (new_length < 0) {
             throw range_error("new_length < 0");
         }
@@ -107,12 +115,35 @@ public:
         delete[] actual_array;
         length = new_length;
         actual_array = new_array;
+        return *this;
     }
 
-    DynamicArray<T> &operator=(const DynamicArray<T> &list) = default;
+    DynamicArray<T> &operator=(const DynamicArray<T> &list) {
+        if (&list != this) {
+//            this->~DynamicArray();
+            if (actual_array) {
+                delete[] actual_array;
+                actual_array = nullptr;
+            }
+            length = list.length;
+            if (length > 0) {
+                actual_array = new T[length]();
+                for (size_t i = 0; i < length; ++i) {
+                    actual_array[i] = list.actual_array[i];
+                }
+            } else
+                actual_array = new T[1]();
+        }
+        return *this;
+    }
 
     //Termination
-    ~DynamicArray() { delete[] actual_array; }
+    ~DynamicArray() {
+        if (actual_array) {
+            delete[] actual_array;
+            actual_array = nullptr;
+        }
+    }
 };
 
 #endif //LABA2_DYNAMICARRAY_H

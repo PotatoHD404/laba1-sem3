@@ -1,9 +1,6 @@
 //
 // Created by korna on 20.03.2021.
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunknown-pragmas"
-#pragma ide diagnostic ignored "HidingNonVirtualFunction"
 #ifndef LABA2_ARRAYSEQUENCE_H
 #define LABA2_ARRAYSEQUENCE_H
 
@@ -22,33 +19,20 @@ private:
     DynamicArray<T> items;
 
 public:
-    RandomAccessIterator<T> *begin() {
-        return new RandomAccessIterator<T>(*this);
-    }
-
-    RandomAccessIterator<T> *end() {
-        return new RandomAccessIterator<T>(*this, this->Count());
-    }
-
-
     ArraySequence Copy() {
         return ArraySequence<T>(*this);
     }
 
     //Creation of the object
-    ArraySequence() {
-        items = DynamicArray<T>();
-    }
+    ArraySequence() : items() {}
 
     explicit ArraySequence(int count) : ArraySequence((size_t) count) {
     }
 
-    explicit ArraySequence(size_t count) {
-        items = DynamicArray<T>(count);
+    explicit ArraySequence(size_t count) : items(count) {
     }
 
-    ArraySequence(T *items, size_t count) {
-        this->items = DynamicArray<T>(items, count);
+    ArraySequence(T *items, size_t count) : items(items, count) {
     }
 
     template<size_t N>
@@ -59,8 +43,7 @@ public:
             this->Add(item);
     }
 
-    ArraySequence(ArraySequence<T> const &list) {
-        items = DynamicArray<T>(list.items);
+    ArraySequence(ArraySequence<T> const &list) : items(list.items) {
     }
 
     explicit ArraySequence(Sequence<T> &list) : ArraySequence((*dynamic_cast<ArraySequence<T> *>(&list))) {}
@@ -75,9 +58,11 @@ public:
 
     //Decomposition
 
-    T &At(size_t index) {
+    virtual T &Get(size_t index) {
         return items.Get(index);
     }
+
+    virtual T GetConst(size_t index) const { return items.GetConst(index); }
 
     ArraySequence<T> *GetSubsequence(size_t startIndex, size_t endIndex) {
         if (startIndex < 0 || startIndex >= items.Count())
@@ -93,9 +78,21 @@ public:
         return res;
     }
 
-    size_t Count() {
+    [[nodiscard]] size_t Count() const {
         return items.Count();
     }
+
+    virtual bool operator==(const Sequence<T> &list) {
+        size_t len = list.Count();
+        if (len != this->Count())
+            return false;
+        for (size_t i = 0; i < len; ++i)
+            if (this->GetConst(i) != list.GetConst(i))
+                return false;
+
+        return true;
+    }
+
 
     ArraySequence<T> *Subsequence(size_t startIndex, size_t endIndex) {
         if (startIndex < 0 || startIndex >= items.Count())
@@ -109,27 +106,27 @@ public:
         return res;
     }
 
-    bool operator==(ArraySequence<T> &&list) {
-        size_t len = list.Count();
-        if (len != this->items.Count())
-            return false;
-        for (size_t i = 0; i < len; ++i)
-            if (this->At(i) != list.At(i))
-                return false;
+//    bool operator==(ArraySequence<T> &&list) {
+//        size_t len = list.Count();
+//        if (len != this->items.Count())
+//            return false;
+//        for (size_t i = 0; i < len; ++i)
+//            if (this->Get(i) != list.Get(i))
+//                return false;
+//
+//        return true;
+//    }
 
-        return true;
-    }
-
-    bool operator==(ArraySequence<T> &list) {
-        size_t len = list.Count();
-        if (len != this->items.Count())
-            return false;
-        for (size_t i = 0; i < len; ++i)
-            if (this->At(i) != list.At(i))
-                return false;
-
-        return true;
-    }
+//    virtual bool operator==(ArraySequence<T> &list) {
+//        size_t len = list.Count();
+//        if (len != this->items.Count())
+//            return false;
+//        for (size_t i = 0; i < len; ++i)
+//            if (this->Get(i) != list.Get(i))
+//                return false;
+//
+//        return true;
+//    }
 
     //Operations
     template<typename T1>
@@ -142,24 +139,27 @@ public:
         return new ArraySequence<T1>(count);
     }
 
-    void Resize(size_t count) {
+    ArraySequence<T> &Resize(size_t count) {
         items.Resize(count);
+        return *this;
     }
 
-    void Add(T item) {
+    ArraySequence<T> &Add(T item) {
         items.Resize(items.Count() + 1);
         items.Set(items.Count() - 1, item);
+        return *this;
     }
 
-    void AddFirst(T item) {
+    virtual ArraySequence<T> &AddFirst(T item) {
         items.Resize(items.Count() + 1);
         for (size_t i = items.Count() - 1; i > 0; --i) {
             items.Set(i, items.Get(i - 1));
         }
         items.Set(0, item);
+        return *this;
     }
 
-    void Insert(size_t index, T item) {
+    ArraySequence<T> &Insert(size_t index, T item) {
         if (index == 0)
             return AddFirst(item);
         items.Resize(items.Count() + 1);
@@ -171,20 +171,21 @@ public:
             items.Set(index, item);
         else
             items.Set(items.Count() - 1, item);
+        return *this;
     }
 
-    ArraySequence<T> *Concat(Sequence<T> &list) {
-        ArraySequence<T> *res = new ArraySequence<T>();
+    virtual ArraySequence<T> &Concat(Sequence<T> &list) {
+//        ArraySequence<T> *res = new ArraySequence<T>();
         for (size_t i = 0; i < items.Count(); ++i) {
-            res->Add(items[i]);
+            this->Add(items[i]);
         }
         for (size_t i = 0; i < list.Count(); ++i) {
-            res->Add(list[i]);
+            this->Add(list[i]);
         }
-        return res;
+        return *this;
     }
 
-    T PopFirst() {
+    T RemoveFirst() {
         T res = items.Get(0);
         for (size_t i = 0; i < items.Count() - 1; ++i) {
             items.Set(i, items[i + 1]);
@@ -193,7 +194,7 @@ public:
         return res;
     }
 
-    T PopLast() {
+    T RemoveLast() {
         T res = items.Get(items.Count() - 1);
         items.Resize(items.Count() - 1);
         return res;
@@ -215,37 +216,16 @@ public:
         return items[index];
     }
 
-
-    template<typename T1>
-    ArraySequence<T1> Map(T1 (*mapper)(T)) {
-        auto *res = dynamic_cast<ArraySequence<T1> *>(Enumerable<T>::template Map<T1, ArraySequence>(
-                mapper));
-        auto res1 = ArraySequence<T1>(res);
-        delete res;
-        return res1;
-    }
-
-    ArraySequence<T> Where(bool(*predicate)(T)) {
-        auto *res = dynamic_cast<ArraySequence<T> *>(Enumerable<T>::template Where<ArraySequence>(
-                predicate));
-        auto res1 = ArraySequence<T>(res);
-        delete res;
-        return res1;
-    }
-
-    void Clear() {
+    ArraySequence<T> &Clear() {
         items.Resize(0);
+        return *this;
     }
 
 //    ArraySequence<T> *Concat(const ArraySequence<T> *list) {
 //        return Concat(*list);
 //    }
 
-    ArraySequence<T> &operator=(const ArraySequence<T> &list) {
-        items = DynamicArray<T>(list.items);
-        return *this;
-    }
+    ArraySequence<T> &operator=(const ArraySequence<T> &list) = default;
 };
 
 #endif //LABA2_ARRAYSEQUENCE_H
-#pragma clang diagnostic pop

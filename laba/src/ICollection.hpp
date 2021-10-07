@@ -10,7 +10,7 @@ class ICollection {
 public:
     //Decomposition
 
-    virtual size_t Count() = 0;
+    [[nodiscard]] virtual size_t Count() const = 0;
 
     virtual bool Contains(T item) = 0;
 
