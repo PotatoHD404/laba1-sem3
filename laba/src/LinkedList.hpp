@@ -106,20 +106,6 @@ public:
         return GetNode(index)->data;
     }
 
-    T GetConst(size_t index) const {
-        if (index < 0 || index >= length)
-            throw out_of_range("index < 0 or index >= length");
-        if (index == 0)
-            return head->data;
-        if (index == length - 1)
-            return tail->data;
-        Node *res = head;
-        for (size_t i = 0; i < index; i++) {
-            res = res->next;
-        }
-        return res->data;
-    }
-
     LinkedList<T> &Set(size_t index, T value) {
         if (index < 0 || index >= length)
             throw range_error("index < 0 or index >= length");

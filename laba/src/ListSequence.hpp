@@ -17,14 +17,18 @@ using namespace std;
 template<typename T>
 class ListSequence : public Enumerable<T> {
 private:
-    LinkedList<T> items;
+    mutable LinkedList<T> items;
 
     class Iterator : public RandomAccessIterator<T> {
-
+        using RandomAccessIterator<T>::RandomAccessIterator;
     };
 
 
 public:
+    virtual RandomAccessIterator<T> begin() { return Iterator(*this); }
+
+    virtual RandomAccessIterator<T> end() { return Iterator(*this, this->Count()); }
+
     ListSequence Copy() {
         return ListSequence<T>(*this);
     }
@@ -71,11 +75,11 @@ public:
 
     //Decomposition
 
-    virtual T &Get(size_t index) {
+    virtual T &Get(size_t index) const {
         return items.Get(index);
     }
 
-    virtual T GetConst(size_t index) const { return items.GetConst(index); }
+    virtual Enumerable<T> &Sort() { return this->Enumerable<T>::Sort(Sorts::InsertionSort<T>); }
 
     ListSequence<T> *Subsequence(size_t startIndex, size_t endIndex) {
         if (startIndex < 0 || startIndex >= items.Count())
@@ -93,7 +97,7 @@ public:
         return items.Count();
     }
 
-    T &operator[](size_t index) {
+    T &operator[](size_t index) const {
         return items[index];
     }
 //    virtual bool operator==(const Sequence<T> &list) = 0;
@@ -103,7 +107,7 @@ public:
         if (len != this->Count())
             return false;
         for (size_t i = 0; i < len; ++i)
-            if (this->GetConst(i) != list.GetConst(i))
+            if (this->Get(i) != list.Get(i))
                 return false;
 
         return true;

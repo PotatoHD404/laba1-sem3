@@ -15,9 +15,7 @@ class Sequence : public ICollection<T> {
 public:
     Sequence() = default;
 
-    virtual T &Get(size_t index) = 0;
-
-    virtual T GetConst(size_t index) const = 0;
+    virtual T &Get(size_t index) const = 0;
 
     //Decomposition
     virtual T &First() { return Get(0); }
@@ -30,9 +28,9 @@ public:
 
     virtual bool operator==(const Sequence<T> &list) = 0;
 
-    virtual T &operator[](size_t index) = 0;
+    virtual T &operator[](size_t index) const = 0;
 
-    friend ostream &operator<<(ostream &out, Sequence<T> &&x) {
+    friend ostream &operator<<(ostream &out, const Sequence<T> &x) {
         out << "[";
         size_t length = x.Count();
         for (size_t i = 0; i < length; ++i) {

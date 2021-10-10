@@ -15,6 +15,9 @@ template<typename T>
 /*abstract*/
 class Enumerable : public Sequence<T>, public IEnumerable<T>, public ISorter<T> {
 public:
+//    using Sequence<T>::operator<<;
+//    using Sequence<T>::operator>>;
+
     virtual RandomAccessIterator<T> begin() { return RandomAccessIterator<T>(*this); }
 
     virtual RandomAccessIterator<T> end() { return RandomAccessIterator<T>(*this, this->Count()); }
@@ -27,10 +30,10 @@ public:
     }
 
 //     Shell
-    virtual Enumerable<T> &Sort() = 0;
+    virtual Enumerable<T> &Sort() { return this->Sort(Sorts::QuickSort<T>); }
 
-    virtual Enumerable<T> &Sort(Sorts::ISort<T>& sort) {
-        return sort.Sort(*this);
+    virtual Enumerable<T> &Sort(const ISort<T>& sort) {
+        return sort(*this);
     }
 
     virtual T Remove(T item) {
@@ -39,52 +42,6 @@ public:
                 return this->RemoveAt(ptr.GetPos());
         throw invalid_argument("Item was not found");
     }
-
-protected:
-    Enumerable<T> &InsertionSort(Enumerable<T> &arr) {
-
-        //TODO: implement
-        return arr;
-    }
-
-    Enumerable<T> &QuickSort(Enumerable<T> &arr) {
-//        auto first = arr.begin();
-//        auto last = arr.end();
-//        if (first != last) {
-//            auto left = first;
-//            auto right = last;
-//            auto pivot = left++;
-//
-//            while (left != right) {
-//                if (cmp(*left, *pivot)) {
-//                    ++left;
-//                } else {
-//                    while ((left != right) && cmp(*pivot, *right))
-//                        --right;
-//                    std::iter_swap(left, right);
-//                }
-//            }
-//
-//            --left;
-//            std::iter_swap(pivot, left);
-//
-//            quick_sort(first, left);
-//            quick_sort(right, last);
-//        }
-        return arr;
-    }
-
-    Enumerable<T> &ShellSort(Enumerable<T> &arr) {
-//        auto first = arr.begin();
-//        auto last = arr.end();
-//        for (auto d = (arr.Count()) / 2; d != 0; d /= 2)
-//            //нужен цикл для first = a[0..d-1]
-//            for (auto i = first + d; i != last; ++i)
-//                for (auto j = i; j - first >= d && comp(*j, *(j - d)); j -= d)
-//                    std::swap(*j, *(j - d));
-        return arr;
-    }
-
 
     virtual ~Enumerable() = default;
 };

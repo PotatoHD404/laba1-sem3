@@ -1,6 +1,7 @@
 <script>
   import Header from '../components/header.svelte';
   import '../app.postcss';
+
   const site_name = 'PotatoHD website';
   const description = 'Lab 1 sem 3 that can sort your data';
 </script>

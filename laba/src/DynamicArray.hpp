@@ -56,12 +56,6 @@ public:
         return actual_array[index];
     }
 
-    virtual T GetConst(size_t index) const {
-        if (index < 0 || index >= length)
-            throw out_of_range("index < 0 or index >= length");
-        return actual_array[index];
-    }
-
     DynamicArray<T> &Set(size_t index, T value) {
         if (index < 0 || index >= length)
             throw range_error("index < 0 or index >= length");

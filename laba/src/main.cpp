@@ -225,17 +225,17 @@ void StartUI() {
     }
 }
 
-std::vector a = {1,2,3,4,5};
-
 
 int main() {
 
-    a.push_back(5);
+    ListSequence<int> v1 = {5, 4, 3, 2, 1};
+//    cout << Sorts::QuickSort<int>(v1)[0] << endl;
 
 //    MainStartUI();
 
-    ListSequence<int> v1 = {1, 2, 3, 4, 5};
-    ArraySequence<int> v2 = {1, 2, 3, 4, 5};
+
+    cout << v1.Sort() << endl;
+//    ArraySequence<int> v2 = {5,4,3,2,1};
 //    cout << iterator << endl;
 //    cout << v1.begin() << endl;
 

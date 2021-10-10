@@ -55,28 +55,28 @@ public:
         float i, j;
         i = this->real + x.real;
         j = this->imaginary + x.imaginary;
-        return Complex(i, j);
+        return {i, j};
     }
 
     Complex operator-() const {
         float i, j;
         i = -this->real;
         j = -this->imaginary;
-        return Complex(i, j);
+        return {i, j};
     }
 
     Complex operator-(const Complex &x) const {
         float i, j;
         i = this->real - x.real;
         j = this->imaginary - x.imaginary;
-        return Complex(i, j);
+        return {i, j};
     }
 
     Complex operator*(Complex &x) const {
         float i, j;
         i = real * x.real - imaginary * x.imaginary;
         j = real * x.imaginary + x.real * imaginary;
-        return Complex(i, j);
+        return {i, j};
     }
 
     Complex operator/(Complex &x) const {
@@ -84,7 +84,7 @@ public:
         k = real * real + x.imaginary * x.imaginary;
         i = (real * x.real + imaginary * x.imaginary) / k;
         j = (x.real * imaginary - real * x.imaginary) / k;
-        return Complex(i, j);
+        return {i, j};
     }
 
     friend ostream &operator<<(ostream &out, const Complex &x) {
@@ -157,7 +157,7 @@ namespace std {
         float re = sqrt((complex.real + complex.Norm()) / 2);
         float imag = complex.sgn() * sqrt((complex.Norm() - complex.real) / 2);
 
-        return Complex(re, imag);
+        return {re, imag};
     }
 }
 

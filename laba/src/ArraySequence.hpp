@@ -16,7 +16,7 @@ using namespace std;
 template<typename T>
 class ArraySequence : public Enumerable<T> {
 private:
-    DynamicArray<T> items;
+    mutable DynamicArray<T> items;
 
 public:
     ArraySequence Copy() {
@@ -58,11 +58,11 @@ public:
 
     //Decomposition
 
-    virtual T &Get(size_t index) {
+
+
+    virtual T &Get(size_t index) const {
         return items.Get(index);
     }
-
-    virtual T GetConst(size_t index) const { return items.GetConst(index); }
 
     ArraySequence<T> *GetSubsequence(size_t startIndex, size_t endIndex) {
         if (startIndex < 0 || startIndex >= items.Count())
@@ -87,7 +87,7 @@ public:
         if (len != this->Count())
             return false;
         for (size_t i = 0; i < len; ++i)
-            if (this->GetConst(i) != list.GetConst(i))
+            if (this->Get(i) != list.Get(i))
                 return false;
 
         return true;
@@ -212,7 +212,7 @@ public:
         return res;
     }
 
-    T &operator[](size_t index) {
+    T &operator[](size_t index) const {
         return items[index];
     }
 

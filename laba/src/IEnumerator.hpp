@@ -37,12 +37,12 @@ public:
         return pos;
     }
 
-    friend bool operator==(const IEnumerator &a, const IEnumerator &b) {
-        return a->Equals(b);
+    friend bool operator==(const Child<T> &a, const Child<T> &b) {
+        return a.Equals(b);
     }
 
-    friend bool operator!=(const IEnumerator &a, const IEnumerator &b) {
-        return !a->Equals(b);
+    friend bool operator!=(const Child<T> &a, const Child<T> &b) {
+        return !a.Equals(b);
     }
 
 

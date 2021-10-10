@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { theme } from '../stores/themeStore';
+
   const themes = ['dark', 'light'];
   const icons = ['🌙', '🌞'];
   let index = 0;
@@ -22,7 +23,8 @@
 
       });
     }
-  );</script>
+  );
+</script>
 <nav class='flex items-center justify-between flex-wrap bg-teal-500 p-6'>
   <div class='flex items-center flex-shrink-0 text-white mr-6'>
     <img src='/favicon.png' alt='Beautiful image' class='w-10 mr-2'>
