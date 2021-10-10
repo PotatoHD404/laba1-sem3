@@ -152,13 +152,16 @@ public:
     }
 };
 
-namespace std {
-    Complex sqrt(Complex &complex) {
-        float re = sqrt((complex.real + complex.Norm()) / 2);
-        float imag = complex.sgn() * sqrt((complex.Norm() - complex.real) / 2);
-
-        return {re, imag};
-    }
-}
+//namespace std {
+//#ifndef TEST_DB_COMPLEX_HPP
+//#define TEST_DB_COMPLEX_HPP
+//    Complex sqrt(Complex &complex) {
+//        float re = sqrt((complex.real + complex.Norm()) / 2);
+//        float imag = complex.sgn() * sqrt((complex.Norm() - complex.real) / 2);
+//
+//        return {re, imag};
+//    }
+//#endif //TEST_DB_COMPLEX_HPP
+//}
 
 #endif //TEST_DB_COMPLEX_H

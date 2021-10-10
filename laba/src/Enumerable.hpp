@@ -15,8 +15,8 @@ template<typename T>
 /*abstract*/
 class Enumerable : public Sequence<T>, public IEnumerable<T>, public ISorter<T> {
 public:
-//    using Sequence<T>::operator<<;
-//    using Sequence<T>::operator>>;
+//    using Sequence<Seq>::operator<<;
+//    using Sequence<Seq>::operator>>;
 
     virtual RandomAccessIterator<T> begin() { return RandomAccessIterator<T>(*this); }
 

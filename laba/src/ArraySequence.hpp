@@ -108,7 +108,7 @@ public:
         return res;
     }
 
-//    bool operator==(ArraySequence<T> &&list) {
+//    bool operator==(ArraySequence<Seq> &&list) {
 //        size_t len = list.Count();
 //        if (len != this->items.Count())
 //            return false;
@@ -119,7 +119,7 @@ public:
 //        return true;
 //    }
 
-//    virtual bool operator==(ArraySequence<T> &list) {
+//    virtual bool operator==(ArraySequence<Seq> &list) {
 //        size_t len = list.Count();
 //        if (len != this->items.Count())
 //            return false;
@@ -177,7 +177,7 @@ public:
     }
 
     virtual ArraySequence<T> &Concat(Sequence<T> &list) {
-//        ArraySequence<T> *res = new ArraySequence<T>();
+//        ArraySequence<Seq> *res = new ArraySequence<Seq>();
         for (size_t i = 0; i < items.Count(); ++i) {
             this->Add(items[i]);
         }
@@ -223,7 +223,7 @@ public:
         return *this;
     }
 
-//    ArraySequence<T> *Concat(const ArraySequence<T> *list) {
+//    ArraySequence<Seq> *Concat(const ArraySequence<Seq> *list) {
 //        return Concat(*list);
 //    }
 

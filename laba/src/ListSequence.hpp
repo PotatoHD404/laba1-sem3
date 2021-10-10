@@ -101,7 +101,7 @@ public:
     T &operator[](size_t index) const {
         return items[index];
     }
-//    virtual bool operator==(const Sequence<T> &list) = 0;
+//    virtual bool operator==(const Sequence<Seq> &list) = 0;
 
     virtual bool operator==(const Sequence<T> &list) {
         if(this == &list)
@@ -122,8 +122,8 @@ public:
         return *this;
     }
 
-//    ListSequence<T> Copy() const {
-//        return ListSequence<T>(this->items);
+//    ListSequence<Seq> Copy() const {
+//        return ListSequence<Seq>(this->items);
 //    }
 
     ListSequence<T> &Add(T item) {

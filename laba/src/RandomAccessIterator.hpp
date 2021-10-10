@@ -17,7 +17,7 @@ template<typename T>
 class RandomAccessIterator : public IEnumerator<T, RandomAccessIterator> {
 private:
     Sequence<T> &iterable;
-//    using IEnumerator = IEnumerator<T, RandomAccessIterator>;
+//    using IEnumerator = IEnumerator<Seq, RandomAccessIterator>;
 
 public:
     explicit RandomAccessIterator(Sequence<T> &it, size_t pos = 0) : IEnumerator<T, RandomAccessIterator>(pos),

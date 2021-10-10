@@ -84,7 +84,7 @@ public:
         for (size_t i = startIndex; i < len; ++i) {
             res.actual_array[i] = actual_array[i];
         }
-//        memcpy(res.actual_array, this->actual_array + startIndex, len * sizeof(T));
+//        memcpy(res.actual_array, this->actual_array + startIndex, len * sizeof(Seq));
         return res;
     }
 

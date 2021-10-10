@@ -60,7 +60,7 @@ public:
     }
 
     //Operations
-//    virtual shared_ptr<Sequence<T>> Copy() = 0;
+//    virtual shared_ptr<Sequence<Seq>> Copy() = 0;
 
     virtual Sequence &AddFirst(T item) = 0;
 

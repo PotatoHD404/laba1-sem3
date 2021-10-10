@@ -8,6 +8,5 @@ add_executable(Tests
         EnumerableTests.cpp
         LinkedListTests.cpp
         ListSequenceTests.cpp
-        SequenceTests.cpp
-        SortTests.cpp)
+        SequenceTests.cpp SortTests.cpp)
 target_link_libraries(Tests gtest gtest_main)

@@ -2,277 +2,174 @@
 // Created by kmv026 on 10.10.2021.
 //
 
-//
-// Created by lokt0 on 13.09.2021.
-//
-#include "gtest/gtest.h"
+#ifndef LABA3_SORTTESTS_H
+#define LABA3_SORTTESTS_H
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "cert-err58-cpp"
+
+#include <array>
+#include <algorithm>
+#include <random>
+#include <type_traits>
+#include <limits>
+#include <chrono>
+#include <gtest/gtest.h>
 #include "../ListSequence.hpp"
 #include "../ArraySequence.hpp"
+#include "../Complex.hpp"
 
-TEST(BubbleSort, IntegerArray){
-    auto arr = new ArraySequence<int>({5, 2, 3, 6, 1, 4});
-    arr = (ArraySequence<int>*)SequenceSorter<int>::BubbleSort(arr, [](int a, int b){ return a > b; });
-    EXPECT_EQ (1, arr->Get(0));
-    EXPECT_EQ (2, arr->Get(1));
-    EXPECT_EQ (3, arr->Get(2));
-    EXPECT_EQ (4, arr->Get(3));
-    EXPECT_EQ (5, arr->Get(4));
-    EXPECT_EQ (6, arr->Get(5));
-}
-TEST(BubbleSort, FloatArray){
-    auto arr = new ArraySequence<float>({0.5f, 0.2f, 0.3f, 0.6f, 0.1f, 0.4f});
-    arr = (ArraySequence<float>*)SequenceSorter<float>::BubbleSort(arr, [](float a, float b){ return a > b; });
-    EXPECT_EQ (0.1f, arr->Get(0));
-    EXPECT_EQ (0.2f, arr->Get(1));
-    EXPECT_EQ (0.3f, arr->Get(2));
-    EXPECT_EQ (0.4f, arr->Get(3));
-    EXPECT_EQ (0.5f, arr->Get(4));
-    EXPECT_EQ (0.6f, arr->Get(5));
-}
-TEST(BubbleSort, StringArray){
-    auto arr = new ArraySequence<string>({"a", "g", "cow", "human", "Sergei", "programming"});
-    arr = (ArraySequence<string>*)SequenceSorter<string>::BubbleSort(arr,[](const string& a, const string& b){
-        //return a.size() > b.size();
-        return a.compare(b);
-    });
-    EXPECT_EQ ("programming", arr->Get(0));
-    EXPECT_EQ ("Sergei", arr->Get(1));
-    EXPECT_EQ ("human", arr->Get(2));
-    EXPECT_EQ ("cow", arr->Get(3));
-    EXPECT_EQ ("g", arr->Get(4));
-    EXPECT_EQ ("a", arr->Get(5));
-}
-TEST(BubbleSort, IntegerList){
-    auto arr = new ListSequence<int>({5, 2, 3, 6, 1, 4});
-    arr = (ListSequence<int>*)SequenceSorter<int>::BubbleSort(arr, [](int a, int b){ return a > b; });
-    EXPECT_EQ (1, arr->Get(0));
-    EXPECT_EQ (2, arr->Get(1));
-    EXPECT_EQ (3, arr->Get(2));
-    EXPECT_EQ (4, arr->Get(3));
-    EXPECT_EQ (5, arr->Get(4));
-    EXPECT_EQ (6, arr->Get(5));
-}
-TEST(BubbleSort, FloatList){
-    auto arr = new ListSequence<float>({0.5f, 0.2f, 0.3f, 0.6f, 0.1f, 0.4f});
-    arr = (ListSequence<float>*)SequenceSorter<float>::BubbleSort(arr, [](float a, float b){ return a > b; });
-    EXPECT_EQ (0.1f, arr->Get(0));
-    EXPECT_EQ (0.2f, arr->Get(1));
-    EXPECT_EQ (0.3f, arr->Get(2));
-    EXPECT_EQ (0.4f, arr->Get(3));
-    EXPECT_EQ (0.5f, arr->Get(4));
-    EXPECT_EQ (0.6f, arr->Get(5));
-}
-TEST(BubbleSort, StringList){
-    auto arr = new ListSequence<string>({"a", "g", "cow", "human", "Sergei", "programming"});
-    arr = (ListSequence<string>*)SequenceSorter<string>::BubbleSort(arr,[](const string& a, const string& b){
-        //return a.size() > b.size();
-        return a.compare(b);
-    });
-    EXPECT_EQ ("programming", arr->Get(0));
-    EXPECT_EQ ("Sergei", arr->Get(1));
-    EXPECT_EQ ("human", arr->Get(2));
-    EXPECT_EQ ("cow", arr->Get(3));
-    EXPECT_EQ ("g", arr->Get(4));
-    EXPECT_EQ ("a", arr->Get(5));
+// https://stackoverflow.com/questions/55892577/how-to-test-the-same-behaviour-for-multiple-templated-classes-with-different-tem
+
+// https://github.com/google/googletest/blob/master/docs/advanced.md#type-parameterized-tests
+
+using namespace std;
+
+template<typename T>
+T GenRandom(mt19937 &rng) {
+    if constexpr(std::is_same<T, string>::value) {
+        static string alphanum = "0123456789"
+                                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                 "abcdefghijklmnopqrstuvwxyz";
+        uniform_int_distribution<unsigned> distribution(0, alphanum.length() - 1);
+        string res;
+        for (int i = 0; i < 5; ++i) {
+            res += alphanum[distribution(rng)];
+        }
+        return res;
+    } else if constexpr(std::is_same<T, Complex>::value) {
+        uniform_real_distribution<float> distribution(-1, 1);
+        return Complex((float) distribution(rng), (float) distribution(rng));
+    } else if constexpr(std::is_same<T, int>::value) {
+        uniform_int_distribution<int> distribution(-1000, 1000);
+        return (int) distribution(rng);
+    } else if constexpr(std::is_same<T, float>::value) {
+        uniform_real_distribution<float> distribution(-10, 10);
+        return (float) distribution(rng);
+    } else {
+        throw NotImplemented("", "");
+    }
 }
 
-TEST(InsertionSort, IntegerArray){
-    auto arr = new ArraySequence<int>({5, 2, 3, 6, 1, 4});
-    arr = (ArraySequence<int>*)SequenceSorter<int>::InsertionSort(arr, [](int a, int b){ return a > b; });
-    EXPECT_EQ (1, arr->Get(0));
-    EXPECT_EQ (2, arr->Get(1));
-    EXPECT_EQ (3, arr->Get(2));
-    EXPECT_EQ (4, arr->Get(3));
-    EXPECT_EQ (5, arr->Get(4));
-    EXPECT_EQ (6, arr->Get(5));
-}
-TEST(InsertionSort, FloatArray){
-    auto arr = new ArraySequence<float>({0.5f, 0.2f, 0.3f, 0.6f, 0.1f, 0.4f});
-    arr = (ArraySequence<float>*)SequenceSorter<float>::InsertionSort(arr, [](float a, float b){ return a > b; });
-    EXPECT_EQ (0.1f, arr->Get(0));
-    EXPECT_EQ (0.2f, arr->Get(1));
-    EXPECT_EQ (0.3f, arr->Get(2));
-    EXPECT_EQ (0.4f, arr->Get(3));
-    EXPECT_EQ (0.5f, arr->Get(4));
-    EXPECT_EQ (0.6f, arr->Get(5));
-}
-TEST(InsertionSort, StringArray){
-    auto arr = new ArraySequence<string>({"a", "g", "cow", "human", "Sergei", "programming"});
-    arr = (ArraySequence<string>*)SequenceSorter<string>::InsertionSort(arr,[](const string& a, const string& b){
-        //return a.size() > b.size();
-        return a.compare(b);
-    });
-    EXPECT_EQ ("programming", arr->Get(0));
-    EXPECT_EQ ("Sergei", arr->Get(1));
-    EXPECT_EQ ("human", arr->Get(2));
-    EXPECT_EQ ("cow", arr->Get(3));
-    EXPECT_EQ ("g", arr->Get(4));
-    EXPECT_EQ ("a", arr->Get(5));
-}
-TEST(InsertionSort, IntegerList){
-    auto arr = new ListSequence<int>({5, 2, 3, 6, 1, 4});
-    arr = (ListSequence<int>*)SequenceSorter<int>::InsertionSort(arr, [](int a, int b){ return a > b; });
-    EXPECT_EQ (1, arr->Get(0));
-    EXPECT_EQ (2, arr->Get(1));
-    EXPECT_EQ (3, arr->Get(2));
-    EXPECT_EQ (4, arr->Get(3));
-    EXPECT_EQ (5, arr->Get(4));
-    EXPECT_EQ (6, arr->Get(5));
-}
-TEST(InsertionSort, FloatList){
-    auto arr = new ListSequence<float>({0.5f, 0.2f, 0.3f, 0.6f, 0.1f, 0.4f});
-    arr = (ListSequence<float>*)SequenceSorter<float>::InsertionSort(arr, [](float a, float b){ return a > b; });
-    EXPECT_EQ (0.1f, arr->Get(0));
-    EXPECT_EQ (0.2f, arr->Get(1));
-    EXPECT_EQ (0.3f, arr->Get(2));
-    EXPECT_EQ (0.4f, arr->Get(3));
-    EXPECT_EQ (0.5f, arr->Get(4));
-    EXPECT_EQ (0.6f, arr->Get(5));
-}
-TEST(InsertionSort, StringList){
-    auto arr = new ListSequence<string>({"a", "g", "cow", "human", "Sergei", "programming"});
-    arr = (ListSequence<string>*)SequenceSorter<string>::InsertionSort(arr,[](const string& a, const string& b){
-        //return a.size() > b.size();
-        return a.compare(b);
-    });
-    EXPECT_EQ ("programming", arr->Get(0));
-    EXPECT_EQ ("Sergei", arr->Get(1));
-    EXPECT_EQ ("human", arr->Get(2));
-    EXPECT_EQ ("cow", arr->Get(3));
-    EXPECT_EQ ("g", arr->Get(4));
-    EXPECT_EQ ("a", arr->Get(5));
+template<typename Seq>
+class Sorts_Test : public testing::Test {
+public:
+    using T = typename Seq::type;
+
+    static auto const &test_data() {
+        static random_device rd;
+        static mt19937::result_type seed = rd() ^ (
+                (mt19937::result_type)
+                        chrono::duration_cast<chrono::seconds>(
+                                chrono::system_clock::now().time_since_epoch()
+                        ).count() +
+                (mt19937::result_type)
+                        chrono::duration_cast<chrono::microseconds>(
+                                chrono::high_resolution_clock::now().time_since_epoch()
+                        ).count());
+        static mt19937 rng = mt19937(seed);
+        static array<T, 1000> data;
+        static bool called;
+        if (!called) {
+            generate(
+                    data.begin(), data.end(), []() { return GenRandom<T>(rng); });
+            called = true;
+        }
+        return data;
+    }
+
+    void SetUp() override {
+
+
+    }
+
+    void TearDown() override {
+//        delete globalObject;
+//        globalObject = nullptr;
+    }
+
+
+};
+
+TYPED_TEST_SUITE_P(Sorts_Test);
+
+TYPED_TEST_P(Sorts_Test, QuickSort) {
+    // Inside a test, refer to TypeParam to get the type parameter.
+    using Seq = TypeParam;
+    using T = typename Seq::type;
+    Enumerable<T> &&seq = Seq();
+    array<T, 1000> test_data = this->test_data();
+    vector<T> data(test_data.begin(), test_data.end());
+    for (T el: test_data) {
+        seq.Add(el);
+    }
+    seq.Sort(Sorts::ShellSort<T>);
+    sort(data.begin(), data.end());
+    auto begin = seq.begin();
+    for (T el: data) {
+        EXPECT_EQ(*(begin++), el);
+    }
+
 }
 
-//TEST(HeapSort, IntegerArray){
-//    auto arr = new ArraySequence<int>({5, 2, 3, 6, 1, 4});
-//    arr = (ArraySequence<int>*)SequenceSorter<int>::HeapSort(arr, [](int a, int b){ return a > b; });
-//    EXPECT_EQ (1, arr->Get(0));
-//    EXPECT_EQ (2, arr->Get(1));
-//    EXPECT_EQ (3, arr->Get(2));
-//    EXPECT_EQ (4, arr->Get(3));
-//    EXPECT_EQ (5, arr->Get(4));
-//    EXPECT_EQ (6, arr->Get(5));
-//}
-//TEST(HeapSort, FloatArray){
-//    auto arr = new ArraySequence<float>({0.5f, 0.2f, 0.3f, 0.6f, 0.1f, 0.4f});
-//    arr = (ArraySequence<float>*)SequenceSorter<float>::HeapSort(arr, [](float a, float b){ return a > b; });
-//    EXPECT_EQ (0.1f, arr->Get(0));
-//    EXPECT_EQ (0.2f, arr->Get(1));
-//    EXPECT_EQ (0.3f, arr->Get(2));
-//    EXPECT_EQ (0.4f, arr->Get(3));
-//    EXPECT_EQ (0.5f, arr->Get(4));
-//    EXPECT_EQ (0.6f, arr->Get(5));
-//}
-//TEST(HeapSort, StringArray){
-//    auto arr = new ArraySequence<string>({"a", "g", "cow", "human", "Sergei", "programming"});
-//    arr = (ArraySequence<string>*)SequenceSorter<string>::HeapSort(arr,[](const string& a, const string& b){
-//        //return a.size() > b.size();
-//        return a.compare(b);
-//    });
-//    EXPECT_EQ ("human", arr->Get(0));
-//    EXPECT_EQ ("Sergei", arr->Get(1));
-//    EXPECT_EQ ("g", arr->Get(2));
-//    EXPECT_EQ ("cow", arr->Get(3));
-//    EXPECT_EQ ("a", arr->Get(4));
-//    EXPECT_EQ ("programming", arr->Get(5));
-//}
-//TEST(HeapSort, IntegerList){
-//    auto arr = new ListSequence<int>({5, 2, 3, 6, 1, 4});
-//    arr = (ListSequence<int>*)SequenceSorter<int>::HeapSort(arr, [](int a, int b){ return a > b; });
-//    EXPECT_EQ (1, arr->Get(0));
-//    EXPECT_EQ (2, arr->Get(1));
-//    EXPECT_EQ (3, arr->Get(2));
-//    EXPECT_EQ (4, arr->Get(3));
-//    EXPECT_EQ (5, arr->Get(4));
-//    EXPECT_EQ (6, arr->Get(5));
-//}
-//TEST(HeapSort, FloatList){
-//    auto arr = new ListSequence<float>({0.5f, 0.2f, 0.3f, 0.6f, 0.1f, 0.4f});
-//    arr = (ListSequence<float>*)SequenceSorter<float>::HeapSort(arr, [](float a, float b){ return a > b; });
-//    EXPECT_EQ (0.1f, arr->Get(0));
-//    EXPECT_EQ (0.2f, arr->Get(1));
-//    EXPECT_EQ (0.3f, arr->Get(2));
-//    EXPECT_EQ (0.4f, arr->Get(3));
-//    EXPECT_EQ (0.5f, arr->Get(4));
-//    EXPECT_EQ (0.6f, arr->Get(5));
-//}
-//TEST(HeapSort, StringList){
-//    auto arr = new ListSequence<string>({"a", "g", "cow", "human", "Sergei", "programming"});
-//    arr = (ListSequence<string>*)SequenceSorter<string>::HeapSort(arr,[](const string& a, const string& b){
-//        //return a.size() > b.size();
-//        return a.compare(b);
-//    });
-//    EXPECT_EQ ("human", arr->Get(0));
-//    EXPECT_EQ ("Sergei", arr->Get(1));
-//    EXPECT_EQ ("g", arr->Get(2));
-//    EXPECT_EQ ("cow", arr->Get(3));
-//    EXPECT_EQ ("a", arr->Get(4));
-//    EXPECT_EQ ("programming", arr->Get(5));
-//}
+TYPED_TEST_P(Sorts_Test, ShellSort) {
+    // Inside a test, refer to TypeParam to get the type parameter.
+    using Seq = TypeParam;
+    using T = typename Seq::type;
+    Enumerable<T> &&seq = Seq();
+    array<T, 1000> test_data = this->test_data();
+    vector<T> data(test_data.begin(), test_data.end());
+    for (T el: test_data) {
+        seq.Add(el);
+    }
+    seq.Sort(Sorts::ShellSort<T>);
+    sort(data.begin(), data.end());
+    auto begin = seq.begin();
+    for (T el: data) {
+        EXPECT_EQ(*(begin++), el);
+    }
 
-TEST(QuickSort, IntegerArray){
-    auto arr = new ArraySequence<int>({5, 2, 3, 6, 1, 4});
-    arr = (ArraySequence<int>*)SequenceSorter<int>::QuickSort(arr, [](int a, int b){ return a > b; });
-    EXPECT_EQ (1, arr->Get(0));
-    EXPECT_EQ (2, arr->Get(1));
-    EXPECT_EQ (3, arr->Get(2));
-    EXPECT_EQ (4, arr->Get(3));
-    EXPECT_EQ (5, arr->Get(4));
-    EXPECT_EQ (6, arr->Get(5));
+
 }
-TEST(QuickSort, FloatArray){
-    auto arr = new ArraySequence<float>({0.5f, 0.2f, 0.3f, 0.6f, 0.1f, 0.4f});
-    arr = (ArraySequence<float>*)SequenceSorter<float>::QuickSort(arr, [](float a, float b){ return a > b; });
-    EXPECT_EQ (0.1f, arr->Get(0));
-    EXPECT_EQ (0.2f, arr->Get(1));
-    EXPECT_EQ (0.3f, arr->Get(2));
-    EXPECT_EQ (0.4f, arr->Get(3));
-    EXPECT_EQ (0.5f, arr->Get(4));
-    EXPECT_EQ (0.6f, arr->Get(5));
+
+TYPED_TEST_P(Sorts_Test, InsertionSort) {
+    // Inside a test, refer to TypeParam to get the type parameter.
+    using Seq = TypeParam;
+    using T = typename Seq::type;
+    Enumerable<T> &&seq = Seq();
+    array<T, 1000> test_data = this->test_data();
+    vector<T> data(test_data.begin(), test_data.end());
+    for (T el: test_data) {
+        seq.Add(el);
+    }
+    seq.Sort(Sorts::ShellSort<T>);
+    sort(data.begin(), data.end());
+    auto begin = seq.begin();
+    for (T el: data) {
+        EXPECT_EQ(*(begin++), el);
+    }
+
+
 }
-TEST(QuickSort, StringArray){
-    auto arr = new ArraySequence<string>({"Sergei", "cow", "g", "human", "a", "programming"});
-    arr = (ArraySequence<string>*)SequenceSorter<string>::QuickSort(arr,[](const string& a, const string& b){
-        //return a.size() > b.size();
-        return b.size() < a.size();
-    });
-    EXPECT_EQ ("g", arr->Get(0));
-    EXPECT_EQ ("a", arr->Get(1));
-    EXPECT_EQ ("cow", arr->Get(2));
-    EXPECT_EQ ("human", arr->Get(3));
-    EXPECT_EQ ("Sergei", arr->Get(4));
-    EXPECT_EQ ("programming", arr->Get(5));
+
+template<template<typename> class C, typename ...Ts>
+using test_types = ::testing::Types<C<Ts>...>;
+
+using ListSequence_test_types = test_types<ListSequence, int, float, string, Complex>;
+using ArraySequence_test_types = test_types<ArraySequence, int, float, string, Complex>;
+
+
+REGISTER_TYPED_TEST_SUITE_P(Sorts_Test,
+                            QuickSort, ShellSort, InsertionSort);
+
+INSTANTIATE_TYPED_TEST_SUITE_P(ListSequence, Sorts_Test, ListSequence_test_types);
+INSTANTIATE_TYPED_TEST_SUITE_P(ArraySequence, Sorts_Test, ArraySequence_test_types);
+
+
+int main(int argc, char **argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
-TEST(QuickSort, IntegerList){
-    auto arr = new ListSequence<int>({5, 2, 3, 6, 1, 4});
-    arr = (ListSequence<int>*)SequenceSorter<int>::QuickSort(arr, [](int a, int b){ return a > b; });
-    EXPECT_EQ (1, arr->Get(0));
-    EXPECT_EQ (2, arr->Get(1));
-    EXPECT_EQ (3, arr->Get(2));
-    EXPECT_EQ (4, arr->Get(3));
-    EXPECT_EQ (5, arr->Get(4));
-    EXPECT_EQ (6, arr->Get(5));
-}
-TEST(QuickSort, FloatList){
-    auto arr = new ListSequence<float>({0.5f, 0.2f, 0.3f, 0.6f, 0.1f, 0.4f});
-    arr = (ListSequence<float>*)SequenceSorter<float>::QuickSort(arr, [](float a, float b){ return a > b; });
-    EXPECT_EQ (0.1f, arr->Get(0));
-    EXPECT_EQ (0.2f, arr->Get(1));
-    EXPECT_EQ (0.3f, arr->Get(2));
-    EXPECT_EQ (0.4f, arr->Get(3));
-    EXPECT_EQ (0.5f, arr->Get(4));
-    EXPECT_EQ (0.6f, arr->Get(5));
-}
-TEST(QuickSort, StringList){
-    auto arr = new ListSequence<string>({"Sergei", "cow", "g", "human", "a", "programming"});
-    arr = (ListSequence<string>*)SequenceSorter<string>::QuickSort(arr,[](const string& a, const string& b){
-        //return a.size() > b.size();
-        return a.size() > b.size();
-    });
-    EXPECT_EQ ("g", arr->Get(0));
-    EXPECT_EQ ("a", arr->Get(1));
-    EXPECT_EQ ("cow", arr->Get(2));
-    EXPECT_EQ ("human", arr->Get(3));
-    EXPECT_EQ ("Sergei", arr->Get(4));
-    EXPECT_EQ ("programming", arr->Get(5));
-}
+
+#pragma clang diagnostic pop
+#endif //LABA3_SORTTESTS_H

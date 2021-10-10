@@ -18,19 +18,19 @@ protected:
 
 public:
     typedef long difference_type; //almost always ptrdiff_t
-    typedef T value_type; //almost always T
-    typedef T &reference; //almost always T& or const T&
-    typedef T *pointer; //almost always T* or const T*
+    typedef T value_type; //almost always Seq
+    typedef T &reference; //almost always Seq& or const Seq&
+    typedef T *pointer; //almost always Seq* or const Seq*
     typedef std::random_access_iterator_tag iterator_category;  //usually std::forward_iterator_tag or similar
     explicit IEnumerator(size_t pos) : pos(pos) {}
-//    explicit IEnumerator(Iter<T> &it, size_t pos) = 0;
+//    explicit IEnumerator(Iter<Seq> &it, size_t pos) = 0;
 
 //    IEnumerator(const IEnumerator &other) = 0;
-//    virtual Child<T> Init() = 0;
+//    virtual Child<Seq> Init() = 0;
 
     virtual T &operator*() const = 0;
 
-//    virtual T *operator->() const = 0;
+//    virtual Seq *operator->() const = 0;
 
     // Prefix increment
     virtual Child<T> &operator++() = 0;

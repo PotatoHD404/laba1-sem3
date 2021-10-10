@@ -4,14 +4,15 @@
 
 #ifndef LABA2_ICOLLECTION_H
 #define LABA2_ICOLLECTION_H
-#include "Exceptions.hpp"
 
+#include "Exceptions.hpp"
 
 
 template<typename T>
 class ICollection {
 public:
     //Decomposition
+    using type = T;
 
     [[nodiscard]] virtual size_t Count() const = 0;
 
