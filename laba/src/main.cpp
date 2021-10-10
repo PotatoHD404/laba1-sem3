@@ -234,7 +234,7 @@ int main() {
 //    MainStartUI();
 
 
-    cout << v1.Sort() << endl;
+    cout << Sorts::ShellSort<int>(v1) << endl;
 //    ArraySequence<int> v2 = {5,4,3,2,1};
 //    cout << iterator << endl;
 //    cout << v1.begin() << endl;

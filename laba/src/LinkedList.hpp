@@ -79,6 +79,7 @@ public:
     }
 
     LinkedList(const LinkedList<T> &list) : LinkedList() {
+        length = 0;
         *this = list;
     }
 

@@ -63,9 +63,8 @@ namespace PrivateSorts {
     private:
         void shell_sort(RandomAccessIterator<T> &&first, RandomAccessIterator<T> &&last) const {
             for (auto d = (last.GetPos()) / 2; d != 0; d /= 2)
-                //нужен цикл для first = a[0..d-1]
                 for (auto i = first + d; i != last; ++i)
-                    for (auto j = i; j - first >= d && comp(*j, *(j - d)); j -= d)
+                    for (auto j = i; j - first >= d && *j < *(j - d); j -= d)
                         std::swap(*j, *(j - d));
         }
     };

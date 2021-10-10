@@ -6,16 +6,18 @@
 
 #ifndef LABA3_IENUMERATOR_H
 #define LABA3_IENUMERATOR_H
+
 // https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
 // Derived
 template<typename T, template<typename> class Child>
 class IEnumerator {
 protected:
-    size_t pos{};
+    size_t pos;
 //    using iterator_category = std::forward_iterator_tag;
 //    using difference_type   = std::ptrdiff_t;
 
 public:
+    explicit IEnumerator(size_t pos) : pos(pos) {}
 //    explicit IEnumerator(Iter<T> &it, size_t pos) = 0;
 
 //    IEnumerator(const IEnumerator &other) = 0;
@@ -26,7 +28,7 @@ public:
 //    virtual T *operator->() const = 0;
 
     // Prefix increment
-    virtual Child<T>& operator++() = 0;
+    virtual Child<T> &operator++() = 0;
 
     // Postfix increment
     virtual Child<T> operator++(int) = 0; // NOLINT(cert-dcl21-cpp)

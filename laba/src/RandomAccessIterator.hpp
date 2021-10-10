@@ -17,27 +17,27 @@ template<typename T>
 class RandomAccessIterator : public IEnumerator<T, RandomAccessIterator> {
 private:
     Sequence<T> &iterable;
-    size_t pos;
 //    using IEnumerator = IEnumerator<T, RandomAccessIterator>;
 
 public:
-    explicit RandomAccessIterator(Sequence<T> &it, size_t pos = 0) : iterable(it), pos(pos) {}
+    explicit RandomAccessIterator(Sequence<T> &it, size_t pos = 0) : iterable(it),
+                                                                     IEnumerator<T, RandomAccessIterator>(pos) {}
 
     RandomAccessIterator(const RandomAccessIterator &other) : iterable(other.iterable),
-                                                              pos(other.pos) {}
+                                                              IEnumerator<T, RandomAccessIterator>(other.pos) {}
 
-    virtual T &operator*() const { return iterable[pos]; }
+    virtual T &operator*() const { return iterable[this->pos]; }
 
-    virtual T *operator->() { return &iterable[pos]; }
+    virtual T *operator->() { return &iterable[this->pos]; }
 
     // Prefix increment
     virtual RandomAccessIterator &operator++() {
-        pos++;
+        this->pos++;
         return *this;
     }
 
     virtual RandomAccessIterator &operator--() {
-        pos--;
+        this->pos--;
         return *this;
     }
 
@@ -60,7 +60,7 @@ public:
     };
 
     virtual bool Equals(const RandomAccessIterator &b) const {
-        return this->iterable == b.iterable && this->GetPos() == b.GetPos();
+        return (this->iterable == b.iterable) && (this->GetPos() == b.GetPos());
     }
 
     virtual RandomAccessIterator operator-(const RandomAccessIterator &b) const {
