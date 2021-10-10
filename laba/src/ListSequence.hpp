@@ -78,6 +78,7 @@ public:
     virtual T &Get(size_t index) const {
         return items.Get(index);
     }
+    using Enumerable<T>::Sort;
 
     virtual Enumerable<T> &Sort() { return this->Enumerable<T>::Sort(Sorts::InsertionSort<T>); }
 
@@ -103,6 +104,8 @@ public:
 //    virtual bool operator==(const Sequence<T> &list) = 0;
 
     virtual bool operator==(const Sequence<T> &list) {
+        if(this == &list)
+            return true;
         size_t len = list.Count();
         if (len != this->Count())
             return false;

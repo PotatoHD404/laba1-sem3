@@ -83,6 +83,8 @@ public:
     }
 
     virtual bool operator==(const Sequence<T> &list) {
+        if(this == &list)
+            return true;
         size_t len = list.Count();
         if (len != this->Count())
             return false;

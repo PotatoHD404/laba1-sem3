@@ -114,11 +114,16 @@ public:
         return *this;
     }
 
-    virtual bool Contains(T item) {};
 
-    virtual LinkedList<T> &Clear() {};
+    virtual bool Contains(T item) {
+        throw NotImplemented("", "in LinkedList Contains");
+    };
 
-    virtual T Remove(T item) {};
+    virtual LinkedList<T> &Clear() { throw NotImplemented("", "in LinkedList Clear"); };
+
+    virtual T Remove(T item) {
+        throw NotImplemented("", "in LinkedList Remove");
+    };
 
     LinkedList<T> GetSubList(size_t startIndex, size_t endIndex) {
         if (startIndex < 0 || startIndex >= length)
@@ -247,7 +252,7 @@ public:
     }
 
     LinkedList<T> &operator=(const LinkedList<T> &list) {
-        if(&list != this) {
+        if (&list != this) {
             while (length)
                 RemoveFirst();
             if (list.length > 0) {

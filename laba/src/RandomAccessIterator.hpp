@@ -20,24 +20,29 @@ private:
 //    using IEnumerator = IEnumerator<T, RandomAccessIterator>;
 
 public:
-    explicit RandomAccessIterator(Sequence<T> &it, size_t pos = 0) : iterable(it),
-                                                                     IEnumerator<T, RandomAccessIterator>(pos) {}
+    explicit RandomAccessIterator(Sequence<T> &it, size_t pos = 0) : IEnumerator<T, RandomAccessIterator>(pos),
+                                                                     iterable(it) {}
 
-    RandomAccessIterator(const RandomAccessIterator &other) : iterable(other.iterable),
-                                                              IEnumerator<T, RandomAccessIterator>(other.pos) {}
+    RandomAccessIterator(const RandomAccessIterator &other) : IEnumerator<T, RandomAccessIterator>(other.pos),
+                                                              iterable(other.iterable) {}
 
     virtual T &operator*() const { return iterable[this->pos]; }
 
     virtual T *operator->() { return &iterable[this->pos]; }
 
+//    operator int() const
+//    {
+//        return this->pos;
+//    }
+
     // Prefix increment
     virtual RandomAccessIterator &operator++() {
-        this->pos++;
+        ++this->pos;
         return *this;
     }
 
     virtual RandomAccessIterator &operator--() {
-        this->pos--;
+        --this->pos;
         return *this;
     }
 

@@ -34,7 +34,12 @@ public:
         out << "[";
         size_t length = x.Count();
         for (size_t i = 0; i < length; ++i) {
-            out << x[i];
+            if constexpr(std::is_same<T, string>::value) {
+                out << "\'" << x[i] << "\'";
+            }
+            else {
+                out << x[i];
+            }
             if (i != length - 1)
                 out << ", ";
         }

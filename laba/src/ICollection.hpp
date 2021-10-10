@@ -4,7 +4,7 @@
 
 #ifndef LABA2_ICOLLECTION_H
 #define LABA2_ICOLLECTION_H
-
+#include "Exceptions.hpp"
 
 
 

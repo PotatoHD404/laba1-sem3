@@ -63,13 +63,13 @@ public:
         return *this;
     }
 
-    virtual bool Contains(T item) {};
+    virtual bool Contains(T item) { throw NotImplemented("", "in DynamicArray Contains"); };
 
-    virtual DynamicArray<T> &Clear() {};
+    virtual DynamicArray<T> &Clear() { throw NotImplemented("", "in DynamicArray Clear"); };
 
-    virtual DynamicArray<T> &Add(T item) {};
+    virtual DynamicArray<T> &Add(T item) { throw NotImplemented("", "in DynamicArray Add"); };
 
-    virtual T Remove(T item) {};
+    virtual T Remove(T item) { throw NotImplemented("", "in DynamicArray Remove"); };
 
     DynamicArray<T> GetSubArray(size_t startIndex, size_t endIndex) {
         if (startIndex < 0 || startIndex >= length)

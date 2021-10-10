@@ -17,6 +17,11 @@ protected:
 //    using difference_type   = std::ptrdiff_t;
 
 public:
+    typedef long difference_type; //almost always ptrdiff_t
+    typedef T value_type; //almost always T
+    typedef T &reference; //almost always T& or const T&
+    typedef T *pointer; //almost always T* or const T*
+    typedef std::random_access_iterator_tag iterator_category;  //usually std::forward_iterator_tag or similar
     explicit IEnumerator(size_t pos) : pos(pos) {}
 //    explicit IEnumerator(Iter<T> &it, size_t pos) = 0;
 
