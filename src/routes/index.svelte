@@ -8,7 +8,7 @@
   let consoleText = '';
   let type_selected = false;
   onMount(async () => {
-    worker = new Worker('scripts/service-worker.scripts', { type: 'module' });
+    worker = new Worker('scripts/service-worker.js', { type: 'module' });
     worker.onmessage = (e) => {
       if (e && e.data) {
         print(e.data);
