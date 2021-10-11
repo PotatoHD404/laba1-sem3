@@ -12,13 +12,13 @@ string str;
 EM_JS(const char *, do_fetch, (), {
 return Asyncify.handleAsync(async () => {
         let promise = new Promise(function(resolve, reject){
-        Module.addEventListener("message", text => {
+        Module.addEventListener("cin", e => {
 
-            resolve(text);
+            resolve(e.input);
 
         }, {once : true});
+        Module.listening = true;
         });
-        let promise = Module.cpp_promise;
         let res = await promise;
         let lengthBytes = lengthBytesUTF8(res)+1;
         let stringOnWasmHeap = _malloc(lengthBytes);

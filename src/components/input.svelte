@@ -1,4 +1,6 @@
-<script></script>
+<script>
+  export let props;
+</script>
 <div class='flex my-2 w-full md:w-2/3'>
   <div class='relative input-component empty w-full h-8 px-1'>
     <input id='items-input' type='text' name='items-input' class='px-2 bg-light w-full h-full overflow-hidden rounded-md

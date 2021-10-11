@@ -78,16 +78,6 @@ T InputValue() {
     return value;
 }
 
-int GenRandom(int minValue, int maxValue, mt19937 &rng) {
-    uniform_int_distribution<signed> distribution(minValue, maxValue);
-    return (int) distribution(rng);
-}
-
-float GenRandom(float minValue, float maxValue, mt19937 &rng) {
-    uniform_real_distribution<> distribution(minValue, maxValue);
-    return (float) distribution(rng);
-}
-
 template<typename T>
 T GenRandom(mt19937 &rng) {
     if constexpr(std::is_same<T, string>::value) {
@@ -100,9 +90,17 @@ T GenRandom(mt19937 &rng) {
             res += alphanum[distribution(rng)];
         }
         return res;
-    } else {
-        uniform_real_distribution<> distribution(-1, 1);
+    } else if constexpr(std::is_same<T, Complex>::value) {
+        uniform_real_distribution<float> distribution(-1, 1);
         return Complex((float) distribution(rng), (float) distribution(rng));
+    } else if constexpr(std::is_same<T, int>::value) {
+        uniform_int_distribution<int> distribution(-1000, 1000);
+        return (int) distribution(rng);
+    } else if constexpr(std::is_same<T, float>::value) {
+        uniform_real_distribution<float> distribution(-10, 10);
+        return (float) distribution(rng);
+    } else {
+        throw NotImplemented("", "");
     }
 }
 
@@ -164,28 +162,12 @@ void StartUI() {
                     break;
 
                 case 4:
-                    cout << *seq << endl;
+                    cout << "Sequence: " << *seq << endl;
                     break;
                 case 5:
                     count = DialogValue("Input items count");
-                    if constexpr(std::is_same<T, string>::value || std::is_same<T, Complex>::value) {
-                        for (int i = 0; i < count; ++i) {
-                            seq->Add(GenRandom<T>(rng));
-                        }
-                    } else {
-                        do {
-                            cout << "Input min value" << endl;
-                            value1 = InputValue<T>();
-                            cout << "Input max value" << endl;
-                            value2 = InputValue<T>();
-                            if (value1 >= value2) {
-                                cout << "Min value is less than max value. Try again." << endl;
-                            }
-                        } while (value1 >= value2);
-                        for (int i = 0; i < count; ++i) {
-                            seq->Add(GenRandom(value1, value2, rng));
-                        }
-
+                    for (int i = 0; i < count; ++i) {
+                        seq->Add(GenRandom<T>(rng));
                     }
                     break;
                 case 6:
@@ -200,7 +182,7 @@ void StartUI() {
                         seq->Sort(*sort);
                         auto t2 = high_resolution_clock::now();
                         duration<double, milli> ms_double = t2 - t1;
-                        cout << ms_double.count() << "ms" << endl;
+                        cout << "Result: " << ms_double.count() << "ms" << endl;
                     }
                     choice = 1;
                     break;
@@ -248,11 +230,7 @@ void MainStartUI() {
 
 
 int main() {
-//    vector<int> a = {};
-//    auto it = a.begin();
-//    cout << &(*it) << " " << &(*a.end()) << endl;
-//    a.push_back(1);
-//    cout << &(*it) << " " << &(*a.end()) << endl;
+
     MainStartUI();
     return 0;
 }
