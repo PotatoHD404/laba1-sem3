@@ -227,10 +227,45 @@ void MainStartUI() {
         }
     }
 }
-
+template<typename T>
+auto const &test_data() {
+    static random_device rd;
+    static mt19937::result_type seed = rd() ^ (
+            (mt19937::result_type)
+                    chrono::duration_cast<chrono::seconds>(
+                            chrono::system_clock::now().time_since_epoch()
+                    ).count() +
+            (mt19937::result_type)
+                    chrono::duration_cast<chrono::microseconds>(
+                            chrono::high_resolution_clock::now().time_since_epoch()
+                    ).count());
+    static mt19937 rng = mt19937(seed);
+    static array<T, 1000> data;
+    static bool called;
+    if (!called) {
+        generate(
+                data.begin(), data.end(), []() { return GenRandom<T>(rng); });
+        called = true;
+    }
+    return data;
+}
 
 int main() {
-
+//    using Seq = ListSequence<int>;
+//    using T = typename Seq::type;
+//    Enumerable<T> &&seq = Seq();
+//    array<T, 1000> test_data = ::test_data<T>();
+//    vector<T> data(test_data.begin(), test_data.end());
+//    for (T el: test_data) {
+//        seq.Add(el);
+//    }
+//    seq.Sort(Sorts::QuickSort<T>);
+////    sort(data.begin(), data.end());
+//    auto begin = seq.begin();
+//    auto begin1 = test_data.begin();
+//    for (T el: data) {
+//        cout << *(begin1++) << " " << *(begin++) << " " << el << endl;
+//    }
     MainStartUI();
     return 0;
 }

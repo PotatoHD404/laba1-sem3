@@ -39,22 +39,23 @@ namespace PrivateSorts {
         RandomAccessIterator<T>
         partition(const RandomAccessIterator<T> &start, const RandomAccessIterator<T> &end) const {
             auto partition_idx = start;
-            for (auto i = start; i != end; i++) {
-                if (*i <= *end) {
+            auto end1 = end - 1;
+            for (auto i = start; i != end1; i++) {
+                if (*i <= *end1) {
                     iter_swap(i, partition_idx);
                     partition_idx++;
                 }
             }
-            iter_swap(partition_idx, end);
+            iter_swap(partition_idx, end1);
             return partition_idx;
         }
 
         void quick_sort(const RandomAccessIterator<T> &start, const RandomAccessIterator<T> &end) const {
-            int size = distance(start, end - 1);
+            int size = distance(start, end);
             if (size <= 1) return;
-            auto partition_idx = partition(start, end - 1);
-            quick_sort(start, partition_idx - 1);
-            quick_sort(partition_idx, end - 1);
+            auto partition_idx = partition(start, end);
+            quick_sort(start, partition_idx);
+            quick_sort(partition_idx, end);
         }
     };
 
@@ -85,17 +86,10 @@ namespace PrivateSorts {
 
     private:
         void insertion_sort(RandomAccessIterator<T> &&begin, RandomAccessIterator<T> &&end) const {
-            if (begin == end) return; //If the range is empty, abort
-
-            for (auto i = begin + 1; i < end; ++i) {
-                auto j = i - 1;
-                bool flag = false; //Used to abort the loop after j == begin case
-                while (!flag && (j != begin || (flag = j == begin)) && *j > *i) {
-                    *(j + 1) = *j;
-                    j -= !flag; //If j == begin, don't decrement (Without branch)
-                }
-                *(j + 1) = *i;
-            }
+            iter_swap(begin, min_element(begin, end));
+            for (RandomAccessIterator<T> b = begin; ++b < end; begin = b)
+                for (RandomAccessIterator<T> c = b; *c < *begin; --c, --begin)
+                    iter_swap(begin, c);
         }
     };
 }

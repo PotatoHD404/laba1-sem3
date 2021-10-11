@@ -100,13 +100,13 @@ TYPED_TEST_P(Sorts_Test, QuickSort) {
     Enumerable<T> &&seq = Seq();
     array<T, 1000> test_data = this->test_data();
     vector<T> data(test_data.begin(), test_data.end());
-    for (T el: test_data) {
+    for (const T& el: test_data) {
         seq.Add(el);
     }
-    seq.Sort(Sorts::ShellSort<T>);
+    seq.Sort(Sorts::QuickSort<T>);
     sort(data.begin(), data.end());
     auto begin = seq.begin();
-    for (T el: data) {
+    for (const T& el: data) {
         EXPECT_EQ(*(begin++), el);
     }
 
@@ -119,13 +119,13 @@ TYPED_TEST_P(Sorts_Test, ShellSort) {
     Enumerable<T> &&seq = Seq();
     array<T, 1000> test_data = this->test_data();
     vector<T> data(test_data.begin(), test_data.end());
-    for (T el: test_data) {
+    for (const T& el: test_data) {
         seq.Add(el);
     }
     seq.Sort(Sorts::ShellSort<T>);
     sort(data.begin(), data.end());
     auto begin = seq.begin();
-    for (T el: data) {
+    for (const T& el: data) {
         EXPECT_EQ(*(begin++), el);
     }
 
@@ -139,13 +139,13 @@ TYPED_TEST_P(Sorts_Test, InsertionSort) {
     Enumerable<T> &&seq = Seq();
     array<T, 1000> test_data = this->test_data();
     vector<T> data(test_data.begin(), test_data.end());
-    for (T el: test_data) {
+    for (const T& el: test_data) {
         seq.Add(el);
     }
-    seq.Sort(Sorts::ShellSort<T>);
+    seq.Sort(Sorts::InsertionSort<T>);
     sort(data.begin(), data.end());
     auto begin = seq.begin();
-    for (T el: data) {
+    for (const T& el: data) {
         EXPECT_EQ(*(begin++), el);
     }
 
