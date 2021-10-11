@@ -136,7 +136,7 @@
           <Input text='Remove value from sequence' command={(choice)=>{Command('remove',choice);}}
                  button_text='Remove' />
           <Input text='Fill sequence with random numbers' command={(choice)=>{Command('fill',choice);}}
-                 button_text='Fill' />
+                 button_text='Fill' choice={10}/>
           <Select text='Init sequence with' command={(choice)=>{Command('init',choice);}}
                   button_text='Init' options={['ListSequence', 'ArraySequence']} />
           <Select text='Sort sequence' command={(choice)=>{Command('sort',choice);}}

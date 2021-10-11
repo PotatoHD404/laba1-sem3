@@ -2,7 +2,7 @@
   export let text;
   export let button_text;
   export let command;
-  let choice;
+  export let choice;
 </script>
 <div class='flex my-2 w-full md:w-2/3 pt-1'>
   <div class='relative input-component empty w-full h-8 px-1'>
