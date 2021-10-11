@@ -4,9 +4,9 @@
   export let command;
   let choice;
 </script>
-<div class='flex my-2 w-full md:w-2/3'>
+<div class='flex my-2 w-full md:w-2/3 pt-1'>
   <div class='relative input-component empty w-full h-8 px-1'>
-    <input bind:value={choice} type='text' name='items-input' class='px-2 bg-light w-full h-full overflow-hidden rounded-md
+    <input bind:value={choice} type='text' name='items-input' class='{choice ? "": "empty"} px-2 bg-light w-full h-full overflow-hidden rounded-md
           dark:bg-gray-900 dark:text-white focus:outline-none ring-1 ring-outline-light dark:ring-outline-dark'>
     <label class='absolute left-2 transition-all px-1 bg-transparent dark:text-gray-200 select-none'>
       {text}
@@ -22,12 +22,13 @@
 </div>
 <style>
     label {
+        pointer-events: none;
         top: 0;
         transform: translateY(-100%);
         font-size: 11px;
     }
 
-    .empty input:not(:focus) + label {
+    input.empty:not(:focus) + label {
         top: 50%;
         transform: translateY(-50%);
         font-size: 14px;

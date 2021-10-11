@@ -3,9 +3,10 @@ import Laba3 from './Laba3.js';
 
 function cin(input) {
   if (self.instance?.listening) {
-    const event = new CustomEvent('cin', { input: input });
+    // const event = new CustomEvent('cin', { input: input });
     self.instance.listening = false;
-    self.instance.dispatchEvent(event);
+    self.instance.message(input);
+    // self.instance.dispatchEvent(event);
   } else {
     console.log('Not responding to your input. Try again later.');
   }
@@ -17,6 +18,7 @@ self.onmessage = async (e) => {
         postMessage(data);
       }
     });
+
     self.instance.listening = false;
     self.instance.start();
   } else {

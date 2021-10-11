@@ -5,9 +5,10 @@
   export let command;
   let choice;
 </script>
-<div class='flex my-2 w-full md:w-2/3'>
+<div class='flex my-2 w-full md:w-2/3 pt-2'>
   <div class='relative input-component empty w-full h-8 px-1'>
-    <select bind:value={choice}>
+    <select bind:value={choice} class='px-2 bg-light w-full h-full overflow-hidden rounded-md
+          dark:bg-gray-900 dark:text-gray-300 focus:outline-none ring-1 ring-outline-light dark:ring-outline-dark'>
       {#each options as option}
         <option value={option}>
           {option}

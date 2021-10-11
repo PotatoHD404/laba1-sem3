@@ -1,12 +1,15 @@
 <script>
   import Input from '../components/input.svelte';
   import Select from '../components/select.svelte';
+  import Field from '../components/field.svelte';
   import { onMount } from 'svelte';
 
   let worker;
   let ok = false;
   let consoleText = '';
   let type_selected = false;
+  let sequence = '';
+  let result = '';
   onMount(async () => {
     worker = new Worker('scripts/service-worker.js', { type: 'module' });
     worker.onmessage = (e) => {
@@ -16,7 +19,7 @@
     };
     worker.postMessage('init');
     ok = true;
-    console.log("initialized");
+    console.log('initialized');
   });
 
 
@@ -65,6 +68,7 @@
           worker.postMessage('1' + '\n' + choice + '\n' + '4');
           break;
         case 'input':
+          console.log('2' + '\n' + choice + '\n' + '4');
           worker.postMessage('2' + '\n' + choice + '\n' + '4');
           break;
         case 'remove':
@@ -95,9 +99,9 @@
     ok = true;
     console.log(data);
     if (data.includes('Sequence: ['))
-      document.getElementById('Sequence').value = data.split('Sequence: ')[1];
+      sequence = data.split('Sequence: ')[1];
     else if (data.includes('Result: '))
-      document.getElementById('result').value = data.split('Result: ')[1];
+      result = data.split('Result: ')[1];
 
     consoleText += data + '\r\n';
     let textarea = document.getElementById('consoleOutput');
@@ -118,10 +122,10 @@
 <div class='flex justify-center'>
   <div class='flex justify-center md:w-full xl:w-2/3 2xl:w-1/2'>
     <div class='flex justify-center flex-wrap md:w-2/3 w-full'>
-    <textarea
-      class='px-2 py-2 flex console bg-light ring-1 ring-outline-light dark:bg-deep-black dark:text-gray-200
+    <textarea id='consoleOutput'
+              class='px-2 py-2 flex console bg-light ring-1 ring-outline-light dark:bg-deep-black dark:text-gray-300
        rounded-md w-full focus:outline-none h-44 dark:ring-outline-dark m-1'
-      readonly>{consoleText}</textarea>
+              readonly>{consoleText}</textarea>
       {#if !type_selected}
         <Select text='Select type for sequence' command={(choice)=>{Command('type', choice);}}
                 button_text='Select' id='type' options={['int', 'float', 'string', 'complex']} />
@@ -137,6 +141,8 @@
                   button_text='Init' options={['ListSequence', 'ArraySequence']} />
           <Select text='Sort sequence' command={(choice)=>{Command('sort',choice);}}
                   button_text='Sort' options={['QuickSort', 'ShellSort', 'InsertionSort']} />
+          <Field label_text='Sequence' text={sequence} />
+          <Field label_text='Result' text={result} />
         </div>
       {/if}
     </div>
@@ -147,8 +153,14 @@
 
 
 <style>
-    .greenBox {
-        background-color: rgba(0, 255, 0, 0.2);
+    /*.greenBox {*/
+    /*    background-color: rgba(0, 255, 0, 0.2);*/
+    /*}*/
+
+    label {
+        top: 0;
+        transform: translateY(-100%);
+        font-size: 11px;
     }
 
     :global(body) {

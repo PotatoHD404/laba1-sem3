@@ -12,11 +12,9 @@ string str;
 EM_JS(const char *, do_fetch, (), {
 return Asyncify.handleAsync(async () => {
         let promise = new Promise(function(resolve, reject){
-        Module.addEventListener("cin", e => {
-
-            resolve(e.input);
-
-        }, {once : true});
+        Module.message = (input) => {
+            resolve(input);
+        };
         Module.listening = true;
         });
         let res = await promise;
@@ -50,7 +48,7 @@ string readline(){
             }
         else {res = str;
             str = "";}
-
+    cout << res << endl;
     return res;
 }
 #else
