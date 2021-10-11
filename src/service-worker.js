@@ -1,5 +1,4 @@
-import Laba3 from '../scripts/Laba3.js';
-import { consoleText } from '../stores/consoleStore';
+import Laba3 from './scripts/Laba3.js';
 
 
 function cin(input) {

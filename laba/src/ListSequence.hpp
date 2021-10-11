@@ -27,7 +27,7 @@ private:
 public:
     virtual RandomAccessIterator<T> begin() { return Iterator(*this); }
 
-    virtual RandomAccessIterator<T> end() { return Iterator(*this, this->Count()); }
+    virtual RandomAccessIterator<T> end() { return Iterator(*this, this->Count() > 0 ? this->Count() : 0); }
 
     ListSequence Copy() {
         return ListSequence<T>(*this);

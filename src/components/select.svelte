@@ -1,4 +1,5 @@
 <script>
+  export let options;
   export let text;
   export let button_text;
   export let command;
@@ -6,8 +7,13 @@
 </script>
 <div class='flex my-2 w-full md:w-2/3'>
   <div class='relative input-component empty w-full h-8 px-1'>
-    <input bind:value={choice} type='text' name='items-input' class='px-2 bg-light w-full h-full overflow-hidden rounded-md
-          dark:bg-gray-900 dark:text-white focus:outline-none ring-1 ring-outline-light dark:ring-outline-dark'>
+    <select bind:value={choice}>
+      {#each options as option}
+        <option>
+          {option}
+        </option>
+      {/each}
+    </select>
     <label class='absolute left-2 transition-all px-1 bg-transparent dark:text-gray-200 select-none'>
       {text}
     </label>

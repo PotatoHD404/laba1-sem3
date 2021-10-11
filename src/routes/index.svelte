@@ -1,66 +1,57 @@
 <script>
+  import LabWorker from '../service-worker?worker';
   import Input from '../components/input.svelte';
-  import { consoleText } from '../stores/consoleStore';
+  import Select from '../components/select.svelte';
 
-  let worker = new Worker('/workers/main.main.worker.js', { type: 'module' });
   let ok = false;
-  worker.addEventListener('message', (e) => {
-    if (e && e.data) {
-      print(e.data);
-    }
-  });
-  worker.postMessage('init');
-  let array = [...Array(2).keys()];
-  // const char *MSGS[] = {"0. Quit",
-  //   "1. Int",
-  //   "2. Float",
-  //   "3. String",
-  //   "4. Complex"};
-  //
-  //
-  // const char *MSGS1[] = {"0. Quit",
-  //   "1. Init sequence",
-  //   "2. Add value to sequence",
-  //   "3. Remove value from sequence",
-  //   "4. Print sequence",
-  //   "5. Fill with random values",
-  //   "6. Sort"};
-  //
-  // const char *MSGS2[] = {"0. Quit",
-  //   "1. ListSequence",
-  //   "2. ArraySequence"};
-  //
-  // const char *MSGS3[] = {"0. Quit",
-  //   "1. QuickSort",
-  //   "2. ShellSort",
-  //   "3. InsertionSort"};
-  function Command(input) {
+  let consoleText = '';
+  let type_selected = false;
+  console.log('sas');
+  let worker = 'a';
+  try {
+    const worker = new LabWorker();
+  }
+  catch (e){console.log('sus');}
+
+  // fetchWorker.onmessage = ({ data: { status, data } }) => {
+  //   if (status) loadState.status = status;
+  //   if (data) dataParsed = data;
+  //   if (status && status === "done") fetchWorker.terminate();
+  // };
+  // worker.onmessage = (e) => {
+  //   if (e && e.data) {
+  //     print(e.data);
+  //   }
+  // };
+  // worker.postMessage('init');
+
+  function Command(input, choice) {
+
     if (ok) {
       ok = false;
-      let choice;
       switch (input) {
         case 'type':
-          let mess;
-          switch (document.getElementById('typeSelect').value) {
+          choice = choice.replace(/\s/g, '');
+          console.log(choice);
+          switch (choice) {
             case 'int':
-              mess = '1';
+              choice = '1';
               break;
             case 'float':
-              mess = '2';
+              choice = '2';
               break;
             case 'strings':
-              mess = '3';
+              choice = '3';
               break;
             case 'complex':
-              mess = '4';
+              choice = '4';
               break;
           }
-          worker.postMessage(mess + '\n' + '4');
-          document.getElementById('type').classList.add('d-none');
-          document.getElementById('menu').classList.remove('d-none');
+          worker.postMessage(choice + '\n' + '4');
+          type_selected = true;
           break;
         case 'init':
-          switch (document.getElementById('typeSelect').value) {
+          switch (choice) {
             case 'ListSequence':
               choice = '1';
               break;
@@ -71,16 +62,16 @@
           worker.postMessage('1' + '\n' + choice + '\n' + '4');
           break;
         case 'input':
-          worker.postMessage('2' + '\n' + document.getElementById('seqInput').value + '\n' + '4');
+          worker.postMessage('2' + '\n' + choice + '\n' + '4');
           break;
         case 'remove':
-          worker.postMessage('3' + '\n' + document.getElementById('seqRemove').value + '\n' + '4');
+          worker.postMessage('3' + '\n' + choice + '\n' + '4');
           break;
-        case 'fillRandom':
-          worker.postMessage('5' + '\n' + document.getElementById('seqFill').value + '\n' + '4');
+        case 'fill':
+          worker.postMessage('5' + '\n' + choice + '\n' + '4');
           break;
         case 'sort':
-          switch (document.getElementById('sortSelect').value) {
+          switch (choice) {
             case 'QuickSort':
               choice = '1';
               break;
@@ -105,7 +96,7 @@
     else if (data.includes('Result: '))
       document.getElementById('result').value = data.split('Result: ')[1];
 
-    document.getElementById('consoleOutput').innerHTML += data + '\r\n';
+    consoleText += data + '\r\n';
     let textarea = document.getElementById('consoleOutput');
     let temp = textarea.scrollTop;
     let interval = setInterval(() => {
@@ -127,13 +118,26 @@
     <textarea
       class='px-2 py-2 flex console bg-light ring-1 ring-outline-light dark:bg-deep-black dark:text-gray-200
        rounded-md w-full focus:outline-none h-44 dark:ring-outline-dark m-1'
-      readonly>$consoleText</textarea>
-      <div class='my-2 w-full flex flex-wrap justify-center pt-2'>
-          <Input />
-      </div>
-
-
+      readonly>{consoleText}</textarea>
+      {#if !type_selected}
+        <Select text='Select type for sequence' command={(choice)=>{Command('type', choice);}}
+                button_text='Select' id='type' options={['int', 'float', 'string', 'complex']} />
+      {:else}
+        <div class='my-2 w-full flex flex-wrap justify-center pt-2' id='menu'>
+          <Input text='Add value to sequence' command={(choice)=>{Command('input',choice);}}
+                 button_text='Add' />
+          <Input text='Remove value from sequence' command={(choice)=>{Command('remove',choice);}}
+                 button_text='Remove' />
+          <Input text='Fill sequence with random numbers' command={(choice)=>{Command('fill',choice);}}
+                 button_text='Fill' />
+          <Select text='Init sequence with' command={(choice)=>{Command('init',choice);}}
+                  button_text='Init' options={['ListSequence', 'ArraySequence']} />
+          <Select text='Sort sequence' command={(choice)=>{Command('sort',choice);}}
+                  button_text='Sort' options={['QuickSort', 'ShellSort', 'InsertionSort']} />
+        </div>
+      {/if}
     </div>
+
 
   </div>
 </div>
