@@ -46,7 +46,7 @@
             case 'float':
               choice = '2';
               break;
-            case 'strings':
+            case 'string':
               choice = '3';
               break;
             case 'complex':
