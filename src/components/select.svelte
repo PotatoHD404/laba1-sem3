@@ -9,7 +9,7 @@
   <div class='relative input-component empty w-full h-8 px-1'>
     <select bind:value={choice}>
       {#each options as option}
-        <option>
+        <option value={option}>
           {option}
         </option>
       {/each}

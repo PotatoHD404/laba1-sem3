@@ -1,28 +1,31 @@
 <script>
-  import LabWorker from '../service-worker?worker';
   import Input from '../components/input.svelte';
   import Select from '../components/select.svelte';
+  import { onMount } from 'svelte';
 
+  let worker;
   let ok = false;
   let consoleText = '';
   let type_selected = false;
-  console.log('sas');
-  let worker = 'a';
-  try {
-    const worker = new LabWorker();
-  }
-  catch (e){console.log('sus');}
+  onMount(async () => {
+    worker = new Worker('scripts/service-worker.scripts', { type: 'module' });
+    worker.onmessage = (e) => {
+      if (e && e.data) {
+        print(e.data);
+      }
+    };
+    worker.postMessage('init');
+    ok = true;
+    console.log("initialized");
+  });
+
 
   // fetchWorker.onmessage = ({ data: { status, data } }) => {
   //   if (status) loadState.status = status;
   //   if (data) dataParsed = data;
   //   if (status && status === "done") fetchWorker.terminate();
   // };
-  // worker.onmessage = (e) => {
-  //   if (e && e.data) {
-  //     print(e.data);
-  //   }
-  // };
+
   // worker.postMessage('init');
 
   function Command(input, choice) {
@@ -90,7 +93,7 @@
 
   function print(data) {
     ok = true;
-    // console.log(data);
+    console.log(data);
     if (data.includes('Sequence: ['))
       document.getElementById('Sequence').value = data.split('Sequence: ')[1];
     else if (data.includes('Result: '))
