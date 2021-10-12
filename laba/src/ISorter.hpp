@@ -31,31 +31,33 @@ namespace PrivateSorts {
     public:
 
         Enumerable<T> &operator()(Enumerable<T> &arr) const final {
-            quick_sort(arr.begin(), arr.end());
+            quick_sort(arr.begin(), arr.end(), [](T a, T b) { return a < b; });
             return arr;
         }
 
     private:
-        RandomAccessIterator<T>
-        partition(const RandomAccessIterator<T> &start, const RandomAccessIterator<T> &end) const {
-            auto partition_idx = start;
-            auto end1 = end - 1;
-            for (auto i = start; i != end1; i++) {
-                if (*i <= *end1) {
-                    iter_swap(i, partition_idx);
-                    partition_idx++;
+        /// Quick Sort, allow user-defined less-than operator
+        template<typename RandomIt, typename Compare>
+        RandomIt Partition(RandomIt first, RandomIt last, Compare compare) const {
+            auto pivot = std::prev(last, 1);
+            auto i = first;
+            for (auto j = first; j != pivot; ++j) {
+                // bool format
+                if (compare(*j, *pivot)) {
+                    std::swap(*i++, *j);
                 }
             }
-            iter_swap(partition_idx, end1);
-            return partition_idx;
+            std::swap(*i, *pivot);
+            return i;
         }
 
-        void quick_sort(const RandomAccessIterator<T> &start, const RandomAccessIterator<T> &end) const {
-            int size = distance(start, end);
-            if (size <= 1) return;
-            auto partition_idx = partition(start, end);
-            quick_sort(start, partition_idx);
-            quick_sort(partition_idx, end);
+        template<typename RandomIt, typename Compare>
+        void quick_sort(RandomIt first, RandomIt last, Compare compare) const {
+            if (std::distance(first, last) > 1) {
+                RandomIt bound = Partition(first, last, compare);
+                quick_sort(first, bound, compare);
+                quick_sort(bound + 1, last, compare);
+            }
         }
     };
 

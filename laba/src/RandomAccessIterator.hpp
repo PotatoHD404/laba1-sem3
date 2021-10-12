@@ -58,6 +58,10 @@ public:
         --(*this);
         return tmp;
     }
+    virtual RandomAccessIterator &operator+=(size_t num) {
+        *this = *this + num;
+        return *this;
+    };
 
     virtual RandomAccessIterator &operator-=(size_t num) {
         *this = *this - num;
