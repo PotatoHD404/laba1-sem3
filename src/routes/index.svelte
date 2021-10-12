@@ -2,6 +2,7 @@
   import Input from '../components/input.svelte';
   import Select from '../components/select.svelte';
   import Field from '../components/field.svelte';
+  import MyWorker from '../scripts/service-worker.js?worker&inline';
   import { onMount } from 'svelte';
 
   let worker;
@@ -11,7 +12,7 @@
   let sequence = '';
   let result = '';
   onMount(async () => {
-    worker = new Worker('scripts/service-worker.js', { type: 'module' });
+    worker = new MyWorker();
     worker.onmessage = (e) => {
       if (e && e.data) {
         print(e.data);
