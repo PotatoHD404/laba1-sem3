@@ -6,7 +6,7 @@
 #define LABA3_ITERIMPLEMENTATION_HPP
 
 template<typename Interface>
-struct Implementation {
+class Implementation {
 
 public:
     using T = typename Interface::type;
@@ -43,6 +43,14 @@ public:
     [[maybe_unused]] explicit Implementation(ConcreteType *object)
             : storage(object),
               copy([](const Interface &strg) -> Interface * { return new ConcreteType(static_cast<const ConcreteType&>(strg)); }) {}
+
+
+    template<typename ConcreteType>
+    [[maybe_unused]] explicit Implementation(const ConcreteType &object)
+            : storage(new ConcreteType(object)),
+              copy([](const Interface &strg) -> Interface * { return new ConcreteType(static_cast<const ConcreteType&>(strg)); }) {}
+
+
 
 
     virtual T *operator->() { return storage->operator->(); }
@@ -94,11 +102,11 @@ public:
 
     virtual Implementation operator-(const Implementation &b) const {
 //        IEnumerator &tmp = RandomAccessIterator(*this);
-        return Implementation(copy(*storage - *b.storage));
+        return *storage - *b.storage;
     }
 
     virtual Implementation operator-(const size_t &b) const {
-        return Implementation(copy(*storage - b));
+        return *storage - b;
     }
 
 //    IEnumerator &operator/(const IEnumerator *b) const override {
@@ -106,15 +114,15 @@ public:
 //    }
 
     virtual Implementation operator/(const size_t &b) const {
-        return Implementation(copy(*storage / b));
+        return *storage / b;
     }
 
     virtual Implementation operator+(const Implementation &b) const {
-        return Implementation(copy(*storage + *b.storage));
+        return *storage + *b.storage;
     }
 
     virtual Implementation operator+(const size_t &b) const {
-        return Implementation(copy(*storage + b));
+        return *storage + b;
     }
 
     virtual bool operator<(const size_t &b) const {

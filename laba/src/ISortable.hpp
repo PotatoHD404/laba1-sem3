@@ -4,22 +4,19 @@
 // Created by kmv026 on 07.10.2021.
 //
 
-#ifndef LABA3_ISORTER_HPP
-#define LABA3_ISORTER_HPP
+#ifndef LABA3_ISORTABLE_HPP
+#define LABA3_ISORTABLE_HPP
 
 #include <utility>
-#include "IterImplementation.hpp"
+#include "IEnumerable.hpp"
 
-template<typename T>
-class Enumerable;
-
-template<typename T>
-using Iter = Implementation<RandomAccessIterator<T>>;
+//template<typename T>
+//class Enumerable;
 
 template<typename T>
 class ISort {
 public:
-    virtual Enumerable<T> &operator()(Enumerable<T> &arr) const = 0;
+    virtual IEnumerable<T> &operator()(IEnumerable<T> &arr) const = 0;
 };
 
 namespace std {
@@ -34,7 +31,7 @@ namespace PrivateSorts {
     private:
     public:
 
-        Enumerable<T> &operator()(Enumerable<T> &arr) const final {
+        IEnumerable<T> &operator()(IEnumerable<T> &arr) const final {
             quick_sort(arr.begin(), arr.end(), [](T a, T b) { return a < b; });
             return arr;
         }
@@ -68,7 +65,7 @@ namespace PrivateSorts {
     template<typename T>
     class ShellSort : public ISort<T> {
     public:
-        Enumerable<T> &operator()(Enumerable<T> &arr) const final {
+        IEnumerable<T> &operator()(IEnumerable<T> &arr) const final {
             shell_sort(arr.begin(), arr.end());
             return arr;
         }
@@ -85,7 +82,7 @@ namespace PrivateSorts {
     template<typename T>
     class InsertionSort : public ISort<T> {
     public:
-        Enumerable<T> &operator()(Enumerable<T> &arr) const final {
+        IEnumerable<T> &operator()(IEnumerable<T> &arr) const final {
             insertion_sort(arr.begin(), arr.end());
             return arr;
         }
@@ -117,9 +114,9 @@ namespace Sorts {
 }
 
 template<typename T>
-class ISorter {
+class ISortable {
 public:
-    virtual Enumerable<T> &Sort(const ISort<T> &sort) = 0;
+    virtual IEnumerable<T> &Sort(const ISort<T> &sort) = 0;
 };
 
-#endif //LABA3_ISORTER_HPP
+#endif //LABA3_ISORTABLE_HPP

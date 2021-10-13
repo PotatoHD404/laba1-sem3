@@ -8,9 +8,12 @@
 #include "IterImplementation.hpp"
 
 template<typename T>
+using Iter = Implementation<RandomAccessIterator<T>>;
+
+template<typename T>
 class IEnumerable {
 public:
-    virtual Implementation<RandomAccessIterator<T>> begin() = 0;
-    virtual Implementation<RandomAccessIterator<T>> end() = 0;
+    virtual Iter<T> begin() const= 0;
+    virtual Iter<T> end() const= 0;
 };
 #endif //LABA3_IENUMERABLE_HPP

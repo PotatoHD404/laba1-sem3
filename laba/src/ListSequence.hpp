@@ -9,7 +9,6 @@
 #include <cstring>
 #include <memory>
 #include "Enumerable.hpp"
-#include "RandomAccessIterator.hpp"
 
 
 using namespace std;
@@ -19,17 +18,10 @@ class ListSequence : public Enumerable<T> {
 private:
     mutable LinkedList<T> items;
 
-    class Iterator : public RandomAccessIterator<T> {
-        using RandomAccessIterator<T>::RandomAccessIterator;
-    };
-
-
 public:
-    virtual Iter<T> begin() { return Iter<T>(new Iterator(*this)); }
+    virtual Iter<T> begin() const { return items.begin(); }
 
-    virtual Iter<T> end() {
-        return Iter<T>(new Iterator(*this, this->Count() > 0 ? this->Count() : 0));
-    }
+    virtual Iter<T> end() const { return items.end(); }
 
     ListSequence Copy() {
         return ListSequence<T>(*this);
@@ -106,17 +98,8 @@ public:
     }
 //    virtual bool operator==(const Sequence<Seq> &list) = 0;
 
-    virtual bool operator==(const Sequence<T> &list) {
-        if (this == &list)
-            return true;
-        size_t len = list.Count();
-        if (len != this->Count())
-            return false;
-        for (size_t i = 0; i < len; ++i)
-            if (this->Get(i) != list.Get(i))
-                return false;
-
-        return true;
+    virtual bool operator==(const IList<T> &list) {
+        return items == list;
     }
 
     //Operations
