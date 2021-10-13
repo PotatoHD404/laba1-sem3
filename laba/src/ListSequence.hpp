@@ -25,9 +25,11 @@ private:
 
 
 public:
-    virtual RandomAccessIterator<T> begin() { return Iterator(*this); }
+    virtual Iter<T> begin() { return Iter<T>(new Iterator(*this)); }
 
-    virtual RandomAccessIterator<T> end() { return Iterator(*this, this->Count() > 0 ? this->Count() : 0); }
+    virtual Iter<T> end() {
+        return Iter<T>(new Iterator(*this, this->Count() > 0 ? this->Count() : 0));
+    }
 
     ListSequence Copy() {
         return ListSequence<T>(*this);
@@ -78,6 +80,7 @@ public:
     virtual T &Get(size_t index) const {
         return items.Get(index);
     }
+
     using Enumerable<T>::Sort;
 
     virtual Enumerable<T> &Sort() { return this->Enumerable<T>::Sort(Sorts::InsertionSort<T>); }
@@ -104,7 +107,7 @@ public:
 //    virtual bool operator==(const Sequence<Seq> &list) = 0;
 
     virtual bool operator==(const Sequence<T> &list) {
-        if(this == &list)
+        if (this == &list)
             return true;
         size_t len = list.Count();
         if (len != this->Count())

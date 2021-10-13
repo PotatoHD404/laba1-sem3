@@ -17,6 +17,7 @@ protected:
 //    using difference_type   = std::ptrdiff_t;
 
 public:
+    using type = T;
     typedef long difference_type; //almost always ptrdiff_t
     typedef T value_type; //almost always Seq
     typedef T &reference; //almost always Seq& or const Seq&

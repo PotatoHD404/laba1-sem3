@@ -8,9 +8,13 @@
 #define LABA3_ISORTER_HPP
 
 #include <utility>
+#include "IterImplementation.hpp"
 
 template<typename T>
 class Enumerable;
+
+template<typename T>
+using Iter = Implementation<RandomAccessIterator<T>>;
 
 template<typename T>
 class ISort {
@@ -20,7 +24,7 @@ public:
 
 namespace std {
     template<typename T>
-    int distance(const RandomAccessIterator<T> &ra1, const RandomAccessIterator<T> &ra2) {
+    int distance(const Iter<T> &ra1, const Iter<T> &ra2) {
         return abs((long) (ra1 - ra2).GetPos());
     }
 }
@@ -70,7 +74,7 @@ namespace PrivateSorts {
         }
 
     private:
-        void shell_sort(RandomAccessIterator<T> &&first, RandomAccessIterator<T> &&last) const {
+        void shell_sort(Iter<T> &&first, Iter<T> &&last) const {
             for (auto d = (last.GetPos()) / 2; d != 0; d /= 2)
                 for (auto i = first + d; i != last; ++i)
                     for (auto j = i; j - first >= d && *j < *(j - d); j -= d)
@@ -87,10 +91,10 @@ namespace PrivateSorts {
         }
 
     private:
-        void insertion_sort(RandomAccessIterator<T> &&begin, RandomAccessIterator<T> &&end) const {
+        void insertion_sort(Iter<T> &&begin, Iter<T> &&end) const {
             iter_swap(begin, min_element(begin, end));
-            for (RandomAccessIterator<T> b = begin; ++b < end; begin = b)
-                for (RandomAccessIterator<T> c = b; *c < *begin; --c, --begin)
+            for (Iter<T> b = begin; ++b < end; begin = b)
+                for (Iter<T> c = b; *c < *begin; --c, --begin)
                     iter_swap(begin, c);
         }
     };

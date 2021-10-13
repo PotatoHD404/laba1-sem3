@@ -11,6 +11,7 @@ function cin(input) {
     console.log('Not responding to your input. Try again later.');
   }
 }
+
 self.onmessage = async (e) => {
   if (e.data === 'init') {
     self.instance = await Laba3({

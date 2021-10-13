@@ -8,6 +8,7 @@
 #include "RandomAccessIterator.hpp"
 #include "IEnumerable.hpp"
 #include "ISorter.hpp"
+#include "IterImplementation.hpp"
 
 using namespace std;
 
@@ -18,10 +19,12 @@ public:
 //    using Sequence<Seq>::operator<<;
 //    using Sequence<Seq>::operator>>;
 
-    virtual RandomAccessIterator<T> begin() { return RandomAccessIterator<T>(*this); }
+    virtual Iter<T> begin() {
+        return Iter<T>(new RandomAccessIterator<T>(*this));
+    }
 
-    virtual RandomAccessIterator<T> end() {
-        return RandomAccessIterator<T>(*this, this->Count() > 0 ? this->Count() : 0);
+    virtual Iter<T> end() {
+        return Iter<T>(new RandomAccessIterator<T>(*this, this->Count() > 0 ? this->Count() : 0));
     }
 
     bool Contains(T item) {
