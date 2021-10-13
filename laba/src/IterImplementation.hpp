@@ -42,13 +42,13 @@ public:
     template<typename ConcreteType>
     [[maybe_unused]] explicit Implementation(ConcreteType *object)
             : storage(object),
-              copy([](const Interface &strg) -> Interface * { return new ConcreteType(static_cast<const ConcreteType&>(strg)); }) {}
+              copy([](Interface &strg) -> Interface * { return new ConcreteType(dynamic_cast<const ConcreteType&>(strg)); }) {}
 
 
     template<typename ConcreteType>
     [[maybe_unused]] explicit Implementation(const ConcreteType &object)
             : storage(new ConcreteType(object)),
-              copy([](const Interface &strg) -> Interface * { return new ConcreteType(static_cast<const ConcreteType&>(strg)); }) {}
+              copy([](const Interface &strg) -> Interface * { return new ConcreteType(dynamic_cast<const ConcreteType&>(strg)); }) {}
 
 
 

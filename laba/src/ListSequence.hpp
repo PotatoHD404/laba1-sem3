@@ -19,9 +19,9 @@ private:
     mutable LinkedList<T> items;
 
 public:
-    virtual Iter<T> begin() const { return items.begin(); }
+    virtual Iter<T> begin() { return items.begin(); }
 
-    virtual Iter<T> end() const { return items.end(); }
+    virtual Iter<T> end() { return items.end(); }
 
     ListSequence Copy() {
         return ListSequence<T>(*this);

@@ -108,12 +108,16 @@ private:
             }
             return *this;
         }
+
+        virtual bool Equals(const Iterator &b) const {
+            return ((LinkedList<T> &) this->iterable == (LinkedList<T> &) b.iterable) && (this->GetPos() == b.GetPos());
+        }
     };
 
 public:
-    virtual Iter<T> begin() const { return Iter<T>(new Iterator(*this)); }
+    virtual Iter<T> begin() { return Iter<T>(new Iterator(*this)); }
 
-    virtual Iter<T> end() const {
+    virtual Iter<T> end() {
         return Iter<T>(new Iterator(*this, this->Count() > 0 ? this->Count() : 0));
     }
     //Creation of the object
@@ -199,13 +203,25 @@ public:
         throw NotImplemented("", "in LinkedList Remove");
     };
 
-    virtual bool operator==(const IList<T> &list) {
+    virtual bool operator==(LinkedList<T> &list) {
         if (this->Count() != list.Count())
             return false;
         auto start = this->begin();
         for (T el: list) {
             if (el != *(start++))
                 return false;
+        }
+        return true;
+    }
+
+    virtual bool operator==(const IList<T> &list) {
+        if (this->Count() != list.Count())
+            return false;
+        int i = 0;
+        for (T el: *this) {
+            if (el != list[i])
+                return false;
+            i++;
         }
         return true;
     }
