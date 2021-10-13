@@ -82,7 +82,7 @@ public:
         return items.Count();
     }
 
-    virtual bool operator==(const IList<T> &list) {
+    virtual bool operator==(const Sequence<T> &list) {
         if(this == &list)
             return true;
         size_t len = list.Count();

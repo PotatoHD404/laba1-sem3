@@ -4,18 +4,31 @@
 #ifndef LABA3_SEQUENCE_HPP
 #define LABA3_SEQUENCE_HPP
 
-#include "IList.hpp"
-#include "ISortable.hpp"
+#include "ICollection.hpp"
 #include <iostream>
 #include <memory>
 
 using namespace std;
 
 template<typename T>
-class Sequence : public IList<T>, public ISortable<T> {
+class Sequence : public ICollection<T> {
 public:
     Sequence() = default;
 
+    virtual T &Get(size_t index) const = 0;
+
+    //Decomposition
+    virtual T &First() { return Get(0); }
+
+    virtual T &Last() { return Get(this->Count() - 1); }
+
+    void Set(size_t index, T value) {
+        Get(index) = value;
+    }
+
+    virtual bool operator==(const Sequence<T> &list) = 0;
+
+    virtual T &operator[](size_t index) const = 0;
 
     friend ostream &operator<<(ostream &out, const Sequence<T> &x) {
         out << "[";
@@ -23,7 +36,8 @@ public:
         for (size_t i = 0; i < length; ++i) {
             if constexpr(std::is_same<T, string>::value) {
                 out << "\'" << x[i] << "\'";
-            } else {
+            }
+            else {
                 out << x[i];
             }
             if (i != length - 1)
@@ -56,10 +70,9 @@ public:
 
     virtual T RemoveLast() = 0;
 
-    //Decomposition
-    virtual T &First() { return this->Get(0); }
+    virtual T RemoveAt(size_t index) = 0;
 
-    virtual T &Last() { return this->Get(this->Count() - 1); }
+    virtual T Remove(T item) = 0;
 
     virtual Sequence<T> &Concat(Sequence<T> &list) = 0;
 

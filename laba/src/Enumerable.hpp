@@ -5,24 +5,23 @@
 #define LABA2_ENUMERABLE_H
 
 #include "Sequence.hpp"
+#include "RandomAccessIterator.hpp"
 #include "IEnumerable.hpp"
-#include "ISortable.hpp"
+#include "ISorter.hpp"
 
 using namespace std;
 
 template<typename T>
 /*abstract*/
-class Enumerable : public Sequence<T> {
+class Enumerable : public Sequence<T>, public IEnumerable<T>, public ISorter<T> {
 public:
 //    using Sequence<Seq>::operator<<;
 //    using Sequence<Seq>::operator>>;
 
-    virtual Iter<T> begin() {
-        return Iter<T>(new RandomAccessIterator<T>(*this));
-    }
+    virtual RandomAccessIterator<T> begin() { return RandomAccessIterator<T>(*this); }
 
-    virtual Iter<T> end() {
-        return Iter<T>(new RandomAccessIterator<T>(*this, this->Count() > 0 ? this->Count() : 0));
+    virtual RandomAccessIterator<T> end() {
+        return RandomAccessIterator<T>(*this, this->Count() > 0 ? this->Count() : 0);
     }
 
     bool Contains(T item) {
@@ -36,7 +35,7 @@ public:
     virtual Enumerable<T> &Sort() { return this->Sort(Sorts::QuickSort<T>); }
 
     virtual Enumerable<T> &Sort(const ISort<T> &sort) {
-        return (Enumerable<T> &) sort(*this);
+        return sort(*this);
     }
 
     virtual T Remove(T item) {

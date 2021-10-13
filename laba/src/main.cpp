@@ -227,7 +227,6 @@ void MainStartUI() {
         }
     }
 }
-
 template<typename T>
 auto const &test_data() {
     static random_device rd;
@@ -251,12 +250,7 @@ auto const &test_data() {
     return data;
 }
 
-
-
-
 int main() {
-    ListSequence<int> a;
-    Implementation<RandomAccessIterator<int>> sas(new RandomAccessIterator<int>(a));
 //    using Seq = ListSequence<int>;
 //    using T = typename Seq::type;
 //    Enumerable<T> &&seq = Seq();
@@ -272,7 +266,7 @@ int main() {
 //    for (T el: data) {
 //        cout << *(begin1++) << " " << *(begin++) << " " << el << endl;
 //    }
-//    MainStartUI();
+    MainStartUI();
     return 0;
 }
 

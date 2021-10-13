@@ -9,6 +9,7 @@
 #include <cstring>
 #include <memory>
 #include "Enumerable.hpp"
+#include "RandomAccessIterator.hpp"
 
 
 using namespace std;
@@ -18,10 +19,15 @@ class ListSequence : public Enumerable<T> {
 private:
     mutable LinkedList<T> items;
 
-public:
-    virtual Iter<T> begin() { return items.begin(); }
+    class Iterator : public RandomAccessIterator<T> {
+        using RandomAccessIterator<T>::RandomAccessIterator;
+    };
 
-    virtual Iter<T> end() { return items.end(); }
+
+public:
+    virtual RandomAccessIterator<T> begin() { return Iterator(*this); }
+
+    virtual RandomAccessIterator<T> end() { return Iterator(*this, this->Count() > 0 ? this->Count() : 0); }
 
     ListSequence Copy() {
         return ListSequence<T>(*this);
@@ -72,7 +78,6 @@ public:
     virtual T &Get(size_t index) const {
         return items.Get(index);
     }
-
     using Enumerable<T>::Sort;
 
     virtual Enumerable<T> &Sort() { return this->Enumerable<T>::Sort(Sorts::InsertionSort<T>); }
@@ -98,8 +103,17 @@ public:
     }
 //    virtual bool operator==(const Sequence<Seq> &list) = 0;
 
-    virtual bool operator==(const IList<T> &list) {
-        return items == list;
+    virtual bool operator==(const Sequence<T> &list) {
+        if(this == &list)
+            return true;
+        size_t len = list.Count();
+        if (len != this->Count())
+            return false;
+        for (size_t i = 0; i < len; ++i)
+            if (this->Get(i) != list.Get(i))
+                return false;
+
+        return true;
     }
 
     //Operations

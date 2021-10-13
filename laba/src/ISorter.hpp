@@ -4,24 +4,23 @@
 // Created by kmv026 on 07.10.2021.
 //
 
-#ifndef LABA3_ISORTABLE_HPP
-#define LABA3_ISORTABLE_HPP
+#ifndef LABA3_ISORTER_HPP
+#define LABA3_ISORTER_HPP
 
 #include <utility>
-#include "IEnumerable.hpp"
 
-//template<typename T>
-//class Enumerable;
+template<typename T>
+class Enumerable;
 
 template<typename T>
 class ISort {
 public:
-    virtual IEnumerable<T> &operator()(IEnumerable<T> &arr) const = 0;
+    virtual Enumerable<T> &operator()(Enumerable<T> &arr) const = 0;
 };
 
 namespace std {
     template<typename T>
-    int distance(const Iter<T> &ra1, const Iter<T> &ra2) {
+    int distance(const RandomAccessIterator<T> &ra1, const RandomAccessIterator<T> &ra2) {
         return abs((long) (ra1 - ra2).GetPos());
     }
 }
@@ -31,7 +30,7 @@ namespace PrivateSorts {
     private:
     public:
 
-        IEnumerable<T> &operator()(IEnumerable<T> &arr) const final {
+        Enumerable<T> &operator()(Enumerable<T> &arr) const final {
             quick_sort(arr.begin(), arr.end(), [](T a, T b) { return a < b; });
             return arr;
         }
@@ -65,13 +64,13 @@ namespace PrivateSorts {
     template<typename T>
     class ShellSort : public ISort<T> {
     public:
-        IEnumerable<T> &operator()(IEnumerable<T> &arr) const final {
+        Enumerable<T> &operator()(Enumerable<T> &arr) const final {
             shell_sort(arr.begin(), arr.end());
             return arr;
         }
 
     private:
-        void shell_sort(Iter<T> &&first, Iter<T> &&last) const {
+        void shell_sort(RandomAccessIterator<T> &&first, RandomAccessIterator<T> &&last) const {
             for (auto d = (last.GetPos()) / 2; d != 0; d /= 2)
                 for (auto i = first + d; i != last; ++i)
                     for (auto j = i; j - first >= d && *j < *(j - d); j -= d)
@@ -82,16 +81,16 @@ namespace PrivateSorts {
     template<typename T>
     class InsertionSort : public ISort<T> {
     public:
-        IEnumerable<T> &operator()(IEnumerable<T> &arr) const final {
+        Enumerable<T> &operator()(Enumerable<T> &arr) const final {
             insertion_sort(arr.begin(), arr.end());
             return arr;
         }
 
     private:
-        void insertion_sort(Iter<T> &&begin, Iter<T> &&end) const {
+        void insertion_sort(RandomAccessIterator<T> &&begin, RandomAccessIterator<T> &&end) const {
             iter_swap(begin, min_element(begin, end));
-            for (Iter<T> b = begin; ++b < end; begin = b)
-                for (Iter<T> c = b; *c < *begin; --c, --begin)
+            for (RandomAccessIterator<T> b = begin; ++b < end; begin = b)
+                for (RandomAccessIterator<T> c = b; *c < *begin; --c, --begin)
                     iter_swap(begin, c);
         }
     };
@@ -114,9 +113,9 @@ namespace Sorts {
 }
 
 template<typename T>
-class ISortable {
+class ISorter {
 public:
-    virtual IEnumerable<T> &Sort(const ISort<T> &sort) = 0;
+    virtual Enumerable<T> &Sort(const ISort<T> &sort) = 0;
 };
 
-#endif //LABA3_ISORTABLE_HPP
+#endif //LABA3_ISORTER_HPP
