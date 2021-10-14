@@ -154,27 +154,28 @@ private:
     };
 
 public:
-    virtual Iter<T> begin() { return Iter<T>(new Iterator(*this)); }
+    virtual Iter<T> begin() { return Iter<T>(Iterator(*this)); }
 
     virtual Iter<T> end() {
-        return Iter<T>(new Iterator(*this, this->Count() > 0 ? this->Count() : 0));
+        return Iter<T>(Iterator(*this, this->Count() > 0 ? this->Count() : 0));
     }
     //Creation of the object
 
-    LinkedList() : head(NULL), tail(NULL), length() {}
+    LinkedList() : head(nullptr), tail(nullptr), length() {}
 
     explicit LinkedList(size_t count) : LinkedList() {
         if ((long) count < 0)
             throw out_of_range("count < 0");
         if (count > 0) {
-            head = new Node();
-            Node *prev = head;
+            Node *curr = new Node();
+            head = curr;
             for (size_t i = 1; i < count; ++i) {
-                prev->next = new Node();
-                prev->next->prev = prev;
-                prev = prev->next;
+                head->next = new Node();
+                head->next->prev = head;
+                head = head->next;
             }
-            tail = prev;
+            tail = head;
+            head = curr;
             length = count;
         }
     }
@@ -182,7 +183,7 @@ public:
     LinkedList(T *items, size_t count) : LinkedList() {
         if ((int) count < 0)
             throw out_of_range("count < 0");
-        if (items == NULL)
+        if (items == nullptr)
             throw invalid_argument("items is NULL");
         if (count > 0) {
             head = new Node(items[0]);
@@ -309,11 +310,12 @@ public:
 
     LinkedList<T> &AddFirst(T item) {
         Node *tmp = new Node(item);
-        if (head == NULL) {
+        if (head == nullptr) {
             head = tmp;
             tail = tmp;
         } else {
             tmp->next = head;
+            head->prev = tmp;
             head = tmp;
         }
         ++length;
@@ -336,23 +338,21 @@ public:
     }
 
     T RemoveFirst() {
-        if (length < 1)
-            throw range_error("length = 0");
+        if (length == 0)
+            throw range_error("No elements to remove");
         T data = head->data;
         if (length == 1) {
             delete head;
-        } else {
-            head = head->next;
-            head->prev = nullptr;
-        }
-
-        --length;
-        if (length == 0) {
             tail = nullptr;
             head = nullptr;
         } else {
-            delete head->prev;
+            Node* prev = head;
+            head = head->next;
+            delete prev;
+            head->prev = nullptr;
         }
+        --length;
+
         return data;
     }
 
@@ -416,7 +416,7 @@ public:
                 head = new Node(tmp->data);
                 Node *prev = head;
                 tmp = tmp->next;
-                while (tmp != NULL) {
+                while (tmp != nullptr) {
                     prev->next = new Node(tmp->data);
                     prev->next->prev = prev;
                     prev = prev->next;
