@@ -6,17 +6,23 @@
 
 #include <iostream>
 #include <cstring>
-#include "ICollection.hpp"
+#include "IList.hpp"
+#include "RandomAccessIterator.hpp"
+#include "IterImplementation.hpp"
+
+template<typename T>
+using Iter = Implementation<RandomAccessIterator<T>>;
+
 
 using namespace std;
 
 template<typename T>
-class LinkedList : public ICollection<T> {
+class LinkedList : public IList<T> {
 private:
     class Node;
 
 
-    Node *head, *tail;
+    mutable Node *head, *tail;
     size_t length;
 
     class Node {
@@ -32,7 +38,9 @@ private:
         Node(T data, Node *next) : next(next), data(data) {}
     };
 
-    Node *GetNode(size_t index) {
+    Node *GetNode(size_t index) const {
+        if (index == Count())
+            return tail;
         Node *res = head;
         for (size_t i = 0; i < index; i++) {
             res = res->next;
@@ -40,8 +48,78 @@ private:
         return res;
     }
 
+    class Iterator : public RandomAccessIterator<T> {
+    private:
+        Node *current;
+    public:
+
+        explicit Iterator(LinkedList<T> &it, size_t pos = 0) : RandomAccessIterator<T>::RandomAccessIterator(it, pos),
+                                                               current(it.GetNode(pos)) {}
+
+        Iterator(Iterator &other) : RandomAccessIterator<T>::RandomAccessIterator(other.iterable, other.pos) {}
+
+        virtual T &operator*() const { return current->data; }
+
+        virtual T *operator->() { return &current->data; }
+
+//        using RandomAccessIterator<T>::RandomAccessIterator;
+        virtual Iterator &operator++() {
+            current = current->next;
+            ++this->pos;
+            return *this;
+        }
+
+        virtual Iterator &operator--() {
+            current = static_cast<LinkedList<T>>((LinkedList &) this->iterable).GetNode(--this->pos);
+            return *this;
+        }
+
+        virtual Iter<T> operator-(const Iterator &b) const {
+            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, this->pos - b.GetPos()));
+        }
+
+        virtual Iter<T> operator-(const size_t &b) const {
+            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, this->pos - b));
+        }
+
+//    IEnumerator &operator/(const IEnumerator *b) const override {
+//        return new IEnumerable(this->iterable, this->pos / b);
+//    }
+
+        virtual Iter<T> operator/(const size_t &b) const {
+            if (b == 0)
+                throw invalid_argument("b equals 0");
+            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, this->pos / b));
+        }
+
+        virtual Iter<T> operator+(const Iterator &b) const {
+            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, this->pos + b.GetPos()));
+        }
+
+        virtual Iter<T> operator+(const size_t &b) const {
+            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, this->pos + b));
+        }
+
+        Iterator &operator=(const Iterator &list) {
+            if (this != &list) {
+                this->iterable = list.iterable;
+                this->pos = list.pos;
+                this->current = list.current;
+            }
+            return *this;
+        }
+
+        virtual bool Equals(const Iterator &b) const {
+            return ((LinkedList<T> &) this->iterable == (LinkedList<T> &) b.iterable) && (this->GetPos() == b.GetPos());
+        }
+    };
 
 public:
+    virtual Iter<T> begin() { return Iter<T>(new Iterator(*this)); }
+
+    virtual Iter<T> end() {
+        return Iter<T>(new Iterator(*this, this->Count() > 0 ? this->Count() : 0));
+    }
     //Creation of the object
 
     LinkedList() : head(NULL), tail(NULL), length() {}
@@ -85,19 +163,19 @@ public:
 
     //Decomposition
 
-    T &GetFirst() {
+    T &GetFirst() const {
         if (!head)
             throw out_of_range("");
         return head->data;
     }
 
-    T &GetLast() {
+    T &GetLast() const {
         if (!tail)
             throw out_of_range("");
         return tail->data;
     }
 
-    T &Get(size_t index) {
+    T &Get(size_t index) const {
         if (index < 0 || index >= length)
             throw out_of_range("index < 0 or index >= length");
         if (index == 0)
@@ -125,6 +203,30 @@ public:
         throw NotImplemented("", "in LinkedList Remove");
     };
 
+    virtual bool operator==(LinkedList<T> &list) {
+        if (this->Count() != list.Count())
+            return false;
+        auto start = this->begin();
+        for (T el: list) {
+            if (el != *(start++))
+                return false;
+        }
+        return true;
+    }
+
+    virtual bool operator==(const IList<T> &list) {
+        if (this->Count() != list.Count())
+            return false;
+        int i = 0;
+        for (T el: *this) {
+            if (el != list[i])
+                return false;
+            i++;
+        }
+        return true;
+    }
+
+
     LinkedList<T> GetSubList(size_t startIndex, size_t endIndex) {
         if (startIndex < 0 || startIndex >= length)
             throw range_error("index < 0 or index >= length");
@@ -145,7 +247,7 @@ public:
         return length;
     }
 
-    T &operator[](size_t index) { return Get(index); }
+    T &operator[](size_t index) const { return Get(index); }
 
     //Operations
 
