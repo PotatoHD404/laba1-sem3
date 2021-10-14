@@ -1,5 +1,5 @@
-import Laba3 from './Laba3.js';
 
+self.importScripts('/scripts/Laba3.js');
 
 function cin(input) {
   if (self.instance?.listening) {
@@ -13,8 +13,10 @@ function cin(input) {
 }
 
 self.onmessage = async (e) => {
+
   if (e.data === 'init') {
-    self.instance = await Laba3({
+
+    self.instance = await Module({
       'print': (data) => {
         postMessage(data);
       }

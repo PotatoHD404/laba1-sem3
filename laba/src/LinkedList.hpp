@@ -28,14 +28,15 @@ private:
     class Node {
     public:
         Node *next;
+        Node *prev;
         T data;
 
 
-        Node() : Node(T(), NULL) {}
+        Node() : Node(T(), nullptr, nullptr) {}
 
-        explicit Node(T data) : Node(data, NULL) {}
+        explicit Node(T data) : Node(data, nullptr, nullptr) {}
 
-        Node(T data, Node *next) : next(next), data(data) {}
+        Node(T data, Node *next, Node *prev) : next(next), prev(prev), data(data) {}
     };
 
     Node *GetNode(size_t index) const {
@@ -56,7 +57,11 @@ private:
         explicit Iterator(LinkedList<T> &it, size_t pos = 0) : RandomAccessIterator<T>::RandomAccessIterator(it, pos),
                                                                current(it.GetNode(pos)) {}
 
-        Iterator(Iterator &other) : RandomAccessIterator<T>::RandomAccessIterator(other.iterable, other.pos) {}
+        Iterator(Iterator &other) : RandomAccessIterator<T>::RandomAccessIterator(other.iterable, other.pos),
+                                    current(other.current) {}
+
+        Iterator(LinkedList<T> &it, Node *current, size_t pos) : RandomAccessIterator<T>::RandomAccessIterator(
+                it, pos), current(current) {}
 
         virtual T &operator*() const { return current->data; }
 
@@ -70,16 +75,26 @@ private:
         }
 
         virtual Iterator &operator--() {
-            current = static_cast<LinkedList<T>>((LinkedList &) this->iterable).GetNode(--this->pos);
+            current = current->prev;
+            --this->pos;
             return *this;
         }
 
         virtual Iter<T> operator-(const Iterator &b) const {
-            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, this->pos - b.GetPos()));
+            Node *curr = current;
+            size_t pos = b.GetPos();
+            for (size_t i = 0; i < pos; ++i) {
+                curr = curr->prev;
+            }
+            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, curr, this->pos - pos));
         }
 
         virtual Iter<T> operator-(const size_t &b) const {
-            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, this->pos - b));
+            Node *curr = current;
+            for (size_t i = 0; i < b; ++i) {
+                curr = curr->prev;
+            }
+            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, curr, this->pos - b));
         }
 
 //    IEnumerator &operator/(const IEnumerator *b) const override {
@@ -89,14 +104,23 @@ private:
         virtual Iter<T> operator/(const size_t &b) const {
             if (b == 0)
                 throw invalid_argument("b equals 0");
-            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, this->pos / b));
+            return *this - this->pos * (1 - 1 / b);
         }
 
         virtual Iter<T> operator+(const Iterator &b) const {
-            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, this->pos + b.GetPos()));
+            Node *curr = current;
+            size_t pos = b.GetPos();
+            for (size_t i = 0; i < pos; ++i) {
+                curr = curr->next;
+            }
+            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, curr, this->pos + b.GetPos()));
         }
 
         virtual Iter<T> operator+(const size_t &b) const {
+            Node *curr = current;
+            for (size_t i = 0; i < b; ++i) {
+                curr = curr->next;
+            }
             return Iter<T>(Iterator((LinkedList<T> &) this->iterable, this->pos + b));
         }
 
@@ -125,13 +149,14 @@ public:
     LinkedList() : head(NULL), tail(NULL), length() {}
 
     explicit LinkedList(size_t count) : LinkedList() {
-        if (count >= 536870912)
+        if ((long) count < 0)
             throw out_of_range("count < 0");
         if (count > 0) {
             head = new Node();
             Node *prev = head;
             for (size_t i = 1; i < count; ++i) {
                 prev->next = new Node();
+                prev->next->prev = prev;
                 prev = prev->next;
             }
             tail = prev;
@@ -149,6 +174,7 @@ public:
             Node *prev = head;
             for (size_t i = 1; i < count; ++i) {
                 prev->next = new Node(items[i]);
+                prev->next->prev = prev;
                 prev = prev->next;
             }
             tail = prev;
@@ -203,18 +229,21 @@ public:
         throw NotImplemented("", "in LinkedList Remove");
     };
 
-    virtual bool operator==(LinkedList<T> &list) {
-        if (this->Count() != list.Count())
-            return false;
-        auto start = this->begin();
-        for (T el: list) {
-            if (el != *(start++))
-                return false;
-        }
-        return true;
-    }
-
     virtual bool operator==(const IList<T> &list) {
+        if (dynamic_cast<const LinkedList<T> *>(&list) != nullptr) {
+            auto castedList = dynamic_cast<const LinkedList<T> &>(list);
+            if (this->Count() != castedList.Count())
+                return false;
+            auto head1 = this->head;
+            auto head2 = castedList.head;
+            while (head1) {
+                if (head1->data != head2->data)
+                    return false;
+                head1 = head1->next;
+                head2 = head2->next;
+            }
+            return true;
+        }
         if (this->Count() != list.Count())
             return false;
         int i = 0;
@@ -253,10 +282,11 @@ public:
 
     LinkedList<T> &Add(T item) {
         Node *tmp = new Node(item);
-        if (head == NULL)
+        if (head == nullptr)
             head = tmp;
         else
             tail->next = tmp;
+        tmp->prev = tail;
         tail = tmp;
         ++length;
         return *this;
@@ -281,10 +311,11 @@ public:
         if (length == 1) {
             return this->RemoveFirst();
         }
-        Node *prev = GetNode(length - 2);
-        tail = prev;
-        T data = prev->next->data;
-        delete prev->next;
+        T data = tail->data;
+        tail = tail->prev;
+
+        delete tail->next;
+        tail->next = nullptr;
         --length;
         return data;
     }
@@ -292,14 +323,20 @@ public:
     T RemoveFirst() {
         if (length < 1)
             throw range_error("length = 0");
-        Node *prev = head;
-        head = prev->next;
-        T data = prev->data;
-        delete prev;
+        T data = head->data;
+        if (length == 1) {
+            delete head;
+        } else {
+            head = head->next;
+            head->prev = nullptr;
+        }
+
         --length;
         if (length == 0) {
-            tail = NULL;
-            head = NULL;
+            tail = nullptr;
+            head = nullptr;
+        } else {
+            delete head->prev;
         }
         return data;
     }
@@ -319,6 +356,7 @@ public:
         Node *prev = GetNode(index - 1);
         Node *next = prev->next;
         prev->next = tmp;
+        next->prev = tmp;
         tmp->next = next;
         ++length;
         return *this;
@@ -337,6 +375,7 @@ public:
         T data = prev->next->data;
         delete prev->next;
         prev->next = next;
+        next->prev = prev;
         --length;
         return data;
 
@@ -364,6 +403,7 @@ public:
                 tmp = tmp->next;
                 while (tmp != NULL) {
                     prev->next = new Node(tmp->data);
+                    prev->next->prev = prev;
                     prev = prev->next;
                     tmp = tmp->next;
                 }

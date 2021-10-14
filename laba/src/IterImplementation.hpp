@@ -41,17 +41,19 @@ public:
 
     template<typename ConcreteType>
     [[maybe_unused]] explicit Implementation(ConcreteType *object)
-            : storage(object),
-              copy([](Interface &strg) -> Interface * { return new ConcreteType(dynamic_cast<const ConcreteType&>(strg)); }) {}
+            : storage(new ConcreteType(*object)),
+              copy([](Interface &strg) -> Interface * {
+                  return new ConcreteType(dynamic_cast<ConcreteType &>(strg));
+              }) {}
 
 
     template<typename ConcreteType>
-    [[maybe_unused]] explicit Implementation(const ConcreteType &object)
-            : storage(new ConcreteType(object)),
-              copy([](const Interface &strg) -> Interface * { return new ConcreteType(dynamic_cast<const ConcreteType&>(strg)); }) {}
+    [[maybe_unused]] explicit Implementation(ConcreteType &object)
+            : Implementation(&object) {}
 
-
-
+    template<typename ConcreteType>
+    [[maybe_unused]] explicit Implementation(ConcreteType &&object)
+            : Implementation(&object) {}
 
     virtual T *operator->() { return storage->operator->(); }
 
@@ -67,7 +69,7 @@ public:
 
     // Postfix increment
     virtual Implementation operator++(int) {
-        Implementation tmp = Implementation(*this);
+        Implementation tmp = Implementation(this->storage);
         ++(*this);
         return tmp;
     }
@@ -85,7 +87,7 @@ public:
     }
 
     virtual Implementation operator--(int) { // NOLINT(cert-dcl21-cpp)
-        Implementation tmp = Implementation(*this);
+        Implementation tmp = Implementation(this->storage);
         --(*this);
         return tmp;
     }
@@ -173,7 +175,7 @@ public:
 private:
     Interface *storage;
 
-    Interface *(*copy)(const Interface &);
+    Interface *(*copy)(Interface &);
 };
 
 #endif //LABA3_ITERIMPLEMENTATION_HPP

@@ -32,19 +32,18 @@ namespace PrivateSorts {
     public:
 
         IEnumerable<T> &operator()(IEnumerable<T> &arr) const final {
-            quick_sort(arr.begin(), arr.end(), [](T a, T b) { return a < b; });
+            quick_sort(arr.begin(), arr.end());
             return arr;
         }
 
     private:
         /// Quick Sort, allow user-defined less-than operator
-        template<typename RandomIt, typename Compare>
-        RandomIt Partition(RandomIt first, RandomIt last, Compare compare) const {
-            auto pivot = std::prev(last, 1);
+        Iter<T> Partition(const Iter<T> &first, const Iter<T> &last) const {
+            auto pivot = last - 1;
             auto i = first;
             for (auto j = first; j != pivot; ++j) {
                 // bool format
-                if (compare(*j, *pivot)) {
+                if (*j < *pivot) {
                     std::swap(*i++, *j);
                 }
             }
@@ -52,12 +51,11 @@ namespace PrivateSorts {
             return i;
         }
 
-        template<typename RandomIt, typename Compare>
-        void quick_sort(RandomIt first, RandomIt last, Compare compare) const {
+        void quick_sort(const Iter<T> &first, const Iter<T> &last) const {
             if (std::distance(first, last) > 1) {
-                RandomIt bound = Partition(first, last, compare);
-                quick_sort(first, bound, compare);
-                quick_sort(bound + 1, last, compare);
+                Iter<T> bound = Partition(first, last);
+                quick_sort(first, bound);
+                quick_sort(bound + 1, last);
             }
         }
     };

@@ -2,6 +2,7 @@
   import Input from '../components/input.svelte';
   import Select from '../components/select.svelte';
   import Field from '../components/field.svelte';
+  import LabWorker from '../../static/scripts/service-worker.js?worker';
   import { onMount } from 'svelte';
 
   let worker;
@@ -11,7 +12,7 @@
   let sequence = '';
   let result = '';
   onMount(async () => {
-    worker = new Worker('scripts/service-worker.js', { type: 'module' });
+    worker = new LabWorker();
     worker.onmessage = (e) => {
       if (e && e.data) {
         print(e.data);
@@ -136,7 +137,7 @@
           <Input text='Remove value from sequence' command={(choice)=>{Command('remove',choice);}}
                  button_text='Remove' />
           <Input text='Fill sequence with random numbers' command={(choice)=>{Command('fill',choice);}}
-                 button_text='Fill' choice={10}/>
+                 button_text='Fill' choice={10} />
           <Select text='Init sequence with' command={(choice)=>{Command('init',choice);}}
                   button_text='Init' options={['ListSequence', 'ArraySequence']} />
           <Select text='Sort sequence' command={(choice)=>{Command('sort',choice);}}
