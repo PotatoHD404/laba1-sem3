@@ -7,7 +7,10 @@
 
 template<typename Interface>
 class Implementation {
+private:
+    Interface *storage;
 
+    Interface *(*copy)(Interface &);
 public:
     using T = typename Interface::type;
     using difference_type = typename Interface::difference_type;
@@ -172,10 +175,7 @@ public:
 
     ~Implementation() { delete storage; }
 
-private:
-    Interface *storage;
 
-    Interface *(*copy)(Interface &);
 };
 
 #endif //LABA3_ITERIMPLEMENTATION_HPP

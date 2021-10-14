@@ -100,13 +100,13 @@ TYPED_TEST_P(Sorts_Test, QuickSort) {
     Enumerable<T> &&seq = Seq();
     array<T, 100> test_data = this->test_data();
     vector<T> data(test_data.begin(), test_data.end());
-    for (const T& el: test_data) {
+    for (const T &el: test_data) {
         seq.Add(el);
     }
     seq.Sort(Sorts::QuickSort<T>);
     sort(data.begin(), data.end());
     auto begin = seq.begin();
-    for (const T& el: data) {
+    for (const T &el: data) {
         EXPECT_EQ(*(begin++), el);
     }
 
@@ -119,13 +119,13 @@ TYPED_TEST_P(Sorts_Test, ShellSort) {
     Enumerable<T> &&seq = Seq();
     array<T, 100> test_data = this->test_data();
     vector<T> data(test_data.begin(), test_data.end());
-    for (const T& el: test_data) {
+    for (const T &el: test_data) {
         seq.Add(el);
     }
     seq.Sort(Sorts::ShellSort<T>);
     sort(data.begin(), data.end());
     auto begin = seq.begin();
-    for (const T& el: data) {
+    for (const T &el: data) {
         EXPECT_EQ(*(begin++), el);
     }
 
@@ -139,13 +139,13 @@ TYPED_TEST_P(Sorts_Test, InsertionSort) {
     Enumerable<T> &&seq = Seq();
     array<T, 100> test_data = this->test_data();
     vector<T> data(test_data.begin(), test_data.end());
-    for (const T& el: test_data) {
+    for (const T &el: test_data) {
         seq.Add(el);
     }
     seq.Sort(Sorts::InsertionSort<T>);
     sort(data.begin(), data.end());
     auto begin = seq.begin();
-    for (const T& el: data) {
+    for (const T &el: data) {
         EXPECT_EQ(*(begin++), el);
     }
 
@@ -155,8 +155,8 @@ TYPED_TEST_P(Sorts_Test, InsertionSort) {
 template<template<typename> class C, typename ...Ts>
 using test_types = ::testing::Types<C<Ts>...>;
 
-using ListSequence_test_types = test_types<ListSequence, int>;
-using ArraySequence_test_types = test_types<ArraySequence, int>;
+using ListSequence_test_types = test_types<ListSequence, int, float, string, Complex>;
+using ArraySequence_test_types = test_types<ArraySequence, int, float, string, Complex>;
 
 
 REGISTER_TYPED_TEST_SUITE_P(Sorts_Test,

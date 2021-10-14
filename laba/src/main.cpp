@@ -253,26 +253,26 @@ auto const &test_data1() {
 
 
 int main() {
-    using Seq = ListSequence<int>;
-    using T = typename Seq::type;
-    Enumerable<T> &&seq = Seq();
-    auto test_data = test_data1<T, 3>();
-    vector<T> data(test_data.begin(), test_data.end());
-    for (const T &el: test_data) {
-        seq.Add(el);
-    }
-    auto beg = data.begin();
-    sort(data.begin(), data.end());
-    for (T el: test_data) {
-        cout << el << " " << *beg++ << endl;
-    }
-    cout << endl;
-    seq.Sort(Sorts::QuickSort<T>);
-
-    auto begin = seq.begin();
-    for (const T &el: data) {
-        cout << *(begin++) << " " << el << endl;
-    }
+//    using Seq = ListSequence<int>;
+//    using T = typename Seq::type;
+//    Enumerable<T> &&seq = Seq();
+//    auto test_data = test_data1<T, 3>();
+//    vector<T> data(test_data.begin(), test_data.end());
+//    for (const T &el: test_data) {
+//        seq.Add(el);
+//    }
+//    auto beg = data.begin();
+//    sort(data.begin(), data.end());
+//    for (T el: test_data) {
+//        cout << el << " " << *beg++ << endl;
+//    }
+//    cout << endl;
+//    seq.Sort(Sorts::QuickSort<T>);
+//
+//    auto begin = seq.begin();
+//    for (const T &el: data) {
+//        cout << *(begin++) << " " << el << endl;
+//    }
 //    ListSequence<int> a;
 //    Implementation<RandomAccessIterator<int>> sas(new RandomAccessIterator<int>(a));
 //    using Seq = ListSequence<int>;
@@ -290,7 +290,7 @@ int main() {
 //    for (T el: data) {
 //        cout << *(begin1++) << " " << *(begin++) << " " << el << endl;
 //    }
-//    MainStartUI();
+    MainStartUI();
     return 0;
 }
 
