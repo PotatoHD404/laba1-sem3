@@ -101,6 +101,9 @@ public:
     virtual bool operator==(const IList<T> &list) {
         return items == list;
     }
+    virtual bool operator==(const ListSequence<T> &list) {
+        return items == list.items;
+    }
 
     //Operations
     ListSequence<T> &Clear() {

@@ -175,7 +175,7 @@ public:
 
 // c++ stuff
 
-    ~RandomAccessIterator() = default;
+   virtual ~RandomAccessIterator() = default;
 };
 
 #endif //LABA3_RANDOMACCESSITERATOR_HPP

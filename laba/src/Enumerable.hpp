@@ -18,11 +18,11 @@ public:
 //    using Sequence<Seq>::operator>>;
 
     virtual Iter<T> begin() {
-        return Iter<T>(new RandomAccessIterator<T>(*this));
+        return Iter<T>(RandomAccessIterator<T>(*this));
     }
 
     virtual Iter<T> end() {
-        return Iter<T>(new RandomAccessIterator<T>(*this, this->Count() > 0 ? this->Count() : 0));
+        return Iter<T>(RandomAccessIterator<T>(*this, this->Count() > 0 ? this->Count() : 0));
     }
 
     bool Contains(T item) {

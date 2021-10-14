@@ -41,7 +41,7 @@ T GenRandom(mt19937 &rng) {
         uniform_real_distribution<float> distribution(-1, 1);
         return Complex((float) distribution(rng), (float) distribution(rng));
     } else if constexpr(std::is_same<T, int>::value) {
-        uniform_int_distribution<int> distribution(-1000, 1000);
+        uniform_int_distribution<int> distribution(-100, 100);
         return (int) distribution(rng);
     } else if constexpr(std::is_same<T, float>::value) {
         uniform_real_distribution<float> distribution(-10, 10);
@@ -68,7 +68,7 @@ public:
                                 chrono::high_resolution_clock::now().time_since_epoch()
                         ).count());
         static mt19937 rng = mt19937(seed);
-        static array<T, 1000> data;
+        static array<T, 100> data;
         static bool called;
         if (!called) {
             generate(
@@ -98,7 +98,7 @@ TYPED_TEST_P(Sorts_Test, QuickSort) {
     using Seq = TypeParam;
     using T = typename Seq::type;
     Enumerable<T> &&seq = Seq();
-    array<T, 1000> test_data = this->test_data();
+    array<T, 100> test_data = this->test_data();
     vector<T> data(test_data.begin(), test_data.end());
     for (const T& el: test_data) {
         seq.Add(el);
@@ -117,7 +117,7 @@ TYPED_TEST_P(Sorts_Test, ShellSort) {
     using Seq = TypeParam;
     using T = typename Seq::type;
     Enumerable<T> &&seq = Seq();
-    array<T, 1000> test_data = this->test_data();
+    array<T, 100> test_data = this->test_data();
     vector<T> data(test_data.begin(), test_data.end());
     for (const T& el: test_data) {
         seq.Add(el);
@@ -137,7 +137,7 @@ TYPED_TEST_P(Sorts_Test, InsertionSort) {
     using Seq = TypeParam;
     using T = typename Seq::type;
     Enumerable<T> &&seq = Seq();
-    array<T, 1000> test_data = this->test_data();
+    array<T, 100> test_data = this->test_data();
     vector<T> data(test_data.begin(), test_data.end());
     for (const T& el: test_data) {
         seq.Add(el);
@@ -155,8 +155,8 @@ TYPED_TEST_P(Sorts_Test, InsertionSort) {
 template<template<typename> class C, typename ...Ts>
 using test_types = ::testing::Types<C<Ts>...>;
 
-using ListSequence_test_types = test_types<ListSequence, int, float, string, Complex>;
-using ArraySequence_test_types = test_types<ArraySequence, int, float, string, Complex>;
+using ListSequence_test_types = test_types<ListSequence, int>;
+using ArraySequence_test_types = test_types<ArraySequence, int>;
 
 
 REGISTER_TYPED_TEST_SUITE_P(Sorts_Test,

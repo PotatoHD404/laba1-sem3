@@ -228,8 +228,8 @@ void MainStartUI() {
     }
 }
 
-template<typename T>
-auto const &test_data() {
+template<typename T, int N = 1000>
+auto const &test_data1() {
     static random_device rd;
     static mt19937::result_type seed = rd() ^ (
             (mt19937::result_type)
@@ -241,7 +241,7 @@ auto const &test_data() {
                             chrono::high_resolution_clock::now().time_since_epoch()
                     ).count());
     static mt19937 rng = mt19937(seed);
-    static array<T, 1000> data;
+    static array<T, N> data;
     static bool called;
     if (!called) {
         generate(
@@ -252,11 +252,29 @@ auto const &test_data() {
 }
 
 
-
-
 int main() {
-    ListSequence<int> a;
-    Implementation<RandomAccessIterator<int>> sas(new RandomAccessIterator<int>(a));
+    using Seq = ListSequence<int>;
+    using T = typename Seq::type;
+    Enumerable<T> &&seq = Seq();
+    auto test_data = test_data1<T, 3>();
+    vector<T> data(test_data.begin(), test_data.end());
+    for (const T &el: test_data) {
+        seq.Add(el);
+    }
+    auto beg = data.begin();
+    sort(data.begin(), data.end());
+    for (T el: test_data) {
+        cout << el << " " << *beg++ << endl;
+    }
+    cout << endl;
+    seq.Sort(Sorts::QuickSort<T>);
+
+    auto begin = seq.begin();
+    for (const T &el: data) {
+        cout << *(begin++) << " " << el << endl;
+    }
+//    ListSequence<int> a;
+//    Implementation<RandomAccessIterator<int>> sas(new RandomAccessIterator<int>(a));
 //    using Seq = ListSequence<int>;
 //    using T = typename Seq::type;
 //    Enumerable<T> &&seq = Seq();
