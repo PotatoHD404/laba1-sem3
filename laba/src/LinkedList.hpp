@@ -41,6 +41,8 @@ private:
 
     Node *GetNode(size_t index) const {
         if (index == Count())
+            return nullptr;
+        if (index == Count() - 1)
             return tail;
         Node *res = head;
         for (size_t i = 0; i < index; i++) {
@@ -75,7 +77,10 @@ private:
         }
 
         virtual Iterator &operator--() {
-            current = current->prev;
+            if (current == nullptr && this->pos == this->iterable.Count())
+                current = ((LinkedList<T> &) this->iterable).tail;
+            else
+                current = current->prev;
             --this->pos;
             return *this;
         }
@@ -83,15 +88,25 @@ private:
         virtual Iter<T> operator-(const Iterator &b) const {
             Node *curr = current;
             size_t pos = b.GetPos();
+            if (curr == nullptr && this->pos == this->iterable.Count()) {
+                curr = ((LinkedList<T> &) this->iterable).tail;
+                pos--;
+            }
+
             for (size_t i = 0; i < pos; ++i) {
                 curr = curr->prev;
             }
-            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, curr, this->pos - pos));
+            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, curr, this->pos - pos + 1));
         }
 
         virtual Iter<T> operator-(const size_t &b) const {
             Node *curr = current;
-            for (size_t i = 0; i < b; ++i) {
+            size_t pos = b;
+            if (curr == nullptr) {
+                curr = ((LinkedList<T> &) this->iterable).tail;
+                pos--;
+            }
+            for (size_t i = 0; i < pos; ++i) {
                 curr = curr->prev;
             }
             return Iter<T>(Iterator((LinkedList<T> &) this->iterable, curr, this->pos - b));
