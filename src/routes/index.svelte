@@ -2,7 +2,7 @@
   import Input from '../components/input.svelte';
   import Select from '../components/select.svelte';
   import Field from '../components/field.svelte';
-  // import LabWorker from '../../static/scripts/service-worker.js';
+  import LabWorker from '../../static/scripts/service-worker.js?url';
   import { onMount } from 'svelte';
 
   let worker;
@@ -12,7 +12,7 @@
   let sequence = '';
   let result = '';
   onMount(async () => {
-    worker = new Worker('../../static/scripts/service-worker.js');
+    worker = new Worker(LabWorker);
     worker.onmessage = (e) => {
       if (e && e.data) {
         print(e.data);
