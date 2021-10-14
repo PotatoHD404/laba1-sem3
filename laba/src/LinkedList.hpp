@@ -7,6 +7,11 @@
 #include <iostream>
 #include <cstring>
 #include "IList.hpp"
+#include "RandomAccessIterator.hpp"
+#include "IterImplementation.hpp"
+
+template<typename T>
+using Iter = Implementation<RandomAccessIterator<T>>;
 
 
 using namespace std;
@@ -46,7 +51,114 @@ private:
         return res;
     }
 
+    class Iterator : public RandomAccessIterator<T> {
+    private:
+        Node *current;
+    public:
+
+        explicit Iterator(LinkedList<T> &it, size_t pos = 0) : RandomAccessIterator<T>::RandomAccessIterator(it, pos),
+                                                               current(it.GetNode(pos)) {}
+
+        Iterator(Iterator &other) : RandomAccessIterator<T>::RandomAccessIterator(other.iterable, other.pos),
+                                    current(other.current) {}
+
+        Iterator(LinkedList<T> &it, Node *current, size_t pos) : RandomAccessIterator<T>::RandomAccessIterator(
+                it, pos), current(current) {}
+
+        virtual T &operator*() const { return current->data; }
+
+        virtual T *operator->() { return &current->data; }
+
+//        using RandomAccessIterator<T>::RandomAccessIterator;
+        virtual Iterator &operator++() {
+            current = current->next;
+            ++this->pos;
+            return *this;
+        }
+
+        virtual Iterator &operator--() {
+            if (current == nullptr && this->pos == this->iterable.Count())
+                current = ((LinkedList<T> &) this->iterable).tail;
+            else
+                current = current->prev;
+            --this->pos;
+            return *this;
+        }
+
+        virtual Iter<T> operator-(const Iterator &b) const {
+            Node *curr = current;
+            size_t pos = b.GetPos();
+            if (curr == nullptr && this->pos == this->iterable.Count()) {
+                curr = ((LinkedList<T> &) this->iterable).tail;
+                pos--;
+            }
+
+            for (size_t i = 0; i < pos; ++i) {
+                curr = curr->prev;
+            }
+            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, curr, this->pos - pos + 1));
+        }
+
+        virtual Iter<T> operator-(const size_t &b) const {
+            Node *curr = current;
+            size_t pos = b;
+            if (curr == nullptr) {
+                curr = ((LinkedList<T> &) this->iterable).tail;
+                pos--;
+            }
+            for (size_t i = 0; i < pos; ++i) {
+                curr = curr->prev;
+            }
+            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, curr, this->pos - b));
+        }
+
+//    IEnumerator &operator/(const IEnumerator *b) const override {
+//        return new IEnumerable(this->iterable, this->pos / b);
+//    }
+
+        virtual Iter<T> operator/(const size_t &b) const {
+            if (b == 0)
+                throw invalid_argument("b equals 0");
+            return *this - this->pos * (1 - 1 / b);
+        }
+
+        virtual Iter<T> operator+(const Iterator &b) const {
+            Node *curr = current;
+            size_t pos = b.GetPos();
+            for (size_t i = 0; i < pos; ++i) {
+                curr = curr->next;
+            }
+            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, curr, this->pos + b.GetPos()));
+        }
+
+        virtual Iter<T> operator+(const size_t &b) const {
+            Node *curr = current;
+            for (size_t i = 0; i < b; ++i) {
+                curr = curr->next;
+            }
+            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, this->pos + b));
+        }
+
+        Iterator &operator=(const Iterator &list) {
+            if (this != &list) {
+                this->iterable = list.iterable;
+                this->pos = list.pos;
+                this->current = list.current;
+            }
+            return *this;
+        }
+
+        virtual bool Equals(const Iterator &b) const {
+            return ((LinkedList<T> &) this->iterable == (LinkedList<T> &) b.iterable) && (this->GetPos() == b.GetPos());
+        }
+    };
+
 public:
+    virtual Iter<T> begin() { return Iter<T>(new Iterator(*this)); }
+
+    virtual Iter<T> end() {
+        return Iter<T>(new Iterator(*this, this->Count() > 0 ? this->Count() : 0));
+    }
     //Creation of the object
 
     LinkedList() : head(NULL), tail(NULL), length() {}
@@ -133,12 +245,28 @@ public:
     };
 
     virtual bool operator==(const IList<T> &list) {
+        if (dynamic_cast<const LinkedList<T> *>(&list) != nullptr) {
+            auto castedList = dynamic_cast<const LinkedList<T> &>(list);
+            if (this->Count() != castedList.Count())
+                return false;
+            auto head1 = this->head;
+            auto head2 = castedList.head;
+            while (head1) {
+                if (head1->data != head2->data)
+                    return false;
+                head1 = head1->next;
+                head2 = head2->next;
+            }
+            return true;
+        }
         if (this->Count() != list.Count())
             return false;
-        for (int i = 0; i < this->Count(); ++i)
-            if (list[i] != this->Get(i))
+        int i = 0;
+        for (T el: *this) {
+            if (el != list[i])
                 return false;
-
+            i++;
+        }
         return true;
     }
 

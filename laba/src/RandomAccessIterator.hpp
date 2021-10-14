@@ -5,6 +5,8 @@
 #ifndef LABA3_RANDOMACCESSITERATOR_HPP
 #define LABA3_RANDOMACCESSITERATOR_HPP
 
+#include "IterImplementation.hpp"
+
 using namespace std;
 
 //#include "BidirectionalIterator.hpp"
@@ -15,7 +17,7 @@ class IList;
 template<typename T>
 class RandomAccessIterator {
 protected:
-    using Iter = RandomAccessIterator;
+    using Iter = Implementation<RandomAccessIterator<T>>;
     size_t pos;
     IList<T> &iterable;
 
@@ -32,7 +34,7 @@ public:
 
     explicit RandomAccessIterator(IList<T> &it, size_t pos = 0) : pos(pos), iterable(it) {}
 
-    RandomAccessIterator(const Iter &other) : pos(other.pos), iterable(other.iterable) {}
+    RandomAccessIterator(const RandomAccessIterator &other) : pos(other.pos), iterable(other.iterable) {}
 
 
 
@@ -53,11 +55,11 @@ public:
         return pos;
     }
 
-    friend bool operator==(const Iter &a, const Iter &b) {
+    friend bool operator==(const RandomAccessIterator &a, const RandomAccessIterator &b) {
         return a.Equals(b);
     }
 
-    friend bool operator!=(const Iter &a, const Iter &b) {
+    friend bool operator!=(const RandomAccessIterator &a, const RandomAccessIterator &b) {
         return !a.Equals(b);
     }
 
@@ -77,40 +79,40 @@ public:
 //    }
 
     // Prefix increment
-    virtual Iter &operator++() {
+    virtual RandomAccessIterator &operator++() {
         ++this->pos;
         return *this;
     }
 
-    virtual Iter &operator--() {
+    virtual RandomAccessIterator &operator--() {
         --this->pos;
         return *this;
     }
 
     // Postfix increment
     virtual Iter operator++(int) { // NOLINT(cert-dcl21-cpp)
-        Iter tmp = Iter(*this);
+        RandomAccessIterator tmp = RandomAccessIterator(*this);
         ++(*this);
         return Iter(tmp);
     }
 
     virtual Iter operator--(int) { // NOLINT(cert-dcl21-cpp)
-        Iter tmp = Iter(*this);
+        RandomAccessIterator tmp = RandomAccessIterator(*this);
         --(*this);
         return Iter(tmp);
     }
 
-    virtual bool Equals(const Iter &b) const {
+    virtual bool Equals(const RandomAccessIterator &b) const {
         return (this->iterable == b.iterable) && (this->GetPos() == b.GetPos());
     }
 
-    virtual Iter operator-(const Iter &b) const {
+    virtual Iter operator-(const RandomAccessIterator &b) const {
 //        IEnumerator &tmp = RandomAccessIterator(*this);
-        return Iter(Iter(this->iterable, this->pos - b.GetPos()));
+        return Iter(RandomAccessIterator(this->iterable, this->pos - b.GetPos()));
     }
 
     virtual Iter operator-(const size_t &b) const {
-        return Iter(Iter(this->iterable, this->pos - b));
+        return Iter(RandomAccessIterator(this->iterable, this->pos - b));
     }
 
 //    IEnumerator &operator/(const IEnumerator *b) const override {
@@ -120,31 +122,15 @@ public:
     virtual Iter operator/(const size_t &b) const {
         if (b == 0)
             throw invalid_argument("b equals 0");
-        return Iter(Iter(this->iterable, this->pos / b));
-    }
-    virtual Iter& operator-=(const Iter &b) {
-        *this - b;
-        return *this;
-    }
-    virtual Iter& operator+=(const Iter &b) {
-        *this + b;
-        return *this;
-    }
-    virtual Iter& operator+=(const size_t &b) {
-        *this + b;
-        return *this;
-    }
-    virtual Iter& operator-=(const size_t &b) {
-        *this - b;
-        return *this;
+        return Iter(RandomAccessIterator(this->iterable, this->pos / b));
     }
 
-    virtual Iter operator+(const Iter &b) const {
-        return Iter(Iter(this->iterable, this->pos + b.GetPos()));
+    virtual Iter operator+(const RandomAccessIterator &b) const {
+        return Iter(RandomAccessIterator(this->iterable, this->pos + b.GetPos()));
     }
 
     virtual Iter operator+(const size_t &b) const {
-        return Iter(Iter(this->iterable, this->pos + b));
+        return Iter(RandomAccessIterator(this->iterable, this->pos + b));
     }
 
     virtual bool operator<(const size_t &b) const {
@@ -163,23 +149,23 @@ public:
         return this->GetPos() >= b;
     }
 
-    virtual bool operator<(const Iter &b) const {
+    virtual bool operator<(const RandomAccessIterator<T> &b) const {
         return this->GetPos() < b.GetPos();
     }
 
-    virtual bool operator<=(const Iter &b) const {
+    virtual bool operator<=(const RandomAccessIterator<T> &b) const {
         return this->GetPos() <= b.GetPos();
     }
 
-    virtual bool operator>(const Iter &b) const {
+    virtual bool operator>(const RandomAccessIterator<T> &b) const {
         return this->GetPos() > b.GetPos();
     }
 
-    virtual bool operator>=(const Iter &b) const {
+    virtual bool operator>=(const RandomAccessIterator<T> &b) const {
         return this->GetPos() >= b.GetPos();
     }
 
-    RandomAccessIterator &operator=(const Iter &list) {
+    RandomAccessIterator<T> &operator=(const RandomAccessIterator<T> &list) {
         if (this != &list) {
             this->iterable = list.iterable;
             this->pos = list.pos;
@@ -189,7 +175,7 @@ public:
 
 // c++ stuff
 
-    virtual ~RandomAccessIterator() {};
+   virtual ~RandomAccessIterator() {};
 };
 
 #endif //LABA3_RANDOMACCESSITERATOR_HPP

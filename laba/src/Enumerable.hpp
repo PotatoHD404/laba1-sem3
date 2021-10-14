@@ -12,17 +12,17 @@ using namespace std;
 
 template<typename T>
 /*abstract*/
-class Enumerable : public Sequence<T>, public IEnumerable<T> {
+class Enumerable : public Sequence<T> {
 public:
 //    using Sequence<Seq>::operator<<;
 //    using Sequence<Seq>::operator>>;
 
     virtual Iter<T> begin() {
-        return Iter<T>(*this);
+        return Iter<T>(new RandomAccessIterator<T>(*this));
     }
 
     virtual Iter<T> end() {
-        return Iter<T>(*this, this->Count() > 0 ? this->Count() : 0);
+        return Iter<T>(new RandomAccessIterator<T>(*this, this->Count() > 0 ? this->Count() : 0));
     }
 
     bool Contains(T item) {

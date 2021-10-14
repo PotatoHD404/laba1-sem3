@@ -9,7 +9,7 @@
 #include "IEnumerable.hpp"
 
 template<typename T>
-class IList : public ICollection<T> {
+class IList : public ICollection<T>, public IEnumerable<T> {
 public:
     virtual T RemoveAt(size_t index) = 0;
 
