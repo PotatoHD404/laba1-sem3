@@ -1,9 +1,7 @@
 //
 // Created by kmv026 on 19.09.2021.
 //
-
-#ifndef LABA3_RANDOMACCESSITERATOR_HPP
-#define LABA3_RANDOMACCESSITERATOR_HPP
+#pragma once
 
 #include "IterImplementation.hpp"
 
@@ -177,5 +175,3 @@ public:
 
    virtual ~RandomAccessIterator() = default;
 };
-
-#endif //LABA3_RANDOMACCESSITERATOR_HPP

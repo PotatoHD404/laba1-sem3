@@ -2,8 +2,7 @@
 // Created by kmv026 on 10.10.2021.
 //
 
-#ifndef LABA3_EXCEPTIONS_HPP
-#define LABA3_EXCEPTIONS_HPP
+#pragma once
 
 class NotImplemented : public std::logic_error {
 private:
@@ -32,4 +31,3 @@ public:
     }
 };
 
-#endif //LABA3_EXCEPTIONS_HPP

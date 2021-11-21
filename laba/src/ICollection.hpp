@@ -1,22 +1,25 @@
 //
 // Created by korna on 03.04.2021.
 //
-
-#ifndef LABA2_ICOLLECTION_H
-#define LABA2_ICOLLECTION_H
+#pragma once
 
 #include "Exceptions.hpp"
-
+#include "IEnumerable.hpp"
 
 template<typename T>
-class ICollection {
+class ICollection : public IEnumerable<T> {
 public:
     //Decomposition
     using type = T;
 
     [[nodiscard]] virtual size_t Count() const = 0;
 
-    virtual bool Contains(T item) = 0;
+    virtual bool Contains(T item) {
+        for (auto el: *this)
+            if (el == item)
+                return true;
+        return false;
+    }
 
     //Operations
     virtual ICollection<T> &Clear() = 0;
@@ -27,5 +30,3 @@ public:
 
     virtual ~ICollection() = default;
 };
-
-#endif //LABA2_ICOLLECTION_H

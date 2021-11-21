@@ -6,7 +6,7 @@
 #include <chrono>
 #include <random>
 #include <sstream>
-#include "Sequence.hpp"
+#include "ISequence.hpp"
 #include "ListSequence.hpp"
 #include "ArraySequence.hpp"
 #include "Complex.hpp"
@@ -162,7 +162,7 @@ void StartUI() {
                     break;
 
                 case 4:
-                    cout << "Sequence: " << *seq << endl;
+                    cout << "ISequence: " << *seq << endl;
                     break;
                 case 5:
                     count = DialogValue("Input items count");

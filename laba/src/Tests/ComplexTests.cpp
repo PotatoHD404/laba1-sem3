@@ -1,10 +1,6 @@
 //
 // Created by korna on 20.04.2021.
 //
-#ifndef TEST_DB_COMPLEX_TESTS_CPP
-#define TEST_DB_COMPLEX_TESTS_CPP
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "cert-err58-cpp"
 
 #include "gtest/gtest.h"
 #include <iostream>
@@ -44,4 +40,3 @@ TEST(Complex, Compare) {
     Complex num = Complex(4.0, 2.0);
     EXPECT_TRUE(num > 0.0);
 }
-#endif //TEST_DB_COMPLEX_TESTS_CPP

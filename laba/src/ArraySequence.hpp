@@ -1,12 +1,11 @@
 //
 // Created by korna on 20.03.2021.
 //
-#ifndef LABA2_ARRAYSEQUENCE_H
-#define LABA2_ARRAYSEQUENCE_H
+#pragma once
 
-#include "Enumerable.hpp"
 #include "DynamicArray.hpp"
 #include "RandomAccessIterator.hpp"
+#include "ISequence.hpp"
 #include <iostream>
 #include <memory>
 #include <cstring>
@@ -14,11 +13,15 @@
 using namespace std;
 
 template<typename T>
-class ArraySequence : public Enumerable<T> {
+class ArraySequence : public ISequence<T> {
 private:
     mutable DynamicArray<T> items;
 
 public:
+    Iter<T> begin() override { return items.begin(); }
+
+    Iter<T> end() override { return items.end(); }
+
     ArraySequence Copy() {
         return ArraySequence<T>(*this);
     }
@@ -46,13 +49,13 @@ public:
     ArraySequence(ArraySequence<T> const &list) : items(list.items) {
     }
 
-    explicit ArraySequence(Sequence<T> &list) : ArraySequence((*dynamic_cast<ArraySequence<T> *>(&list))) {}
+    explicit ArraySequence(ISequence<T> &list) : ArraySequence((*dynamic_cast<ArraySequence<T> *>(&list))) {}
 
-    explicit ArraySequence(Sequence<T> *list) : ArraySequence(*list) {}
+    explicit ArraySequence(ISequence<T> *list) : ArraySequence(*list) {}
 
     explicit ArraySequence(const ArraySequence<T> *list) : ArraySequence(*list) {}
 
-    explicit ArraySequence(const unique_ptr<Sequence<T>> &list) : ArraySequence(list.get()) {}
+    explicit ArraySequence(const unique_ptr<ISequence<T>> &list) : ArraySequence(list.get()) {}
 
     explicit ArraySequence(const unique_ptr<ArraySequence<T>> &list) : ArraySequence(*list) {}
 
@@ -60,7 +63,7 @@ public:
 
 
 
-    virtual T &Get(size_t index) const {
+    T &Get(size_t index) const override {
         return items.Get(index);
     }
 
@@ -78,22 +81,24 @@ public:
         return res;
     }
 
-    [[nodiscard]] size_t Count() const {
+    [[nodiscard]] size_t Count() const override {
         return items.Count();
     }
 
-    virtual bool operator==(const IList<T> &list) {
-        if(this == &list)
-            return true;
-        size_t len = list.Count();
-        if (len != this->Count())
-            return false;
-        for (size_t i = 0; i < len; ++i)
-            if (this->Get(i) != list.Get(i))
-                return false;
+    T RemoveAt(size_t index) override { return items.RemoveAt(index); }
 
-        return true;
-    }
+//    bool operator==(const IList<T> &list) override {
+//        if(this == &list)
+//            return true;
+//        size_t len = list.Count();
+//        if (len != this->Count())
+//            return false;
+//        for (size_t i = 0; i < len; ++i)
+//            if (this->Get(i) != list.Get(i))
+//                return false;
+//
+//        return true;
+//    }
 
 
     ArraySequence<T> *Subsequence(size_t startIndex, size_t endIndex) {
@@ -108,27 +113,6 @@ public:
         return res;
     }
 
-//    bool operator==(ArraySequence<Seq> &&list) {
-//        size_t len = list.Count();
-//        if (len != this->items.Count())
-//            return false;
-//        for (size_t i = 0; i < len; ++i)
-//            if (this->Get(i) != list.Get(i))
-//                return false;
-//
-//        return true;
-//    }
-
-//    virtual bool operator==(ArraySequence<Seq> &list) {
-//        size_t len = list.Count();
-//        if (len != this->items.Count())
-//            return false;
-//        for (size_t i = 0; i < len; ++i)
-//            if (this->Get(i) != list.Get(i))
-//                return false;
-//
-//        return true;
-//    }
 
     //Operations
     template<typename T1>
@@ -146,13 +130,12 @@ public:
         return *this;
     }
 
-    ArraySequence<T> &Add(T item) {
-        items.Resize(items.Count() + 1);
-        items.Set(items.Count() - 1, item);
+    ArraySequence<T> &Add(T item) override {
+        items.Add(item);
         return *this;
     }
 
-    virtual ArraySequence<T> &AddFirst(T item) {
+    ArraySequence<T> &AddFirst(T item) override {
         items.Resize(items.Count() + 1);
         for (size_t i = items.Count() - 1; i > 0; --i) {
             items.Set(i, items.Get(i - 1));
@@ -161,7 +144,7 @@ public:
         return *this;
     }
 
-    ArraySequence<T> &Insert(size_t index, T item) {
+    ArraySequence<T> &Insert(size_t index, T item) override {
         if (index == 0)
             return AddFirst(item);
         items.Resize(items.Count() + 1);
@@ -176,18 +159,7 @@ public:
         return *this;
     }
 
-    virtual ArraySequence<T> &Concat(Sequence<T> &list) {
-//        ArraySequence<Seq> *res = new ArraySequence<Seq>();
-        for (size_t i = 0; i < items.Count(); ++i) {
-            this->Add(items[i]);
-        }
-        for (size_t i = 0; i < list.Count(); ++i) {
-            this->Add(list[i]);
-        }
-        return *this;
-    }
-
-    T RemoveFirst() {
+    T RemoveFirst() override {
         T res = items.Get(0);
         for (size_t i = 0; i < items.Count() - 1; ++i) {
             items.Set(i, items[i + 1]);
@@ -196,30 +168,18 @@ public:
         return res;
     }
 
-    T RemoveLast() {
+    T RemoveLast() override {
         T res = items.Get(items.Count() - 1);
         items.Resize(items.Count() - 1);
         return res;
     }
 
-    T RemoveAt(size_t index) {
-
-        if (index < 0 || index >= items.Count())
-            throw range_error("index < 0 or index >= length");
-        T res = items[index];
-        for (size_t i = index; i < items.Count() - 1; ++i) {
-            items.Set(i, items[i + 1]);
-        }
-        items.Resize(items.Count() - 1);
-        return res;
-    }
-
-    T &operator[](size_t index) const {
+    T &operator[](size_t index) const override {
         return items[index];
     }
 
-    ArraySequence<T> &Clear() {
-        items.Resize(0);
+    ArraySequence<T> &Clear() override {
+        items.Clear();
         return *this;
     }
 
@@ -229,5 +189,3 @@ public:
 
     ArraySequence<T> &operator=(const ArraySequence<T> &list) = default;
 };
-
-#endif //LABA2_ARRAYSEQUENCE_H

@@ -2,9 +2,6 @@
 // Created by korna on 17.04.2021.
 //
 
-#ifndef TEST_DB_DYNAMICARRAYTESTS_H
-#define TEST_DB_DYNAMICARRAYTESTS_H
-
 #include "gtest/gtest.h"
 #include "../DynamicArray.hpp"
 
@@ -119,6 +116,3 @@ TEST(DynamicArray, GetSubArray) {
 //    EXPECT_EQ (arr1[2], arr2.Get(0));
 //    EXPECT_EQ (arr1[3], arr2.Get(1));
 }
-
-
-#endif //TEST_DB_DYNAMICARRAYTESTS_H

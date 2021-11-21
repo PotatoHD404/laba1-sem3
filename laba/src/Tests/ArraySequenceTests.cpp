@@ -2,11 +2,6 @@
 // Created by korna on 17.04.2021.
 //
 
-
-
-#ifndef TEST_DB_ARRAYSEQUENCETESTS_H
-#define TEST_DB_ARRAYSEQUENCETESTS_H
-
 #include "gtest/gtest.h"
 #include "../ArraySequence.hpp"
 
@@ -739,6 +734,3 @@ TEST(ArraySequence_int, Equals) {
     ArraySequence<int> arr5{};
     EXPECT_TRUE(arr4 == arr5);
 }
-
-
-#endif //TEST_DB_ARRAYSEQUENCETESTS_H

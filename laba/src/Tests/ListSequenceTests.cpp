@@ -3,10 +3,6 @@
 //
 
 
-
-#ifndef TEST_DB_LISTSEQUENCETESTS_H
-#define TEST_DB_LISTSEQUENCETESTS_H
-
 #include "gtest/gtest.h"
 #include "../ListSequence.hpp"
 
@@ -738,5 +734,3 @@ TEST(ListSequence_int, Equals) {
     ListSequence<int> arr5{};
     EXPECT_TRUE(arr4 == arr5);
 }
-
-#endif //TEST_DB_LISTSEQUENCETESTS_H

@@ -1,27 +1,26 @@
 //
 // Created by korna on 20.03.2021.
 //
-#ifndef LABA2_DYNAMICARRAY_H
-#define LABA2_DYNAMICARRAY_H
+#pragma once
 
 #include <iostream>
 #include <cstring>
-#include "ICollection.hpp"
+#include "IList.hpp"
 
 using namespace std;
 
 template<class T>
-class DynamicArray : ICollection<T> {
+class DynamicArray : public IList<T> {
 private:
     T *actual_array;
-    size_t length;
+    size_t length{};
 
 public:
     //Creation of the object
     DynamicArray() : actual_array(new T[1]()), length(0) {}
 
     explicit DynamicArray(size_t count) {
-        if (count < 0)
+        if ((long)count < 0)
             throw out_of_range("count < 0");
 
         if (count > 0)
@@ -32,7 +31,7 @@ public:
     }
 
     DynamicArray(T *items, size_t count) {
-        if (count < 0)
+        if ((long)count < 0)
             throw out_of_range("count < 0");
         if (items == NULL)
             throw invalid_argument("items is NULL");
@@ -50,26 +49,43 @@ public:
     }
 
     //Decomposition
-    T &Get(size_t index) {
+    T &Get(size_t index) const override {
         if (index < 0 || index >= length)
             throw out_of_range("index < 0 or index >= length");
         return actual_array[index];
     }
 
-    DynamicArray<T> &Set(size_t index, T value) {
+    T &operator[](size_t index) const override { return actual_array[index]; }
+
+    DynamicArray<T> &Clear() override {
+        this->Resize(0);
+        return *this;
+    }
+
+    ICollection<T> &Add(T item) override {
+        this->Resize(this->Count() + 1);
+        this->Set(this->Count() - 1, item);
+        return *this;
+    }
+
+    T RemoveAt(size_t index) override {
+
+        if (index < 0 || index >= this->Count())
+            throw range_error("index < 0 or index >= length");
+        T res = this->Get(index);
+        for (size_t i = index; i < this->Count() - 1; ++i) {
+            this->Set(i, this->Get(i + 1));
+        }
+        this->Resize(this->Count() - 1);
+        return res;
+    }
+
+    DynamicArray<T> &Set(size_t index, T value) override {
         if (index < 0 || index >= length)
             throw range_error("index < 0 or index >= length");
         Get(index) = value;
         return *this;
     }
-
-    virtual bool Contains(T item) { throw NotImplemented("", "in DynamicArray Contains"); };
-
-    virtual DynamicArray<T> &Clear() { throw NotImplemented("", "in DynamicArray Clear"); };
-
-    virtual DynamicArray<T> &Add(T item) { throw NotImplemented("", "in DynamicArray Add"); };
-
-    virtual T Remove(T item) { throw NotImplemented("", "in DynamicArray Remove"); };
 
     DynamicArray<T> GetSubArray(size_t startIndex, size_t endIndex) {
         if (startIndex < 0 || startIndex >= length)
@@ -88,9 +104,7 @@ public:
         return res;
     }
 
-    size_t Count() const { return length; }
-
-    T &operator[](size_t index) { return actual_array[index]; }
+    [[nodiscard]] size_t Count() const override { return length; }
 
     //Operations
     DynamicArray<T> &Resize(size_t new_length) {
@@ -139,5 +153,3 @@ public:
         }
     }
 };
-
-#endif //LABA2_DYNAMICARRAY_H

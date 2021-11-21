@@ -2,12 +2,6 @@
 // Created by kmv026 on 10.10.2021.
 //
 
-#ifndef LABA3_SORTTESTS_H
-#define LABA3_SORTTESTS_H
-
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "cert-err58-cpp"
-
 #include <array>
 #include <algorithm>
 #include <random>
@@ -22,6 +16,8 @@
 // https://stackoverflow.com/questions/55892577/how-to-test-the-same-behaviour-for-multiple-templated-classes-with-different-tem
 
 // https://github.com/google/googletest/blob/master/docs/advanced.md#type-parameterized-tests
+
+const int itemNum = 1000;
 
 using namespace std;
 
@@ -41,7 +37,7 @@ T GenRandom(mt19937 &rng) {
         uniform_real_distribution<float> distribution(-1, 1);
         return Complex((float) distribution(rng), (float) distribution(rng));
     } else if constexpr(std::is_same<T, int>::value) {
-        uniform_int_distribution<int> distribution(-100, 100);
+        uniform_int_distribution<int> distribution(-itemNum, itemNum);
         return (int) distribution(rng);
     } else if constexpr(std::is_same<T, float>::value) {
         uniform_real_distribution<float> distribution(-10, 10);
@@ -68,7 +64,7 @@ public:
                                 chrono::high_resolution_clock::now().time_since_epoch()
                         ).count());
         static mt19937 rng = mt19937(seed);
-        static array<T, 100> data;
+        static array<T, itemNum> data;
         static bool called;
         if (!called) {
             generate(
@@ -97,59 +93,47 @@ TYPED_TEST_P(Sorts_Test, QuickSort) {
     // Inside a test, refer to TypeParam to get the type parameter.
     using Seq = TypeParam;
     using T = typename Seq::type;
-    Enumerable<T> &&seq = Seq();
-    array<T, 100> test_data = this->test_data();
-    vector<T> data(test_data.begin(), test_data.end());
+    ISequence<T> &&seq = Seq();
+    array<T, itemNum> test_data = this->test_data();
     for (const T &el: test_data) {
         seq.Add(el);
     }
-    seq.Sort(Sorts::QuickSort<T>);
-    sort(data.begin(), data.end());
+    seq.Sort(Sorts::InsertionSort<T>);
     auto begin = seq.begin();
-    for (const T &el: data) {
-        EXPECT_EQ(*(begin++), el);
+    for (size_t i = 0; i < seq.Count() - 1; i++) {
+        EXPECT_TRUE(seq[i] <= seq[i + 1]);
     }
-
 }
 
 TYPED_TEST_P(Sorts_Test, ShellSort) {
-    // Inside a test, refer to TypeParam to get the type parameter.
     using Seq = TypeParam;
     using T = typename Seq::type;
-    Enumerable<T> &&seq = Seq();
-    array<T, 100> test_data = this->test_data();
-    vector<T> data(test_data.begin(), test_data.end());
+    ISequence<T> &&seq = Seq();
+    array<T, itemNum> test_data = this->test_data();
     for (const T &el: test_data) {
         seq.Add(el);
     }
-    seq.Sort(Sorts::ShellSort<T>);
-    sort(data.begin(), data.end());
+    seq.Sort(Sorts::InsertionSort<T>);
     auto begin = seq.begin();
-    for (const T &el: data) {
-        EXPECT_EQ(*(begin++), el);
+    for (size_t i = 0; i < seq.Count() - 1; i++) {
+        EXPECT_TRUE(seq[i] <= seq[i + 1]);
     }
-
-
 }
 
 TYPED_TEST_P(Sorts_Test, InsertionSort) {
     // Inside a test, refer to TypeParam to get the type parameter.
     using Seq = TypeParam;
     using T = typename Seq::type;
-    Enumerable<T> &&seq = Seq();
-    array<T, 100> test_data = this->test_data();
-    vector<T> data(test_data.begin(), test_data.end());
+    ISequence<T> &&seq = Seq();
+    array<T, itemNum> test_data = this->test_data();
     for (const T &el: test_data) {
         seq.Add(el);
     }
     seq.Sort(Sorts::InsertionSort<T>);
-    sort(data.begin(), data.end());
     auto begin = seq.begin();
-    for (const T &el: data) {
-        EXPECT_EQ(*(begin++), el);
+    for (size_t i = 0; i < seq.Count() - 1; i++) {
+        EXPECT_TRUE(seq[i] <= seq[i + 1]);
     }
-
-
 }
 
 template<template<typename> class C, typename ...Ts>
@@ -170,6 +154,3 @@ int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
-
-#pragma clang diagnostic pop
-#endif //LABA3_SORTTESTS_H

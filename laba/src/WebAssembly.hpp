@@ -2,8 +2,7 @@
 // Created by kmv026 on 15.09.2021.
 //
 
-#ifndef LABA3_WEBASSEMBLY_H
-#define LABA3_WEBASSEMBLY_H
+#pragma once
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -60,5 +59,3 @@ string readline() {
 }
 
 #endif
-
-#endif //LABA3_WEBASSEMBLY_H

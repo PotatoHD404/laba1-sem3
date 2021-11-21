@@ -3,9 +3,7 @@
 //
 // Created by kmv026 on 07.10.2021.
 //
-
-#ifndef LABA3_ISORTABLE_HPP
-#define LABA3_ISORTABLE_HPP
+#pragma once
 
 #include <utility>
 #include "IEnumerable.hpp"
@@ -98,13 +96,13 @@ namespace PrivateSorts {
 namespace Sorts {
 
     template<typename T>
-    static PrivateSorts::QuickSort<T> QuickSort;
+    static const PrivateSorts::QuickSort<T> QuickSort;
 
     template<typename T>
-    static PrivateSorts::ShellSort<T> ShellSort;
+    static const PrivateSorts::ShellSort<T> ShellSort;
 
     template<typename T>
-    static PrivateSorts::InsertionSort<T> InsertionSort;
+    static const PrivateSorts::InsertionSort<T> InsertionSort;
 
 //    enum Sort {
 //        Shell, Insertion, Quick
@@ -117,4 +115,3 @@ public:
     virtual IEnumerable<T> &Sort(const ISort<T> &sort) = 0;
 };
 
-#endif //LABA3_ISORTABLE_HPP

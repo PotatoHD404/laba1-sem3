@@ -2,8 +2,7 @@
 // Created by korna on 20.04.2021.
 //
 
-#ifndef TEST_DB_COMPLEX_H
-#define TEST_DB_COMPLEX_H
+#pragma once
 
 #include <iostream>
 #include <cmath>
@@ -163,5 +162,3 @@ public:
 //    }
 //#endif //TEST_DB_COMPLEX_HPP
 //}
-
-#endif //TEST_DB_COMPLEX_H

@@ -9,7 +9,7 @@ SHELL ["/bin/bash", "-c"]
 
 RUN DEBIAN_FRONTEND="noninteractive" apt update && \
 apt install -y software-properties-common lsb-release wget && \
-apt install -y tzdata ssh git && \
+apt install -y tzdata ssh git rsync grsync && \
 apt clean all
 
 WORKDIR /gtest_build
@@ -23,26 +23,12 @@ DEBIAN_FRONTEND="noninteractive" apt update
 
 RUN apt install -y cmake build-essential gdb libgtest-dev libboost-dev libboost-program-options-dev valgrind lcov
 
-
+#docker buildx build --platform linux/amd64
 #cmake -DCMAKE_BUILD_TYPE=Release /usr/src/gtest && \
 #cmake --build .
 # && \
 #mv lib*.a /usr/lib
 
-
-# Setting up emscripten for compiling to webassembly
-
-WORKDIR /
-
-RUN git clone https://github.com/emscripten-core/emsdk.git
-
-WORKDIR /emsdk
-
-RUN git pull && \
-./emsdk install latest && \
-./emsdk activate latest && \
-source ./emsdk_env.sh && \
-echo 'source "/home/user/emsdk/emsdk_env.sh"' >> /home/user/.bash_profile
 
 # Creating user and setting up ssh
 
@@ -56,6 +42,20 @@ echo 'PasswordAuthentication yes'; \
 echo 'Subsystem sftp /usr/lib/openssh/sftp-server'; \
 ) > /etc/ssh/sshd_config_test && \
 mkdir /run/sshd
+
+# Setting up emscripten for compiling to webassembly
+
+WORKDIR /
+
+RUN git clone https://github.com/emscripten-core/emsdk.git
+
+WORKDIR /emsdk
+
+RUN git pull && \
+./emsdk install tot
+RUN ./emsdk activate tot
+RUN source ./emsdk_env.sh && \
+echo 'source "/home/user/emsdk/emsdk_env.sh"' >> /home/user/.bash_profile
 
 
 # Setting up working directory for app

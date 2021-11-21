@@ -1,27 +1,26 @@
 //
 // Created by korna on 20.03.2021.
 //
-#ifndef LABA2_LISTSEQUENCE_H
-#define LABA2_LISTSEQUENCE_H
+#pragma once
 
 #include "LinkedList.hpp"
 #include <iostream>
 #include <cstring>
 #include <memory>
-#include "Enumerable.hpp"
+#include "ISequence.hpp"
 
 
 using namespace std;
 
 template<typename T>
-class ListSequence : public Enumerable<T> {
+class ListSequence : public ISequence<T> {
 private:
     mutable LinkedList<T> items;
 
 public:
-    virtual Iter<T> begin() { return items.begin(); }
+    Iter<T> begin() override { return items.begin(); }
 
-    virtual Iter<T> end() { return items.end(); }
+    Iter<T> end() override { return items.end(); }
 
     ListSequence Copy() {
         return ListSequence<T>(*this);
@@ -52,16 +51,16 @@ public:
     explicit ListSequence(const LinkedList<T> &list) : items(list) {
     }
 
-    explicit ListSequence(Sequence<T> &list) : ListSequence((*dynamic_cast<ListSequence<T> *>(&list))) {
+    explicit ListSequence(ISequence<T> &list) : ListSequence((*dynamic_cast<ListSequence<T> *>(&list))) {
     }
 
-    explicit ListSequence(Sequence<T> *list) : ListSequence(*list) {
+    explicit ListSequence(ISequence<T> *list) : ListSequence(*list) {
     }
 
     explicit ListSequence(const ListSequence<T> *list) : ListSequence(*list) {
     }
 
-    explicit ListSequence(const unique_ptr<Sequence<T>> &list) : ListSequence(list.get()) {
+    explicit ListSequence(const unique_ptr<ISequence<T>> &list) : ListSequence(list.get()) {
     }
 
     explicit ListSequence(const unique_ptr<ListSequence<T>> &list) : ListSequence(*list) {
@@ -69,13 +68,13 @@ public:
 
     //Decomposition
 
-    virtual T &Get(size_t index) const {
+    T &Get(size_t index) const override {
         return items.Get(index);
     }
 
-    using Enumerable<T>::Sort;
+    using ISequence<T>::Sort;
 
-    virtual Enumerable<T> &Sort() { return this->Enumerable<T>::Sort(Sorts::InsertionSort<T>); }
+    ISequence<T> &Sort() override { return this->ISequence<T>::Sort(Sorts::InsertionSort<T>); }
 
     ListSequence<T> *Subsequence(size_t startIndex, size_t endIndex) {
         if (startIndex < 0 || startIndex >= items.Count())
@@ -89,24 +88,21 @@ public:
         return res;
     }
 
-    [[nodiscard]] size_t Count() const {
+    [[nodiscard]] size_t Count() const override {
         return items.Count();
     }
 
-    T &operator[](size_t index) const {
+    T &operator[](size_t index) const override {
         return items[index];
     }
-//    virtual bool operator==(const Sequence<Seq> &list) = 0;
+//    virtual bool operator==(const ISequence<Seq> &list) = 0;
 
-    virtual bool operator==(const IList<T> &list) {
-        return items == list;
-    }
-    virtual bool operator==(const ListSequence<T> &list) {
-        return items == list.items;
-    }
+//    virtual bool operator==(const ListSequence<T> &list) {
+//        return items == list.items;
+//    }
 
     //Operations
-    ListSequence<T> &Clear() {
+    ListSequence<T> &Clear() override {
         while (items.Count()) items.RemoveFirst();
         return *this;
     }
@@ -115,47 +111,35 @@ public:
 //        return ListSequence<Seq>(this->items);
 //    }
 
-    ListSequence<T> &Add(T item) {
+    ListSequence<T> &Add(T item) override {
         items.Add(item);
         return *this;
     }
 
-    ListSequence<T> &AddFirst(T item) {
+    ListSequence<T> &AddFirst(T item) override {
         items.AddFirst(item);
         return *this;
     }
 
-    ListSequence<T> &Insert(size_t index, T item) {
+    ListSequence<T> &Insert(size_t index, T item) override {
         items.Insert(index, item);
         return *this;
     }
 
-    T RemoveFirst() {
+    T RemoveFirst() override {
         return items.RemoveFirst();
     }
 
-    T RemoveLast() {
+    T RemoveLast() override {
         return items.RemoveLast();
     }
 
-    T RemoveAt(size_t index) {
+    T RemoveAt(size_t index) override {
         if (index < 0 || index >= items.Count())
             throw range_error("index < 0 or index >= length");
         return items.RemoveAt(index);
     }
 
-    ListSequence<T> &Concat(Sequence<T> &list) {
-        for (size_t i = 0; i < items.Count(); ++i) {
-            this->Add(items.Get(i));
-        }
-        for (size_t i = 0; i < list.Count(); ++i) {
-            this->Add(list[i]);
-        }
-        return *this;
-    }
 
     ListSequence<T> &operator=(const ListSequence<T> &list) = default;
 };
-
-
-#endif //LABA2_LISTSEQUENCE_H

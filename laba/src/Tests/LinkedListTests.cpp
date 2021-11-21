@@ -1,11 +1,6 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "cert-err58-cpp"
 //
 // Created by korna on 17.04.2021.
 //
-
-#ifndef TEST_DB_LINKEDLISTTESTS_H
-#define TEST_DB_LINKEDLISTTESTS_H
 
 #include "gtest/gtest.h"
 #include "../LinkedList.hpp"
@@ -338,7 +333,3 @@ TEST(LinkedList, InitDefault) {
 //    EXPECT_EQ (arr1[2], arr2[0]);
 //    EXPECT_EQ (arr1[3], arr2[1]);
 //}
-
-
-#endif //TEST_DB_LINKEDLISTTESTS_H
-#pragma clang diagnostic pop

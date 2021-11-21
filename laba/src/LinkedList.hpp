@@ -1,8 +1,7 @@
 //
 // Created by korna on 20.03.2021.
 //
-#ifndef LABA2_LINKEDLIST_H
-#define LABA2_LINKEDLIST_H
+#pragma once
 
 #include <iostream>
 #include <cstring>
@@ -65,18 +64,18 @@ private:
         Iterator(LinkedList<T> &it, Node *current, size_t pos) : RandomAccessIterator<T>::RandomAccessIterator(
                 it, pos), current(current) {}
 
-        virtual T &operator*() const { return current->data; }
+        T &operator*() const override { return current->data; }
 
-        virtual T *operator->() { return &current->data; }
+        T *operator->() override { return &current->data; }
 
 //        using RandomAccessIterator<T>::RandomAccessIterator;
-        virtual Iterator &operator++() {
+        Iterator &operator++() override {
             current = current->next;
             ++this->pos;
             return *this;
         }
 
-        virtual Iterator &operator--() {
+        Iterator &operator--() override {
             if (current == nullptr && this->pos == this->iterable.Count())
                 current = ((LinkedList<T> &) this->iterable).tail;
             else
@@ -85,21 +84,21 @@ private:
             return *this;
         }
 
-        virtual Iter<T> operator-(const Iterator &b) const {
-            Node *curr = current;
-            size_t pos = b.GetPos();
-            if (curr == nullptr && this->pos == this->iterable.Count()) {
-                curr = ((LinkedList<T> &) this->iterable).tail;
-                pos--;
-            }
+//        Iter<T> operator-(const Iterator &b) const override {
+//            Node *curr = current;
+//            size_t pos = b.GetPos();
+//            if (curr == nullptr && this->pos == this->iterable.Count()) {
+//                curr = ((LinkedList<T> &) this->iterable).tail;
+//                pos--;
+//            }
+//
+//            for (size_t i = 0; i < pos; ++i) {
+//                curr = curr->prev;
+//            }
+//            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, curr, this->pos - pos + 1));
+//        }
 
-            for (size_t i = 0; i < pos; ++i) {
-                curr = curr->prev;
-            }
-            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, curr, this->pos - pos + 1));
-        }
-
-        virtual Iter<T> operator-(const size_t &b) const {
+        Iter<T> operator-(const size_t &b) const override {
             Node *curr = current;
             size_t pos = b;
             if (curr == nullptr) {
@@ -116,22 +115,22 @@ private:
 //        return new IEnumerable(this->iterable, this->pos / b);
 //    }
 
-        virtual Iter<T> operator/(const size_t &b) const {
+        Iter<T> operator/(const size_t &b) const override {
             if (b == 0)
                 throw invalid_argument("b equals 0");
             return *this - this->pos * (1 - 1 / b);
         }
 
-        virtual Iter<T> operator+(const Iterator &b) const {
-            Node *curr = current;
-            size_t pos = b.GetPos();
-            for (size_t i = 0; i < pos; ++i) {
-                curr = curr->next;
-            }
-            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, curr, this->pos + b.GetPos()));
-        }
+//        Iter<T> operator+(const Iterator &b) const override {
+//            Node *curr = current;
+//            size_t pos = b.GetPos();
+//            for (size_t i = 0; i < pos; ++i) {
+//                curr = curr->next;
+//            }
+//            return Iter<T>(Iterator((LinkedList<T> &) this->iterable, curr, this->pos + b.GetPos()));
+//        }
 
-        virtual Iter<T> operator+(const size_t &b) const {
+        Iter<T> operator+(const size_t &b) const override {
             Node *curr = current;
             for (size_t i = 0; i < b; ++i) {
                 curr = curr->next;
@@ -147,16 +146,12 @@ private:
             }
             return *this;
         }
-
-        virtual bool Equals(const Iterator &b) const {
-            return ((LinkedList<T> &) this->iterable == (LinkedList<T> &) b.iterable) && (this->GetPos() == b.GetPos());
-        }
     };
 
 public:
-    virtual Iter<T> begin() { return Iter<T>(Iterator(*this)); }
+    Iter<T> begin() override { return Iter<T>(Iterator(*this)); }
 
-    virtual Iter<T> end() {
+    Iter<T> end() override {
         return Iter<T>(Iterator(*this, this->Count() > 0 ? this->Count() : 0));
     }
     //Creation of the object
@@ -181,7 +176,7 @@ public:
     }
 
     LinkedList(T *items, size_t count) : LinkedList() {
-        if ((int) count < 0)
+        if ((long) count < 0)
             throw out_of_range("count < 0");
         if (items == nullptr)
             throw invalid_argument("items is NULL");
@@ -217,7 +212,7 @@ public:
         return tail->data;
     }
 
-    T &Get(size_t index) const {
+    T &Get(size_t index) const override {
         if (index < 0 || index >= length)
             throw out_of_range("index < 0 or index >= length");
         if (index == 0)
@@ -227,49 +222,33 @@ public:
         return GetNode(index)->data;
     }
 
-    LinkedList<T> &Set(size_t index, T value) {
-        if (index < 0 || index >= length)
-            throw range_error("index < 0 or index >= length");
-        Get(index) = value;
-        return *this;
-    }
+    LinkedList<T> &Clear() override { throw NotImplemented("", "in LinkedList Clear"); };
 
-
-    virtual bool Contains(T item) {
-        throw NotImplemented("", "in LinkedList Contains");
-    };
-
-    virtual LinkedList<T> &Clear() { throw NotImplemented("", "in LinkedList Clear"); };
-
-    virtual T Remove(T item) {
-        throw NotImplemented("", "in LinkedList Remove");
-    };
-
-    virtual bool operator==(const IList<T> &list) {
-        if (dynamic_cast<const LinkedList<T> *>(&list) != nullptr) {
-            auto castedList = dynamic_cast<const LinkedList<T> &>(list);
-            if (this->Count() != castedList.Count())
-                return false;
-            auto head1 = this->head;
-            auto head2 = castedList.head;
-            while (head1) {
-                if (head1->data != head2->data)
-                    return false;
-                head1 = head1->next;
-                head2 = head2->next;
-            }
-            return true;
-        }
-        if (this->Count() != list.Count())
-            return false;
-        int i = 0;
-        for (T el: *this) {
-            if (el != list[i])
-                return false;
-            i++;
-        }
-        return true;
-    }
+//    bool operator==(const IList<T> &list) override {
+//        if (dynamic_cast<const LinkedList<T> *>(&list) != nullptr) {
+//            auto castedList = dynamic_cast<const LinkedList<T> &>(list);
+//            if (this->Count() != castedList.Count())
+//                return false;
+//            auto head1 = this->head;
+//            auto head2 = castedList.head;
+//            while (head1) {
+//                if (head1->data != head2->data)
+//                    return false;
+//                head1 = head1->next;
+//                head2 = head2->next;
+//            }
+//            return true;
+//        }
+//        if (this->Count() != list.Count())
+//            return false;
+//        int i = 0;
+//        for (T el: *this) {
+//            if (el != list[i])
+//                return false;
+//            i++;
+//        }
+//        return true;
+//    }
 
 
     LinkedList<T> GetSubList(size_t startIndex, size_t endIndex) {
@@ -288,15 +267,15 @@ public:
         return res;
     }
 
-    [[nodiscard]] size_t Count() const {
+    [[nodiscard]] size_t Count() const override {
         return length;
     }
 
-    T &operator[](size_t index) const { return Get(index); }
+    T &operator[](size_t index) const override { return Get(index); }
 
     //Operations
 
-    LinkedList<T> &Add(T item) {
+    LinkedList<T> &Add(T item) override {
         Node *tmp = new Node(item);
         if (head == nullptr)
             head = tmp;
@@ -377,7 +356,7 @@ public:
         return *this;
     }
 
-    T RemoveAt(size_t index) {
+    T RemoveAt(size_t index) override {
         if (index < 0 || index >= length)
             throw range_error("index < 0 or index >= length");
         if (index == length - 1)
@@ -440,5 +419,3 @@ public:
             RemoveFirst();
     }
 };
-
-#endif //LABA2_LINKEDLIST_H

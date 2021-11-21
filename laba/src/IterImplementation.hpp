@@ -1,9 +1,7 @@
 //
 // Created by kmv026 on 13.10.2021.
 //
-
-#ifndef LABA3_ITERIMPLEMENTATION_HPP
-#define LABA3_ITERIMPLEMENTATION_HPP
+#pragma once
 
 template<typename Interface>
 class Implementation {
@@ -174,8 +172,4 @@ public:
 //    Interface *operator->() { return &getter(storage); }
 
     ~Implementation() { delete storage; }
-
-
 };
-
-#endif //LABA3_ITERIMPLEMENTATION_HPP
